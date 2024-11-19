@@ -3,7 +3,7 @@ using NET.Starter.API.Shared.Helpers;
 
 namespace NET.Starter.API.Shared.Objects.Dtos
 {
-    internal class ResponsePagingBase(string? message = null, ResponseCode responseCode = ResponseCode.BadRequest) : ResponseBase(message, responseCode)
+    public class ResponsePagingBase(string? message = null, ResponseCode responseCode = ResponseCode.BadRequest) : ResponseBase(message, responseCode)
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
@@ -14,7 +14,7 @@ namespace NET.Starter.API.Shared.Objects.Dtos
         public bool HasPrevious => Page > 1;
     }
 
-    internal class ResponsePaging<T>(string? message = null, ResponseCode responseCode = ResponseCode.BadRequest) : ResponsePagingBase(message, responseCode)
+    public class ResponsePaging<T>(string? message = null, ResponseCode responseCode = ResponseCode.BadRequest) : ResponsePagingBase(message, responseCode)
         where T : class
     {
         public IQueryable<T>? Data { get; set; }

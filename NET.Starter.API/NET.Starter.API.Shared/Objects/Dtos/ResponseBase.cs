@@ -3,7 +3,7 @@ using NET.Starter.API.Shared.Enums;
 
 namespace NET.Starter.API.Shared.Objects.Dtos
 {
-    internal class ResponseBase
+    public class ResponseBase
     {
         public ResponseBase(string? message = null, ResponseCode responseCode = ResponseCode.BadRequest)
         {

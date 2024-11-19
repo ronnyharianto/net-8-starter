@@ -4,7 +4,7 @@ using NET.Starter.API.Shared.Objects;
 
 namespace NET.Starter.API.DataAccess.Bases
 {
-    internal class DbContextBase(DbContextOptions options, CurrentUserAccessor currentUserAccessor) : DbContext(options)
+    public class DbContextBase(DbContextOptions options, CurrentUserAccessor currentUserAccessor) : DbContext(options)
     {
         private readonly CurrentUserAccessor _currentUserAccessor = currentUserAccessor;
 

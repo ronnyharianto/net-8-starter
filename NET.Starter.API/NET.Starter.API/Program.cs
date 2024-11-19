@@ -1,19 +1,18 @@
 using NET.Starter.API.Core;
 using NET.Starter.API.DataAccess;
+using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.API.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register Dependency Injection
 builder.Services.RegisterShared();
+builder.AddController();
+builder.AddSwaggerGen();
+builder.AddCors();
 builder.Services.RegisterDataAccess(builder.Configuration);
-builder.Services.RegisterCore();
-
-// Add services to the container.
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.RegisterCore(builder.Configuration);
+builder.AddAuthentication();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -24,9 +23,14 @@ app.UseDbContext();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.DocumentTitle = "NET.Starter.API";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+    });
 }
 
-app.UseHttpsRedirection();
+app.UseCors();
+app.MapControllers();
 
 app.Run();

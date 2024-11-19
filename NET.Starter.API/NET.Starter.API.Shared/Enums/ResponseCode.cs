@@ -1,6 +1,6 @@
 ﻿namespace NET.Starter.API.Shared.Enums
 {
-    internal enum ResponseCode
+    public enum ResponseCode
     {
         Ok = 200,
         BadRequest = 400,

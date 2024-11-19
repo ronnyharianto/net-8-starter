@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NET.Starter.API.Shared.Objects;
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("NET.Starter.API")]
 
 namespace NET.Starter.API.Shared
 {

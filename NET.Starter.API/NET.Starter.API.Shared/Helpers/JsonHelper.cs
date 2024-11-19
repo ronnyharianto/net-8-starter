@@ -2,7 +2,7 @@
 
 namespace NET.Starter.API.Shared.Helpers
 {
-    internal static class JsonHelper
+    public static class JsonHelper
     {
         private static readonly JsonSerializerSettings settings = new()
         {
