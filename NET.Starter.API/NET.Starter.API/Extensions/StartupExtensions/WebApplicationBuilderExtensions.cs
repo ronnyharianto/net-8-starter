@@ -4,7 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NET.Starter.API.Controllers.V1;
 using NET.Starter.API.Controllers.V1.Security;
+using NET.Starter.API.DataAccess;
 using NET.Starter.API.Extensions.StartupExtensions;
+using NET.Starter.API.Middlewares;
 using System.Reflection;
 using System.Text;
 
@@ -19,11 +21,11 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                 options.SuppressXFrameOptionsHeader = true;
             });
 
-            builder.Services.AddControllers(
-                options =>
+            builder.Services
+                .AddControllers(options =>
                 {
-                    //options.Filters.Add<AuthorizationFilter>();
-                    //options.Filters.Add<TransactionFilter<ApplicationDbContext>>();
+                    options.Filters.Add<AuthorizationFilter>();
+                    options.Filters.Add<TransactionFilter<ApplicationDbContext>>();
                 })
                 .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -34,7 +36,7 @@ namespace NET.Starter.API.Extensions.StartupExtensions
         {
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HGC.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "NET.Starter.API", Version = "v1" });
                 c.AddSecurityDefinition("Bearer",
                     new OpenApiSecurityScheme
                     {

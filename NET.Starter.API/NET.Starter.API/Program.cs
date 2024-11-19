@@ -2,10 +2,11 @@ using NET.Starter.API.Core;
 using NET.Starter.API.DataAccess;
 using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.API.Shared;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterShared();
+builder.Services.RegisterShared(builder.Host, builder.Configuration);
 builder.AddController();
 builder.AddSwaggerGen();
 builder.AddCors();
@@ -16,10 +17,9 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-// Use from Web Application Extensions
 app.UseDbContext();
+app.UseHttpLogging().UseSerilogRequestLogging();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

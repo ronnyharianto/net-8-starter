@@ -42,7 +42,7 @@ namespace NET.Starter.API.Shared.Objects.Dtos
             }
         }
 
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = string.Empty;
         public int Code { get; internal set; }
         public bool Succeeded { get; internal set; }
         public string? Message { get; set; }

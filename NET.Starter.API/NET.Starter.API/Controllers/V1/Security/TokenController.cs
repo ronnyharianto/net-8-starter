@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NET.Starter.API.Core.Services.Security;
 using NET.Starter.API.Core.Services.Security.Dtos;
+using NET.Starter.API.Shared.Attributes;
 using NET.Starter.API.Shared.Enums;
 using NET.Starter.API.Shared.Objects.Dtos;
 
@@ -24,12 +25,12 @@ namespace NET.Starter.API.Controllers.V1.Security
         }
         #endregion
 
-        //[HttpPost("list")]
-        //[AppAuthorize([PermissionConstants.UserManagement.ViewUser])]
-        //public async Task<ResponsePaging<UserDto>> GetListUser(PagingSearchInputBase input)
-        //{
-        //    return await _userService.GetListUser(input);
-        //}
+        [HttpPost("unauthrorize")]
+        [AppAuthorize("UnAuthorized")]
+        public ResponseBase UnAuthorized()
+        {
+            return new ResponseBase(responseCode: ResponseCode.Ok);
+        }
     }
 }
 
