@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NET.Starter.API.Core\NET.Starter.API.Core.csproj" />
-    <ProjectReference Include="..\Net.Starter.API.DataAccess\Net.Starter.API.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>
