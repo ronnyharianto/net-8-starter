@@ -2,7 +2,7 @@
 
 namespace NET.Starter.API.Shared.Helpers
 {
-    internal static class EnumHelper
+    public static class EnumHelper
     {
         public static string GetDescription(this Enum value)
         {

@@ -2,7 +2,7 @@
 
 namespace NET.Starter.API.Shared.Objects.Inputs
 {
-    internal class PagingSearchInputBase : IPagingInput, ISearchInput
+    public class PagingSearchInputBase : IPagingInput, ISearchInput
     {
         public int Page { get; set; }
         public int PageSize { get; set; }

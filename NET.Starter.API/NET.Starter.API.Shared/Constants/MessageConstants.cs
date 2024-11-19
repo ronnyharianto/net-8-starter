@@ -1,6 +1,6 @@
 ﻿namespace NET.Starter.API.Shared.Constants
 {
-    internal static class MessageConstants
+    public static class MessageConstants
     {
         public const string SuccessSave = "{0} has been saved";
         public const string FailedSave = "{0} failed to be save";

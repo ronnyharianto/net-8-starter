@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("NET.Starter.API")]
 
 namespace NET.Starter.API.DataAccess
 {
-    internal static class WebApplicationExtensions
+    public static class WebApplicationExtensions
     {
         public static WebApplication UseDbContext(this WebApplication app)
         {

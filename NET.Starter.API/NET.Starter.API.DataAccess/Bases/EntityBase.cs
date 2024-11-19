@@ -2,7 +2,7 @@
 
 namespace NET.Starter.API.DataAccess.Bases
 {
-    internal class EntityBase
+    public class EntityBase
     {
         /// <summary>
         /// Primary Key for all entity

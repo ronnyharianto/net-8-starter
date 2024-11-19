@@ -1,12 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("NET.Starter.API")]
-[assembly: InternalsVisibleTo("NET.Starter.API.Core")]
-[assembly: InternalsVisibleTo("NET.Starter.API.DataAccess")]
-
-namespace NET.Starter.API.Shared.Objects
+﻿namespace NET.Starter.API.Shared.Objects
 {
-    internal class CurrentUserAccessor
+    public class CurrentUserAccessor
     {
         public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
