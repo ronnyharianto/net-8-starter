@@ -10,15 +10,6 @@ using System.Text;
 
 namespace NET.Starter.API.Extensions.StartupExtensions
 {
-    public class CustomControllerFeatureProvider : ControllerFeatureProvider
-    {
-        protected override bool IsController(TypeInfo typeInfo)
-        {
-            var isCustomController = !typeInfo.IsAbstract && typeof(BaseController).IsAssignableFrom(typeInfo);
-            return isCustomController || base.IsController(typeInfo);
-        }
-    }
-
     public static class WebApplicationBuilderExtensions
     {
         public static WebApplicationBuilder AddController(this WebApplicationBuilder builder)
@@ -34,7 +25,6 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                     //options.Filters.Add<AuthorizationFilter>();
                     //options.Filters.Add<TransactionFilter<ApplicationDbContext>>();
                 })
-                .ConfigureApplicationPartManager(manager => manager.FeatureProviders.Add(new CustomControllerFeatureProvider()))
                 .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             return builder;
