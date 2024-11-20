@@ -6,6 +6,7 @@ using NET.Starter.API.Core.Services.Security.Inputs;
 using NET.Starter.API.Shared.Attributes;
 using NET.Starter.API.Shared.Enums;
 using NET.Starter.API.Shared.Objects.Dtos;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {
@@ -18,6 +19,7 @@ namespace NET.Starter.API.Controllers.V1.Security
         // TODO: Implement changes flow when login user duende identity & azure active directory
         [AllowAnonymous]
         [HttpPost("login")]
+        [SwaggerOperation(Summary = "Login", Description = "")]
         public async Task<ResponseObject<TokenDto>> GenerateToken(LoginInput input)
         {
             return await _accountService.Login(input);
@@ -25,8 +27,9 @@ namespace NET.Starter.API.Controllers.V1.Security
         #endregion
 
         // TO DO : Remove this example
-        [HttpPost("verify/authrorize")]
         [AppAuthorize("Authorized")]
+        [HttpPost("verify/authrorize")]
+        [SwaggerOperation(Summary = "Dummy Endpoint 1", Description = "Untuk mencoba authorize atau tidak access token")]
         public ResponseBase Authorized()
         {
             return new ResponseBase(responseCode: ResponseCode.Ok);
