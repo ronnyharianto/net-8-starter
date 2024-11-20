@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET.Starter.API.Shared", "N
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET.Starter.API.Core", "NET.Starter.API.Core\NET.Starter.API.Core.csproj", "{CC0FD4CB-2BF1-403A-912B-D29471FDA119}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SDK", "SDK", "{6345EBA7-24FE-4F85-99C8-CE11DCB939DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET.Starter.SDK", "NET.Starter.SDK\NET.Starter.SDK.csproj", "{70082A10-7B07-4685-98D4-EB28E561C4F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +43,16 @@ Global
 		{CC0FD4CB-2BF1-403A-912B-D29471FDA119}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC0FD4CB-2BF1-403A-912B-D29471FDA119}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC0FD4CB-2BF1-403A-912B-D29471FDA119}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70082A10-7B07-4685-98D4-EB28E561C4F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70082A10-7B07-4685-98D4-EB28E561C4F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70082A10-7B07-4685-98D4-EB28E561C4F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70082A10-7B07-4685-98D4-EB28E561C4F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{70082A10-7B07-4685-98D4-EB28E561C4F2} = {6345EBA7-24FE-4F85-99C8-CE11DCB939DA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A617C77-9A7C-480B-B10C-E2A984ACB395}

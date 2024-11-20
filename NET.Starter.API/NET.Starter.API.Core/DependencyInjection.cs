@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NET.Starter.API.Core.Services.Rfid;
 using NET.Starter.API.Core.Services.Security;
 using NET.Starter.API.Shared.Objects;
+using NET.Starter.SDK;
 using System.Reflection;
 
 namespace NET.Starter.API.Core
@@ -16,6 +18,9 @@ namespace NET.Starter.API.Core
 
             services.AddScoped<TokenService>();
             services.AddScoped<AccountService>();
+            services.AddScoped<RfidService>();
+
+            services.RegisterRfidFixedReder();
 
             return services;
         }
