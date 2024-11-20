@@ -30,5 +30,5 @@ COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "NET.Starter.API.dll"]
 
 # run in command prompt
-# docker build -t account_name/adeefhelpdesk:1.0 .
-# docker push account_name/adeefhelpdesk:1.0
+# docker build -t <your-dockerhub-username>/<your-image-name>:<your-image-tag> .
+# docker push <your-dockerhub-username>/<your-image-name>:<your-image-tag>

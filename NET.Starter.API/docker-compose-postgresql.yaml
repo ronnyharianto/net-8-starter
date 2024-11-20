@@ -1,0 +1,17 @@
+services:
+  postgres:
+    container_name: net-starter-api-postgresql
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234qwER
+      - POSTGRES_DB=database_name
+    ports:
+      - 5432:5432
+
+
+
+
+
+# run in command prompt
+# docker-compose -f docker-compose-postgresql.yaml up

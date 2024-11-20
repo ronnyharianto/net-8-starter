@@ -1,0 +1,28 @@
+services:
+  mssql:
+    container_name: net-starter-api-sql-server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "1234qwER"
+    ports:
+      - 1433:1433
+
+  # Use this if you want to run the API in docker after build image
+  # net8starterapi:
+  #   container_name: net8starterapi
+  #   image: <your-dockerhub-username>/<your-image-name>:<your-image-tag>
+  #   ports:
+  #     - 7000:7000
+  #   depends_on:
+  #     - mssql
+  #   environment:
+  #     - ConnectionStrings__SqlServer=Server=net-starter-api-sql-server;Database=net-starter-api;User Id=sa;Password=1234qwER;TrustServerCertificate=true
+
+volumes:
+  my-volume:
+  
+
+
+# run in command prompt
+# docker-compose -f docker-compose-sql-server.yaml up
