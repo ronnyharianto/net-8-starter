@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NET.Starter.SDK.Implementations;
-using NET.Starter.SDK.Interfaces;
 
 namespace NET.Starter.SDK
 {

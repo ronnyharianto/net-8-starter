@@ -5,7 +5,6 @@ using NET.Starter.API.DataAccess;
 using NET.Starter.API.Shared.Enums;
 using NET.Starter.API.Shared.Objects.Dtos;
 using NET.Starter.SDK;
-using NET.Starter.SDK.Interfaces;
 
 namespace NET.Starter.API.Core.Services.Rfid
 {
