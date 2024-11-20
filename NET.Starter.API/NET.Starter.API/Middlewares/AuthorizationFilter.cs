@@ -74,7 +74,7 @@ namespace NET.Starter.API.Middlewares
 
         private static bool SkipAuthorization(AuthorizationFilterContext context) => context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
 
-        private bool IsAuthorize(AuthorizationFilterContext context, IEnumerable<Claim> claims)
+        private static bool IsAuthorize(AuthorizationFilterContext context, IEnumerable<Claim> claims)
         {
             // If user doesn't have any permission then the user is not authorize
             if (!claims.Any()) return false;
@@ -86,7 +86,7 @@ namespace NET.Starter.API.Middlewares
 
             foreach (var appAuthorizeAttribute in appAuthorizeAttributes)
             {
-                if (claims.Any(c => appAuthorizeAttribute.Permissions.Contains(c.Value))) return true;
+                if (claims.Any(c => appAuthorizeAttribute.Permissions.Contains(c.Value, StringComparer.OrdinalIgnoreCase))) return true;
             }
 
             return false;

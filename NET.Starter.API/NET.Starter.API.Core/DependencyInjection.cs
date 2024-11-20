@@ -15,6 +15,7 @@ namespace NET.Starter.API.Core
             services.Configure<SecurityConfig>(options => configuration.Bind(nameof(SecurityConfig), options));
 
             services.AddScoped<TokenService>();
+            services.AddScoped<AccountService>();
 
             return services;
         }

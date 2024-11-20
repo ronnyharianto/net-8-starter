@@ -1,0 +1,35 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using NET.Starter.API.Core.Services.Security;
+using NET.Starter.API.Core.Services.Security.Dtos;
+using NET.Starter.API.Core.Services.Security.Inputs;
+using NET.Starter.API.Shared.Attributes;
+using NET.Starter.API.Shared.Enums;
+using NET.Starter.API.Shared.Objects.Dtos;
+
+namespace NET.Starter.API.Controllers.V1.Security
+{
+    [Route("api/v1/[controller]")]
+    public class AccountController(AccountService accountService) : BaseController
+    {
+        private readonly AccountService _accountService = accountService;
+
+        #region AllowAnonymous
+        // TODO: Implement changes flow when login user duende identity & azure active directory
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<ResponseObject<TokenDto>> GenerateToken(LoginInput input)
+        {
+            return await _accountService.Login(input);
+        }
+        #endregion
+
+        // TO DO : Remove this example
+        [HttpPost("verify/authrorize")]
+        [AppAuthorize("Authorized")]
+        public ResponseBase Authorized()
+        {
+            return new ResponseBase(responseCode: ResponseCode.Ok);
+        }
+    }
+}
