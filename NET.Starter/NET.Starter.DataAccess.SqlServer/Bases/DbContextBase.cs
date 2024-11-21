@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Objects;
 
 namespace NET.Starter.DataAccess.SqlServer.Bases
@@ -42,6 +43,24 @@ namespace NET.Starter.DataAccess.SqlServer.Bases
                     entity.Modified = DateTime.Now;
                     entity.ModifiedBy = _currentUserAccessor.Id.ToString();
                 }
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var dbSetProperties = GetType().GetProperties()
+                                           .Where(p => 
+                                            p.PropertyType.IsGenericType &&
+                                            p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
+
+            foreach (var dbSetProperty in dbSetProperties)
+            {
+                var entityType = dbSetProperty.PropertyType.GenericTypeArguments[0];
+                var schemaAttribute = entityType.GetCustomAttributes(typeof(DatabaseSchemaAttribute), false).FirstOrDefault() as DatabaseSchemaAttribute;
+                var schema = schemaAttribute?.Schema ?? "dbo";
+                var tableName = dbSetProperty.Name;
+
+                modelBuilder.Entity(entityType).ToTable(tableName, schema);
             }
         }
     }

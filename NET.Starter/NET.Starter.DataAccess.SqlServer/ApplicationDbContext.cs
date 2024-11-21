@@ -14,6 +14,8 @@ namespace NET.Starter.DataAccess.SqlServer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             #region Security
             new PermissionEntityBuilder().Configure(modelBuilder.Entity<Permission>());
             #endregion
