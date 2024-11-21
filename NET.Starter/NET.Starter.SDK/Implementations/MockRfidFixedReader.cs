@@ -1,25 +1,18 @@
-﻿using NET.Starter.SDK.Interfaces;
+﻿using NET.Starter.SDK.Dtos;
+using NET.Starter.SDK.Inputs;
 
 namespace NET.Starter.SDK.Implementations
 {
-    internal class MockRfidFixedReader : IRfidFixedReader
+    internal class MockRfidFixedReader : BaseRfidFixedReader
     {
-        public void Connect(string connectionString)
+        protected override ConnectedInfoDto ConnectToDevice(ConnectInput input)
         {
-            throw new NotImplementedException();
+            if (input.HostName.StartsWith("192") && input.Port == 5084) return new ConnectedInfoDto { IsConnected = true };
+
+            return new ConnectedInfoDto { IsConnected = false, Message = "Gagal terhubung ke RFID Reader Mock" };
         }
 
-        public void Disconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string ReadTag()
-        {
-            return "Tag Mock 1";
-        }
-
-        public void WriteTag(string tagData)
+        protected override void ListenToDevice(ListenInput input, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

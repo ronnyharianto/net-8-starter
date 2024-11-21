@@ -13,14 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Inputs\" />
-    <Folder Include="Dtos\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Symbol.RFID3.Host">
       <HintPath>Assembly\Symbol.RFID3.Host.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
 

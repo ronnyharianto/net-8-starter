@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using NET.Starter.Core.Services.Rfid;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Objects.Dtos;
-using NET.Starter.SDK.Enums;
 using Swashbuckle.AspNetCore.Annotations;
+using NET.Starter.SDK.Inputs;
+using NET.Starter.SDK.Dtos;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {
@@ -14,11 +15,11 @@ namespace NET.Starter.API.Controllers.V1.Security
 
         // TO DO : Remove this example
         [AppAuthorize("Authorized")]
-        [HttpPost("readtag")]
+        [HttpPost("connect")]
         [SwaggerOperation(Summary = "Dummy Endpoint 2", Description = "Untuk mencoba dependency injection dari beberapa merk reader")]
-        public ResponseObject<string> ReadTag(ReaderType readerType)
+        public ResponseObject<ConnectedInfoDto> Connect(ConnectInput input)
         {
-            return _rfidService.ReadTag(readerType);
+            return _rfidService.Connect(input);
         }
     }
 }

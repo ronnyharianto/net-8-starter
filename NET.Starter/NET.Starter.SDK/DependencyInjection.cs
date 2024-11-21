@@ -8,10 +8,10 @@ namespace NET.Starter.SDK
     {
         public static IServiceCollection RegisterRfidFixedReder(this IServiceCollection services)
         {
-            services.AddScoped<MockRfidFixedReader>();
-            services.AddScoped<ZebraRfidFixedReader>();
+            services.AddSingleton<MockRfidFixedReader>();
+            services.AddSingleton<ZebraRfidFixedReader>();
 
-            services.AddScoped<RfidFixedReaderFactory>();
+            services.AddSingleton<RfidFixedReaderFactory>();
 
             return services;
         }
