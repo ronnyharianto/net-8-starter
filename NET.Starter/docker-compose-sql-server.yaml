@@ -2,6 +2,11 @@ services:
   mssql:
     container_name: net-starter-api-sql-server
     image: mcr.microsoft.com/mssql/server:2022-latest
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1"
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "1234qwER"
@@ -12,6 +17,11 @@ services:
   # net8starterapi:
   #   container_name: net8starterapi
   #   image: <your-dockerhub-username>/<your-image-name>:<your-image-tag>
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 128M
+  #         cpus: "0.5"
   #   ports:
   #     - 7000:7000
   #   depends_on:

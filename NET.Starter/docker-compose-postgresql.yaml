@@ -2,6 +2,11 @@ services:
   postgres:
     container_name: net-starter-api-postgresql
     image: postgres
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234qwER
