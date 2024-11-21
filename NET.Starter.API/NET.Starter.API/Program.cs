@@ -1,5 +1,5 @@
 using NET.Starter.API.Core;
-using NET.Starter.API.DataAccess;
+using NET.Starter.API.DataAccess.SqlServer;
 using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.API.Shared;
 using Serilog;

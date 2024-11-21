@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
-using NET.Starter.API.DataAccess;
+using NET.Starter.API.DataAccess.SqlServer;
 
 namespace NET.Starter.API.Core.Bases
 {

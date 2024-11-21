@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NET.Starter.SDK.Enums;
 using NET.Starter.SDK.Implementations;
 using NET.Starter.SDK.Interfaces;
 
@@ -10,7 +11,7 @@ namespace NET.Starter.SDK
         private readonly IServiceProvider _serviceProvider = serviceProvider;
         private readonly bool _useMockRfidScanner = configuration.GetValue<bool>("UseMockRfidScanner");
 
-        public IRfidFixedReader CreateRfidFixedReader(string readerType)
+        public IRfidFixedReader CreateRfidFixedReader(ReaderType readerType)
         {
             using var scope = _serviceProvider.CreateScope();
 
@@ -18,7 +19,7 @@ namespace NET.Starter.SDK
 
             return readerType switch
             {
-                "Zebra" => _serviceProvider.GetRequiredService<ZebraRfidFixedReader>(),
+                ReaderType.Zebra => _serviceProvider.GetRequiredService<ZebraRfidFixedReader>(),
                 _ => throw new ArgumentException("Merk tidak dikenali"),
             };
         }

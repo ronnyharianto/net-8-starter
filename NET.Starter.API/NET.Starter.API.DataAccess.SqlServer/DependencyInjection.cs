@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NET.Starter.API.DataAccess
+namespace NET.Starter.API.DataAccess.SqlServer
 {
     public static class DependencyInjection
     {
@@ -11,7 +11,7 @@ namespace NET.Starter.API.DataAccess
             services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(
                 configuration.GetConnectionString("SqlServer"), (option) =>
                 {
-                    option.MigrationsAssembly("NET.Starter.API.DataAccess");
+                    option.MigrationsAssembly("NET.Starter.API.DataAccess.SqlServer");
                     option.CommandTimeout(60);
                     option.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 }));

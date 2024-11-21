@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NET.Starter.API.Shared.Objects;
 
-namespace NET.Starter.API.DataAccess.Bases
+namespace NET.Starter.API.DataAccess.SqlServer.Bases
 {
     public class DbContextBase(DbContextOptions options, CurrentUserAccessor currentUserAccessor) : DbContext(options)
     {

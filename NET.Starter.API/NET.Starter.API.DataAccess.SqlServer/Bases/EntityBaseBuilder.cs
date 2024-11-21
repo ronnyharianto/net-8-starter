@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace NET.Starter.API.DataAccess.Bases
+namespace NET.Starter.API.DataAccess.SqlServer.Bases
 {
     public class EntityBaseBuilder<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : EntityBase
     {

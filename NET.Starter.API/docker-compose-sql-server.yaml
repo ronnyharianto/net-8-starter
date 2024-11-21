@@ -12,12 +12,14 @@ services:
   # net8starterapi:
   #   container_name: net8starterapi
   #   image: <your-dockerhub-username>/<your-image-name>:<your-image-tag>
+  #   image: dakupunyaid/net-starter-api:1.2
   #   ports:
   #     - 7000:7000
   #   depends_on:
   #     - mssql
   #   environment:
   #     - ConnectionStrings__SqlServer=Server=net-starter-api-sql-server;Database=net-starter-api;User Id=sa;Password=1234qwER;TrustServerCertificate=true
+  #     - UseMockRfidScanner=false
 
 volumes:
   my-volume:

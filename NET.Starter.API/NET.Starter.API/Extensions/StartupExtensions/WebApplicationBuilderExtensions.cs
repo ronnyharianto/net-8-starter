@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NET.Starter.API.Controllers.V1;
 using NET.Starter.API.Controllers.V1.Security;
-using NET.Starter.API.DataAccess;
+using NET.Starter.API.DataAccess.SqlServer;
 using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.API.Middlewares;
 using System.Reflection;

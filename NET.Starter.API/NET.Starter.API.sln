@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET.Starter.API", "NET.Starter.API\NET.Starter.API.csproj", "{3627C31F-8964-4B77-A5D3-EA34FC52FB83}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET.Starter.API.DataAccess", "NET.Starter.API.DataAccess\NET.Starter.API.DataAccess.csproj", "{449CBA15-99F4-4088-9A3C-41A85E18E218}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NET.Starter.API.DataAccess.SqlServer", "NET.Starter.API.DataAccess.SqlServer\NET.Starter.API.DataAccess.SqlServer.csproj", "{449CBA15-99F4-4088-9A3C-41A85E18E218}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E355983A-556A-4223-8735-EB5198E22A97}"
 	ProjectSection(SolutionItems) = preProject

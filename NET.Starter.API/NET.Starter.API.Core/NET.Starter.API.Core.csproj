@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NET.Starter.API.DataAccess\NET.Starter.API.DataAccess.csproj" />
+    <ProjectReference Include="..\NET.Starter.API.DataAccess.SqlServer\NET.Starter.API.DataAccess.SqlServer.csproj" />
     <ProjectReference Include="..\NET.Starter.SDK\NET.Starter.SDK.csproj" />
   </ItemGroup>
 

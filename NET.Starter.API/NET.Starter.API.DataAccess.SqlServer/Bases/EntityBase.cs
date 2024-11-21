@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NET.Starter.API.DataAccess.Bases
+namespace NET.Starter.API.DataAccess.SqlServer.Bases
 {
     public class EntityBase
     {

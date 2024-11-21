@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 
-namespace NET.Starter.API.DataAccess
+namespace NET.Starter.API.DataAccess.SqlServer
 {
     public static class WebApplicationExtensions
     {

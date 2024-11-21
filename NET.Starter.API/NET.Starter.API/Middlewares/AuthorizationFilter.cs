@@ -79,9 +79,6 @@ namespace NET.Starter.API.Middlewares
             // If user doesn't have any permission then the user is not authorize
             if (!claims.Any()) return false;
 
-            // If user have super permission then the user is authorize
-            if (claims.Any(c => c.Value.Equals(PermissionConstants.SuperPermission))) return true;
-
             var appAuthorizeAttributes = context.ActionDescriptor.EndpointMetadata.OfType<AppAuthorizeAttribute>();
 
             foreach (var appAuthorizeAttribute in appAuthorizeAttributes)

@@ -30,6 +30,6 @@
 3. Open the Package Manager Console.
 4. Run the following command to add new migration:
    ```
-   Add-Migration -s NET.Starter.API -p NET.Starter.API.DataAccess -c ApplicationDbContext
+   Add-Migration -s NET.Starter.API -p NET.Starter.API.DataAccess.SqlServer -c ApplicationDbContext
    ```
 5. Start "NET.Starter.API" project to create the database.

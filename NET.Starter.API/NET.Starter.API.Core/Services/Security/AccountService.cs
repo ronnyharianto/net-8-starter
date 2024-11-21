@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using NET.Starter.API.Core.Bases;
 using NET.Starter.API.Core.Services.Security.Dtos;
 using NET.Starter.API.Core.Services.Security.Inputs;
-using NET.Starter.API.DataAccess;
+using NET.Starter.API.DataAccess.SqlServer;
 using NET.Starter.API.Shared.Enums;
 using NET.Starter.API.Shared.Objects.Dtos;
 

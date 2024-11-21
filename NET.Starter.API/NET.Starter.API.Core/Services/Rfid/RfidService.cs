@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using NET.Starter.API.Core.Bases;
-using NET.Starter.API.DataAccess;
+using NET.Starter.API.DataAccess.SqlServer;
 using NET.Starter.API.Shared.Enums;
 using NET.Starter.API.Shared.Objects.Dtos;
 using NET.Starter.SDK;
+using NET.Starter.SDK.Enums;
 
 namespace NET.Starter.API.Core.Services.Rfid
 {
@@ -13,7 +14,7 @@ namespace NET.Starter.API.Core.Services.Rfid
     {
         private readonly RfidFixedReaderFactory _rfidFixedReaderFactory = rfidFixedReaderFactory;
 
-        public ResponseObject<string> ReadTag(string readerType)
+        public ResponseObject<string> ReadTag(ReaderType readerType)
         {
             var rfidReader = _rfidFixedReaderFactory.CreateRfidFixedReader(readerType);
 
