@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NET.Starter.SDK.Implementations;
+using NET.Starter.SDK.Managers;
 
 namespace NET.Starter.SDK
 {
@@ -8,10 +9,12 @@ namespace NET.Starter.SDK
     {
         public static IServiceCollection RegisterRfidFixedReder(this IServiceCollection services)
         {
-            services.AddSingleton<MockRfidFixedReader>();
-            services.AddSingleton<ZebraRfidFixedReader>();
-
             services.AddSingleton<RfidFixedReaderFactory>();
+
+            services.AddSingleton<ZebraRfidReaderManager>();
+
+            services.AddSingleton<MockRfidFixedReaderService>();
+            services.AddSingleton<ZebraRfidFixedReaderService>();
 
             return services;
         }

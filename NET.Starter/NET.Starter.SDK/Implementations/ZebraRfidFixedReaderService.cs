@@ -4,17 +4,22 @@ using Symbol.RFID3;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using NET.Starter.SDK.Managers;
 
 namespace NET.Starter.SDK.Implementations
 {
-    internal class ZebraRfidFixedReader : BaseRfidFixedReader
+    internal class ZebraRfidFixedReaderService(ZebraRfidReaderManager zebraRfidReaderManager) : BaseRfidFixedReader
     {
+        private readonly ZebraRfidReaderManager _zebraRfidReaderManager = zebraRfidReaderManager;
+
         protected override ConnectedInfoDto ConnectToDevice(ConnectInput input)
         {
             try
             {
                 var rfidReader = new RFIDReader(input.HostName, input.Port, input.TimeoutMilliseconds);
                 rfidReader.Connect();
+
+                _zebraRfidReaderManager.AddReader(rfidReader);
 
                 return new ConnectedInfoDto { IsConnected = true };
             }
@@ -24,26 +29,35 @@ namespace NET.Starter.SDK.Implementations
             }
         }
 
-        protected async override void ListenToDevice(ListenInput input, CancellationToken cancellationToken)
+        protected async override void ListenToDevice(ListenInput input)
         {
-            var tcpListener = new TcpListener(IPAddress.Parse(input.HostName), input.Port);
-            tcpListener.Start();
-
-            while (!cancellationToken.IsCancellationRequested)
+            if (_zebraRfidReaderManager.CtsListen == null || _zebraRfidReaderManager.CtsListen.IsCancellationRequested)
             {
-                try
-                {
-                    // Tunggu koneksi secara asinkron
-                    var client = await tcpListener.AcceptTcpClientAsync(cancellationToken);
-                    _ = HandleTcpClientAsync(client, cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                }
-            }
+                _zebraRfidReaderManager.CtsListen = new CancellationTokenSource();
 
-            tcpListener.Stop();
+                var tcpListener = new TcpListener(IPAddress.Parse(input.HostName), input.Port);
+                tcpListener.Start();
+
+                while (!_zebraRfidReaderManager.CtsListen.Token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        // Tunggu koneksi secara asinkron
+                        var client = await tcpListener.AcceptTcpClientAsync(_zebraRfidReaderManager.CtsListen.Token);
+                        _ = HandleTcpClientAsync(client, _zebraRfidReaderManager.CtsListen.Token);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                }
+
+                tcpListener.Stop();
+            }
+            else
+            {
+                _zebraRfidReaderManager.CtsListen.Cancel();
+            }
         }
 
         private static async Task HandleTcpClientAsync(TcpClient client, CancellationToken cancellationToken)

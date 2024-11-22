@@ -7,8 +7,6 @@ namespace NET.Starter.SDK.Implementations
 {
     internal abstract class BaseRfidFixedReader : IRfidFixedReader
     {
-        private CancellationTokenSource? _ctsListen;
-
         public ConnectedInfoDto Connect(ConnectInput input)
         {
             if (!IPAddress.TryParse(input.HostName, out _))
@@ -33,20 +31,22 @@ namespace NET.Starter.SDK.Implementations
             if (input.Port < 0 || input.Port > 65535)
                 return new ListeningInfoDto { IsListening = false, Message = "Port hanya boleh di antara 0 sampai dengan 65535" };
 
-            if (_ctsListen == null)
-            {
-                _ctsListen = new();
-                ListenToDevice(input, _ctsListen.Token);
-            }
-            else
-            {
-                _ctsListen?.Cancel();
-                _ctsListen = null;
-            }
+            //if (_ctsListen == null)
+            //{
+            //    _ctsListen = new();
+            //    ListenToDevice(input, _ctsListen.Token);
+            //}
+            //else
+            //{
+            //    _ctsListen?.Cancel();
+            //    _ctsListen = null;
+            //}
+
+            ListenToDevice(input);
 
             return await Task.FromResult(new ListeningInfoDto { IsListening = true });
         }
 
-        protected abstract void ListenToDevice(ListenInput input, CancellationToken cancellationToken);
+        protected abstract void ListenToDevice(ListenInput input);
     }
 }

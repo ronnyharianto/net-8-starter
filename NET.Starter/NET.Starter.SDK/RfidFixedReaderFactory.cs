@@ -15,11 +15,11 @@ namespace NET.Starter.SDK
         {
             using var scope = _serviceProvider.CreateScope();
 
-            if (_useMockRfidScanner) return scope.ServiceProvider.GetRequiredService<MockRfidFixedReader>();
+            if (_useMockRfidScanner) return scope.ServiceProvider.GetRequiredService<MockRfidFixedReaderService>();
 
             return readerType switch
             {
-                ReaderType.Zebra => _serviceProvider.GetRequiredService<ZebraRfidFixedReader>(),
+                ReaderType.Zebra => _serviceProvider.GetRequiredService<ZebraRfidFixedReaderService>(),
                 _ => throw new ArgumentException("Merk tidak dikenali"),
             };
         }

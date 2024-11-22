@@ -3,7 +3,7 @@ using NET.Starter.SDK.Inputs;
 
 namespace NET.Starter.SDK.Implementations
 {
-    internal class MockRfidFixedReader : BaseRfidFixedReader
+    internal class MockRfidFixedReaderService : BaseRfidFixedReader
     {
         protected override ConnectedInfoDto ConnectToDevice(ConnectInput input)
         {
@@ -12,7 +12,7 @@ namespace NET.Starter.SDK.Implementations
             return new ConnectedInfoDto { IsConnected = false, Message = "Gagal terhubung ke RFID Reader Mock" };
         }
 
-        protected override void ListenToDevice(ListenInput input, CancellationToken cancellationToken)
+        protected override void ListenToDevice(ListenInput input)
         {
             throw new NotImplementedException();
         }

@@ -3,6 +3,7 @@ using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.Shared;
 using Serilog;
+using NET.Starter.SDK.Managers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,5 +33,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors();
 app.MapControllers();
+
+var zebraRfidReaderManager = app.Services.GetRequiredService<ZebraRfidReaderManager>();
+app.Lifetime.ApplicationStopping.Register(zebraRfidReaderManager.Dispose);
 
 app.Run();
