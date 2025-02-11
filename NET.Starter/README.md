@@ -2,7 +2,6 @@
 🚀 .NET 8 Web API Project Starter
 
 ## **Prerequisites**
-## Installation of .NET 8 SDK RUNTIMES
 Make sure you have installed **.NET 8 SDK** before starting.
 🔗 **Download .NET 8 SDK & Runtimes**:
 [.NET 8 Official Download](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
