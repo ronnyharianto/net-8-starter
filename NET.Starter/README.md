@@ -1,5 +1,5 @@
 # **NET.Starter.API**
-?? .NET 8 Web API Project Starter
+🚀 .NET 8 Web API Project Starter
 
 ## **Prerequisites**
 ## Installation of .NET 8 SDK RUNTIMES
