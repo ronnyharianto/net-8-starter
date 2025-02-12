@@ -71,7 +71,7 @@ namespace NET.Starter.Shared.Objects.Dtos
         {
             Code = (int)ResponseCode.Ok;
             Succeeded = true;
-            Message = message ?? MessageConstants.StatusOk;
+            Message = message ?? "Success";
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace NET.Starter.Shared.Objects.Dtos
         {
             Code = (int)ResponseCode.BadRequest;
             Succeeded = false;
-            Message = message ?? MessageConstants.StatusBadRequest;
+            Message = message ?? "Bad Request";
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace NET.Starter.Shared.Objects.Dtos
         {
             Code = (int)ResponseCode.UnAuthorized;
             Succeeded = false;
-            Message = message ?? MessageConstants.StatusUnauthorized;
+            Message = message ?? "Unauthorized";
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace NET.Starter.Shared.Objects.Dtos
         {
             Code = (int)ResponseCode.Forbidden;
             Succeeded = false;
-            Message = message ?? MessageConstants.StatusForbidden;
+            Message = message ?? "Forbidden";
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace NET.Starter.Shared.Objects.Dtos
         {
             Code = (int)ResponseCode.NotFound;
             Succeeded = false;
-            Message = message ?? MessageConstants.StatusNotFound;
+            Message = message ?? "Not Found";
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace NET.Starter.Shared.Objects.Dtos
         {
             Code = (int)ResponseCode.Error;
             Succeeded = false;
-            Message = message ?? MessageConstants.StatusError;
+            Message = message ?? "Error";
         }
         #endregion
     }

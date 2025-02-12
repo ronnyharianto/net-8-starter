@@ -82,14 +82,28 @@ namespace NET.Starter.Shared
                 // Initialize the CryptographyHelper with the retrieved RSA configuration.
                 CryptographyHelper.Initialize(rsaConfig);
             }
+            else
+            {
+                Log.Logger.Warning("RSA configuration is missing. Cryptographic for RSA operations may not be available.");
+            }
 
             #endregion
-
 
             #region Dependency Injection
 
             // Register 'CurrentUserAccessor' as a scoped service to store user identity per request lifecycle.
             services.AddScoped<CurrentUserAccessor>();
+
+            // Retrieve the Http Client configuration settings from the configuration system.
+            var httpClientConfig = configuration.GetSection(nameof(HttpClientConfig)).Get<HttpClientConfig>() ?? new();
+
+            // Register 'HttpClientHelper' with custom configuration for HTTP requests.
+            services.AddHttpClient<HttpClientHelper>(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(httpClientConfig.Timeout); // Default timeout for requests.
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            })
+            .SetHandlerLifetime(TimeSpan.FromMinutes(httpClientConfig.HandlerLifetime)); // Lifetime of the message handler.
 
             #endregion
 

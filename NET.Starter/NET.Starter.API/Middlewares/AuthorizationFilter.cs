@@ -65,9 +65,11 @@ namespace NET.Starter.API.Middlewares
             catch (Exception ex)
             {
                 _logger.LogError("{Prefix}: Error occurred while authorizing the request: {Message}", logPrefix, ex.Message);
-                context.HttpContext.Response.StatusCode = 401;
-                response.UnAuthorized(ex.Message);
+
+                //context.HttpContext.Response.StatusCode = 401;
+                //response.UnAuthorized(ex.Message);
                 context.Result = new JsonResult(response);
+
                 return;
             }
         }
