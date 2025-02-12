@@ -1,6 +1,6 @@
 ﻿using Serilog.Sinks.Grafana.Loki;
 
-namespace NET.Starter.Shared.Objects
+namespace NET.Starter.Shared.Objects.Configs
 {
     /// <summary>
     /// Represents the logging configuration settings for the application.

@@ -15,11 +15,11 @@ namespace NET.Starter.Core.Services.Security
         private readonly TokenService _tokenService = tokenService;
 
         // TODO: Implement changes flow when login user duende identity & azure active directory
-        public async Task<ResponseObject<TokenDto>> Login(LoginInput input)
+        public async Task<ObjectDto<TokenDto>> Login(LoginInput input)
         {
             var token = await _tokenService.GenerateToken("userName", Guid.NewGuid(), "fullName", input.Permissions);
 
-            return new ResponseObject<TokenDto>(responseCode: ResponseCode.Ok)
+            return new ObjectDto<TokenDto>(responseCode: ResponseCode.Ok)
             {
                 Obj = token
             };

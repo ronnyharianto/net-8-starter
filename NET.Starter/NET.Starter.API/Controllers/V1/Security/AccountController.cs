@@ -20,7 +20,7 @@ namespace NET.Starter.API.Controllers.V1.Security
         [AllowAnonymous]
         [HttpPost("login")]
         [SwaggerOperation(Summary = "Login", Description = "")]
-        public async Task<ResponseObject<TokenDto>> GenerateToken(LoginInput input)
+        public async Task<ObjectDto<TokenDto>> GenerateToken(LoginInput input)
         {
             return await _accountService.Login(input);
         }
@@ -30,9 +30,9 @@ namespace NET.Starter.API.Controllers.V1.Security
         [AppAuthorize("Authorized")]
         [HttpPost("verify/authrorize")]
         [SwaggerOperation(Summary = "Dummy Endpoint 1", Description = "Untuk mencoba authorize atau tidak access token")]
-        public ResponseBase Authorized()
+        public BaseDto Authorized()
         {
-            return new ResponseBase(responseCode: ResponseCode.Ok);
+            return new BaseDto(responseCode: ResponseCode.Ok);
         }
     }
 }

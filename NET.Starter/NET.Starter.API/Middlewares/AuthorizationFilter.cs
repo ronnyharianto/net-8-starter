@@ -18,7 +18,7 @@ namespace NET.Starter.API.Middlewares
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var response = new ResponseBase("Authorization has been denied for this request.", ResponseCode.UnAuthorized);
+            var response = new BaseDto("Authorization has been denied for this request.", ResponseCode.UnAuthorized);
             var authorizationTokens = context.ActionDescriptor.EndpointMetadata.OfType<AuthorizationTokenAttribute>();
 
             if (SkipAuthorization(context))
@@ -49,7 +49,7 @@ namespace NET.Starter.API.Middlewares
                         var sid = identity.Claims.FirstOrDefault(c => c.Type.Equals("sid"))?.Value;
                         var fcmId = identity.Claims.FirstOrDefault(c => c.Type.Equals("FcmId"))?.Value;
 
-                        _currentUserAccessor.Id = new Guid(sub ?? "00000000-0000-0000-0000-000000000000");
+                        _currentUserAccessor.UserId = new Guid(sub ?? "00000000-0000-0000-0000-000000000000");
                         _currentUserAccessor.UserName = sid ?? _currentUserAccessor.UserName;
                         _currentUserAccessor.UserFcmTokenId = !string.IsNullOrEmpty(fcmId) ? new Guid(fcmId) : null;
                         _currentUserAccessor.Permissions = permissions.Select(p => p.Value);

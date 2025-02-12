@@ -16,7 +16,7 @@ namespace NET.Starter.Core.Services.Rfid
     {
         private readonly RfidFixedReaderFactory _rfidFixedReaderFactory = rfidFixedReaderFactory;
 
-        public ResponseObject<ConnectedInfoDto> Connect(ConnectInput input)
+        public ObjectDto<ConnectedInfoDto> Connect(ConnectInput input)
         {
             // TODO: Change it to real implementation
             var readerType = ReaderType.Zebra;
@@ -29,7 +29,7 @@ namespace NET.Starter.Core.Services.Rfid
                 Port = 5084
             });
 
-            return new ResponseObject<ConnectedInfoDto>(responseCode: ResponseCode.Ok)
+            return new ObjectDto<ConnectedInfoDto>(responseCode: ResponseCode.Ok)
             {
                 Obj = rfidReader.Connect(input)
             };

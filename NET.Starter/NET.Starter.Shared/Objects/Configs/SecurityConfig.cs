@@ -1,4 +1,4 @@
-﻿namespace NET.Starter.Shared.Objects
+﻿namespace NET.Starter.Shared.Objects.Configs
 {
     /// <summary>
     /// Represents security-related configuration settings for authentication and session management.

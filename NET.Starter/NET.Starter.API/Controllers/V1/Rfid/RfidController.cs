@@ -17,7 +17,7 @@ namespace NET.Starter.API.Controllers.V1.Security
         [AppAuthorize("Authorized")]
         [HttpPost("connect")]
         [SwaggerOperation(Summary = "Dummy Endpoint 2", Description = "Untuk mencoba dependency injection dari beberapa merk reader")]
-        public ResponseObject<ConnectedInfoDto> Connect(ConnectInput input)
+        public ObjectDto<ConnectedInfoDto> Connect(ConnectInput input)
         {
             return _rfidService.Connect(input);
         }

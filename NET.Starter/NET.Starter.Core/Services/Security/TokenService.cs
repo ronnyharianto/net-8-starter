@@ -6,7 +6,7 @@ using NET.Starter.Core.Bases;
 using NET.Starter.Core.Services.Security.Dtos;
 using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.Shared.Constants;
-using NET.Starter.Shared.Objects;
+using NET.Starter.Shared.Objects.Configs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

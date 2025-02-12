@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NET.Starter.Shared.Helpers;
 using NET.Starter.Shared.Objects;
+using NET.Starter.Shared.Objects.Configs;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Grafana.Loki;
@@ -32,7 +34,7 @@ namespace NET.Starter.Shared
 
             #region Logging Configuration
 
-            // Get LoggingConfig from dependency injection
+            // Retrieve the Logging configuration settings from the configuration system.
             var loggingConfig = configuration.GetSection(nameof(LoggingConfig)).Get<LoggingConfig>();
 
             // Configure Serilog with different log levels for specific namespaces
@@ -44,9 +46,10 @@ namespace NET.Starter.Shared
                 .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor", LogEventLevel.Error) // Suppress logging related to ObjectResult execution, unless there's an error
                 .WriteTo.Console(); // Output logs to the console
 
-            // Add Grafana Loki sink if configured
+            // Check if the GrafanaLoki configuration is present
             if (loggingConfig?.GrafanaLoki != null)
             {
+                // Add Grafana Loki sink
                 loggerConfig.WriteTo.GrafanaLoki(loggingConfig.GrafanaLoki.EndpointUrl, loggingConfig.GrafanaLoki.LokiLabels);
             }
 
@@ -67,6 +70,21 @@ namespace NET.Starter.Shared
             });
 
             #endregion
+
+            #region Cryptography Configuration
+
+            // Retrieve the RSA configuration settings from the configuration system.
+            var rsaConfig = configuration.GetSection(nameof(RsaConfig)).Get<RsaConfig>();
+
+            // Check if the RSA configuration is present
+            if (rsaConfig != null)
+            {
+                // Initialize the CryptographyHelper with the retrieved RSA configuration.
+                CryptographyHelper.Initialize(rsaConfig);
+            }
+
+            #endregion
+
 
             #region Dependency Injection
 

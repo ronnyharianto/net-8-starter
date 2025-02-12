@@ -31,7 +31,7 @@ namespace NET.Starter.DataAccess.SqlServer.Bases
                 if (entry.Entity is EntityBase entity)
                 {
                     entity.Created = DateTime.Now;
-                    entity.CreatedBy = _currentUserAccessor.Id.ToString();
+                    entity.CreatedBy = _currentUserAccessor.UserId.ToString();
                 }
             }
 
@@ -41,7 +41,7 @@ namespace NET.Starter.DataAccess.SqlServer.Bases
                 if (entry.Entity is EntityBase entity)
                 {
                     entity.Modified = DateTime.Now;
-                    entity.ModifiedBy = _currentUserAccessor.Id.ToString();
+                    entity.ModifiedBy = _currentUserAccessor.UserId.ToString();
                 }
             }
         }

@@ -31,10 +31,10 @@ namespace NET.Starter.API.Middlewares
                 {
                     var objectResult = (ObjectResult)resultContext.Result;
 
-                    if (objectResult.Value is not ResponseBase && !isCustomResponse)
+                    if (objectResult.Value is not BaseDto && !isCustomResponse)
                     {
                         var errorMessage = "Use ResponseBase or it's inheritance";
-                        resultContext.Result = new JsonResult(new ResponseBase(errorMessage, ResponseCode.Error)
+                        resultContext.Result = new JsonResult(new BaseDto(errorMessage, ResponseCode.Error)
                         {
                             Id = context.HttpContext.TraceIdentifier
                         });
@@ -42,18 +42,18 @@ namespace NET.Starter.API.Middlewares
                         throw new InvalidOperationException(errorMessage);
                     }
 
-                    if (objectResult.Value is ResponseBase @baseSetId) @baseSetId.Id = context.HttpContext.TraceIdentifier;
+                    if (objectResult.Value is BaseDto @baseSetId) @baseSetId.Id = context.HttpContext.TraceIdentifier;
 
                     if (isMutation && objectResult.Value != null)
                     {
-                        if (objectResult.Value is ResponseBase @baseCheckSucceeded && @baseCheckSucceeded.Succeeded || isCustomResponse)
+                        if (objectResult.Value is BaseDto @baseCheckSucceeded && @baseCheckSucceeded.Succeeded || isCustomResponse)
                         {
                             _logger.LogInformation("{Prefix}: Commit transaction scope", logPrefix);
                             await transaction.CommitAsync();
                         }
                         else
                         {
-                            var statusCode = objectResult.Value is ResponseBase @baseGetStatusCode ? @baseGetStatusCode.Code.ToString() : "400";
+                            var statusCode = objectResult.Value is BaseDto @baseGetStatusCode ? @baseGetStatusCode.Code.ToString() : "400";
 
                             _logger.LogError("{Prefix}: Rollback transaction scope: Status code {StatusCode}", logPrefix, statusCode);
                             await transaction.RollbackAsync();
@@ -68,7 +68,7 @@ namespace NET.Starter.API.Middlewares
                 {
                     var exceptionMessage = resultContext.Exception?.Message;
 
-                    resultContext.Result = new JsonResult(new ResponseBase(exceptionMessage, ResponseCode.Error)
+                    resultContext.Result = new JsonResult(new BaseDto(exceptionMessage, ResponseCode.Error)
                     {
                         Id = context.HttpContext.TraceIdentifier
                     });
