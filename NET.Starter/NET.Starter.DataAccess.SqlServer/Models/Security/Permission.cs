@@ -3,10 +3,17 @@ using NET.Starter.Shared.Attributes;
 
 namespace NET.Starter.DataAccess.SqlServer.Models.Security
 {
-    [DatabaseSchema("Master")]
+    /// <summary>
+    /// Represents the Permission entity, which maps to the "Permission" table in the "Security" schema.
+    /// This entity contains details about specific permissions within the system.
+    /// </summary>
+    [DatabaseSchema("Security")]
     public class Permission : EntityBase
     {
+        /// <summary>
+        /// Gets or sets the unique code that identifies a specific permission.
+        /// This property is required.
+        /// </summary>
         public required string PermissionCode { get; set; }
-        public required string PermissionDescription { get; set; }
     }
 }

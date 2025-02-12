@@ -51,7 +51,7 @@ namespace NET.Starter.API.Middlewares
 
                         _currentUserAccessor.UserId = new Guid(sub ?? "00000000-0000-0000-0000-000000000000");
                         _currentUserAccessor.UserName = sid ?? _currentUserAccessor.UserName;
-                        _currentUserAccessor.UserFcmTokenId = !string.IsNullOrEmpty(fcmId) ? new Guid(fcmId) : null;
+                        _currentUserAccessor.UserFcmTokenId = !string.IsNullOrWhiteSpace(fcmId) ? new Guid(fcmId) : null;
                         _currentUserAccessor.Permissions = permissions.Select(p => p.Value);
 
                         return;

@@ -22,16 +22,6 @@ namespace NET.Starter.Shared
         /// <returns>The modified service collection.</returns>
         public static IServiceCollection RegisterShared(this IServiceCollection services, IHostBuilder host, IConfiguration configuration)
         {
-            #region Register Configuration Options
-
-            // Register configuration options from appsettings.json or environment variables.
-            // These configurations are bound using the Options Pattern and can be injected via IOptions<T>.
-
-            // Security settings
-            services.Configure<SecurityConfig>(opt => configuration.Bind(nameof(SecurityConfig), opt));
-
-            #endregion
-
             #region Logging Configuration
 
             // Retrieve the Logging configuration settings from the configuration system.
@@ -69,9 +59,11 @@ namespace NET.Starter.Shared
                 logging.LoggingFields = HttpLoggingFields.RequestBody | HttpLoggingFields.ResponseBody | HttpLoggingFields.Duration;
             });
 
+            Log.Logger.Information("HTTP logging is enabled.");
+
             #endregion
 
-            #region Cryptography Configuration
+            #region Cryptography Initialization
 
             // Retrieve the RSA configuration settings from the configuration system.
             var rsaConfig = configuration.GetSection(nameof(RsaConfig)).Get<RsaConfig>();
@@ -81,11 +73,23 @@ namespace NET.Starter.Shared
             {
                 // Initialize the CryptographyHelper with the retrieved RSA configuration.
                 CryptographyHelper.Initialize(rsaConfig);
+
+                Log.Logger.Information("RSA configuration is available. Cryptographic for RSA operations will be available.");
             }
             else
             {
-                Log.Logger.Warning("RSA configuration is missing. Cryptographic for RSA operations may not be available.");
+                Log.Logger.Error("RSA configuration is missing. Cryptographic for RSA operations will not be available.");
             }
+
+            #endregion
+
+            #region Register Configuration Options
+
+            // Register configuration options from appsettings.json or environment variables.
+            // These configurations are bound using the Options Pattern and can be injected via IOptions<T>.
+
+            // Security settings
+            services.Configure<SecurityConfig>(opt => configuration.Bind(nameof(SecurityConfig), opt));
 
             #endregion
 
