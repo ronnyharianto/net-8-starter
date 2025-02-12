@@ -19,6 +19,11 @@ namespace NET.Starter.DataAccess.SqlServer
         /// </summary>
         public virtual DbSet<Permission> Permissions { get; set; }
 
+        /// <summary>
+        /// Gets or sets the database table for users.
+        /// </summary>
+        public virtual DbSet<User> Users { get; set; }
+
         #endregion
 
         /// <summary>
@@ -34,6 +39,9 @@ namespace NET.Starter.DataAccess.SqlServer
 
             // Configure the mapping for the Permission entity using the PermissionEntityBuilder.
             new PermissionEntityBuilder().Configure(modelBuilder.Entity<Permission>());
+
+            // Configure the mapping for the User entity using the UserEntityBuilder.
+            new UserEntityBuilder().Configure(modelBuilder.Entity<User>());
 
             #endregion
         }

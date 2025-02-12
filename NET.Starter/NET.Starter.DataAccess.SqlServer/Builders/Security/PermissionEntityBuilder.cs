@@ -20,12 +20,10 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
             // Call the base configuration for the Permission entity.
             base.Configure(builder);
 
-            // Configure the PermissionCode property to have a maximum length of 50 characters.
             builder
                 .Property(e => e.PermissionCode)
                 .HasMaxLength(50);
 
-            // Seed initial data for the Permission entity.
             SeedingData(builder);
         }
 

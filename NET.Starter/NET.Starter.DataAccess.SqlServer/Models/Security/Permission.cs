@@ -4,7 +4,7 @@ using NET.Starter.Shared.Attributes;
 namespace NET.Starter.DataAccess.SqlServer.Models.Security
 {
     /// <summary>
-    /// Represents the Permission entity, which maps to the "Permission" table in the "Security" schema.
+    /// Represents the Permission entity, which maps to the "Permissions" table in the "Security" schema.
     /// This entity contains details about specific permissions within the system.
     /// </summary>
     [DatabaseSchema("Security")]

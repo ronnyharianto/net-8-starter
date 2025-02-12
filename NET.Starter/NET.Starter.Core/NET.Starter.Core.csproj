@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NET.Starter.DataAccess.SqlServer\NET.Starter.DataAccess.SqlServer.csproj" />
-    <ProjectReference Include="..\NET.Starter.SDK\NET.Starter.SDK.csproj" />
   </ItemGroup>
 
 </Project>
