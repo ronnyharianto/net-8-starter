@@ -45,5 +45,11 @@ namespace NET.Starter.DataAccess.SqlServer.Models.Security
         /// Default value is 0.
         /// </summary>
         public int BadPasswordCount { get; set; } = 0;
+
+        /// <summary>
+        /// Gets or sets the user roles associated with a specific user.
+        /// This is a navigation property.
+        /// </summary>
+        public virtual ICollection<UserRole> UserRoles { get; set; } = [];
     }
 }

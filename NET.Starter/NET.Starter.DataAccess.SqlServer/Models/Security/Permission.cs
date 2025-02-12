@@ -15,5 +15,11 @@ namespace NET.Starter.DataAccess.SqlServer.Models.Security
         /// This property is required.
         /// </summary>
         public required string PermissionCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the role permissions associated with a specific permission.
+        /// This is a navigation property.
+        /// </summary>
+        public virtual ICollection<RolePermission> RolePermissions { get; set; } = [];
     }
 }

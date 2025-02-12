@@ -33,9 +33,14 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
         /// <param name="builder">The <see cref="EntityTypeBuilder{Permission}"/> used to configure the entity type.</param>
         private static void SeedingData(EntityTypeBuilder<Permission> builder)
         {
-            // Adds predefined data for the Permission table.
+            // Adds predefined data for the general permission.
             builder.HasData(
                 new Permission { Id = new Guid("6659f17a-c52e-4ec3-847b-46866a3b2abf"), PermissionCode = PermissionConstants.MyPermission, Created = new DateTime(2025, 2, 12, 13, 30, 00) }
+            );
+
+            // Adds predefined data for the identity permission.
+            builder.HasData(
+                new Permission { Id = new Guid("69821b03-b132-4d35-88f0-5502908d50fa"), PermissionCode = PermissionConstants.Identity.Admin, Created = new DateTime(2025, 2, 12, 13, 30, 00) }
             );
         }
     }

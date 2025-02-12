@@ -14,15 +14,11 @@ namespace NET.Starter.DataAccess.SqlServer
     {
         #region Security
 
-        /// <summary>
-        /// Gets or sets the database table for permissions.
-        /// </summary>
         public virtual DbSet<Permission> Permissions { get; set; }
-
-        /// <summary>
-        /// Gets or sets the database table for users.
-        /// </summary>
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<RolePermission> RolePermissions { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
 
         #endregion
 
@@ -37,11 +33,11 @@ namespace NET.Starter.DataAccess.SqlServer
 
             #region Security
 
-            // Configure the mapping for the Permission entity using the PermissionEntityBuilder.
             new PermissionEntityBuilder().Configure(modelBuilder.Entity<Permission>());
-
-            // Configure the mapping for the User entity using the UserEntityBuilder.
+            new RoleEntityBuilder().Configure(modelBuilder.Entity<Role>());
+            new RolePermissionEntityBuilder().Configure(modelBuilder.Entity<RolePermission>());
             new UserEntityBuilder().Configure(modelBuilder.Entity<User>());
+            new UserRoleEntityBuilder().Configure(modelBuilder.Entity<UserRole>());
 
             #endregion
         }
