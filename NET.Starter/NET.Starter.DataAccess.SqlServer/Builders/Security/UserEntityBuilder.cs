@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NET.Starter.DataAccess.SqlServer.Bases;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
 
@@ -34,6 +35,16 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
             builder
                 .Property(e => e.Fullname)
                 .HasMaxLength(100);
+
+            builder
+                .HasIndex(e => e.Username)
+                .HasFilter("[RowStatus] = 0")
+                .IsUnique();
+
+            builder
+                .HasIndex(e => e.EmailAddress)
+                .HasFilter("[RowStatus] = 0")
+                .IsUnique();
 
             SeedingData(builder);
         }

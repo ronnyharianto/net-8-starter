@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NET.Starter.DataAccess.SqlServer.Bases;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
 using NET.Starter.Shared.Constants;
@@ -23,6 +24,11 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
             builder
                 .Property(e => e.PermissionCode)
                 .HasMaxLength(50);
+
+            builder
+                .HasIndex(e => e.PermissionCode)
+                .HasFilter("[RowStatus] = 0")
+                .IsUnique();
 
             SeedingData(builder);
         }

@@ -32,6 +32,11 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
                 .HasForeignKey(e => e.PermissionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder
+                .HasIndex(e => new { e.RoleId, e.PermissionId })
+                .HasFilter("[RowStatus] = 0")
+                .IsUnique();
+
             SeedingDataAdministrator(builder);
         }
 
