@@ -27,11 +27,35 @@
         /// </summary>
         public static class Identity
         {
-            /// <summary>
-            /// Represents the role or identifier for an Administrator user.
-            /// This constant can be used to assign or check admin privileges.
-            /// </summary>
             public const string Admin = "IamAdministrator";
+        }
+
+        /// <summary>
+        /// Nested class defining constants related to security features.
+        /// Used for security-related operations such as authentication and authorization.
+        /// </summary>
+        public static class Security
+        {
+            /// <summary>
+            /// Represents the permission type for viewing security features.
+            /// </summary>
+            public static class Permission
+            {
+                public const string View = "Security.Permission.View";
+            }
+
+            /// <summary>
+            /// Nested class defining constants related to roles in the security module.
+            /// Used for role-based access control (RBAC).
+            /// </summary>
+            public static class Role
+            {
+                public const string Menu = "Security.Role.Menu";
+                public const string View = "Security.Role.View";
+                public const string Create = "Security.Role.Create";
+                public const string Update = "Security.Role.Update";
+                public const string Delete = "Security.Role.Delete";
+            }
         }
     }
 }
