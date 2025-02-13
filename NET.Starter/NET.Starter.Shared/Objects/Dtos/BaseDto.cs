@@ -1,5 +1,4 @@
-﻿using NET.Starter.Shared.Constants;
-using NET.Starter.Shared.Enums;
+﻿using NET.Starter.Shared.Enums;
 
 namespace NET.Starter.Shared.Objects.Dtos
 {

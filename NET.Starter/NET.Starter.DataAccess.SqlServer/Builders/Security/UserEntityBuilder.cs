@@ -57,7 +57,7 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
         {
             // Adds predefined data for the User table.
             builder.HasData(
-                new User { Id = new Guid("73b4c7d1-e6a3-41dc-a8da-6d9a45092761"), Username = "admin", EmailAddress = "admin@example.com", Password="12345678", Fullname = "Administrator", Created = new DateTime(2025, 2, 12, 13, 30, 00) }
+                new User { Id = new Guid("73b4c7d1-e6a3-41dc-a8da-6d9a45092761"), Username = "admin", EmailAddress = "admin@example.com", Password = "12345678", Fullname = "Administrator", Created = new DateTime(2025, 2, 12, 13, 30, 00) }
             );
         }
     }

@@ -1,6 +1,6 @@
+using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.Core;
 using NET.Starter.DataAccess.SqlServer;
-using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.Shared;
 using Serilog;
 

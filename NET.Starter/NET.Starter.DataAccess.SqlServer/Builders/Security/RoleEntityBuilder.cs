@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NET.Starter.DataAccess.SqlServer.Bases;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
-using NET.Starter.Shared.Constants;
 
 namespace NET.Starter.DataAccess.SqlServer.Builders.Security
 {

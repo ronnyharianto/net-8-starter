@@ -2,15 +2,15 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using NET.Starter.Core.Bases;
 using NET.Starter.Core.Services.Security.Dtos;
 using NET.Starter.DataAccess.SqlServer;
+using NET.Starter.DataAccess.SqlServer.Models.Security;
 using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Objects.Configs;
-using NET.Starter.DataAccess.SqlServer.Models.Security;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace NET.Starter.Core.Services.Security
 {

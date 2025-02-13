@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.API.Middlewares;
+using NET.Starter.DataAccess.SqlServer;
 using System.Text;
 
 namespace NET.Starter.API.Extensions.StartupExtensions
