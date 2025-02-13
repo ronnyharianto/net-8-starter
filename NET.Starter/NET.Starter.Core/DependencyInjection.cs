@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NET.Starter.Core.Services.Security;
+using NET.Starter.Core.Services.Security.Interfaces;
 using System.Reflection;
 
 namespace NET.Starter.Core
@@ -21,6 +22,9 @@ namespace NET.Starter.Core
 
             // Register Services with scoped lifetimes
             services.AddScoped<TokenService>();
+            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             return services;
         }

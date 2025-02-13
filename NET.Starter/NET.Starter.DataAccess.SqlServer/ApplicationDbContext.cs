@@ -2,6 +2,7 @@
 using NET.Starter.DataAccess.SqlServer.Bases;
 using NET.Starter.DataAccess.SqlServer.Builders.Security;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
+using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Objects;
 
 namespace NET.Starter.DataAccess.SqlServer
@@ -19,6 +20,7 @@ namespace NET.Starter.DataAccess.SqlServer
         public virtual DbSet<RolePermission> RolePermissions { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<UserFcmToken> UserFcmTokens { get; set; }
 
         #endregion
 
@@ -31,6 +33,9 @@ namespace NET.Starter.DataAccess.SqlServer
             // Call the base configuration from the parent class.
             base.OnModelCreating(modelBuilder);
 
+            // Configure the default collation for all string columns in the database.
+            modelBuilder.UseCollation(CollationConstants.SQL_Latin1_General_CP1_CI_AS);
+
             #region Security
 
             new PermissionEntityBuilder().Configure(modelBuilder.Entity<Permission>());
@@ -38,6 +43,7 @@ namespace NET.Starter.DataAccess.SqlServer
             new RolePermissionEntityBuilder().Configure(modelBuilder.Entity<RolePermission>());
             new UserEntityBuilder().Configure(modelBuilder.Entity<User>());
             new UserRoleEntityBuilder().Configure(modelBuilder.Entity<UserRole>());
+            new UserFcmTokenEntityBuilder().Configure(modelBuilder.Entity<UserFcmToken>());
 
             #endregion
         }

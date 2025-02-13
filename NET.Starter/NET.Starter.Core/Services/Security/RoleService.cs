@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using NET.Starter.Core.Bases;
 using NET.Starter.Core.Services.Security.Dtos;
 using NET.Starter.Core.Services.Security.Inputs;
+using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
 using NET.Starter.Shared.Enums;
@@ -13,20 +14,14 @@ using NET.Starter.Shared.Objects.Inputs;
 namespace NET.Starter.Core.Services.Security
 {
     /// <summary>
-    /// Provides methods for managing roles, including CRUD operations and pagination.
+    /// Provides methods for managing roles in the system, including retrieving, creating, updating, and deleting roles.
     /// </summary>
     /// <param name="dbContext">The database context used for database operations.</param>
     /// <param name="mapper">The mapper service for object mapping.</param>
     /// <param name="logger">The logger service for capturing logs specific to the derived service.</param>
-    public class RoleService(ApplicationDbContext dbContext, IMapper mapper, ILogger<RoleService> logger)
-        : BaseService<RoleService>(dbContext, mapper, logger)
+    internal class RoleService(ApplicationDbContext dbContext, IMapper mapper, ILogger<RoleService> logger)
+        : BaseService<RoleService>(dbContext, mapper, logger), IRoleService
     {
-        /// <summary>
-        /// Retrieves all roles from the database.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="ObjectDto{T}"/> containing a list of <see cref="RoleDto"/> objects and a response code indicating the status of the operation.
-        /// </returns>
         public async Task<ObjectDto<IEnumerable<RoleDto>>> RetrieveRolesAsync()
         {
             var dataRoles = _dbContext.Roles.AsNoTracking()
@@ -39,13 +34,6 @@ namespace NET.Starter.Core.Services.Security
             };
         }
 
-        /// <summary>
-        /// Retrieves roles with pagination and search functionality.
-        /// </summary>
-        /// <param name="input">The pagination and search input parameters.</param>
-        /// <returns>
-        /// A <see cref="PagingDto{T}"/> containing a paginated list of <see cref="RoleDto"/> objects.
-        /// </returns>
         public PagingDto<RoleDto> RetrieveRolesPaging(PagingSearchInputBase input)
         {
             var retVal = new PagingDto<RoleDto>();
@@ -63,13 +51,6 @@ namespace NET.Starter.Core.Services.Security
             return retVal;
         }
 
-        /// <summary>
-        /// Retrieves a role by its unique identifier.
-        /// </summary>
-        /// <param name="roleId">The unique identifier of the role.</param>
-        /// <returns>
-        /// An <see cref="ObjectDto{T}"/> containing a <see cref="RoleDto"/> object and a response code indicating the status of the operation.
-        /// </returns>
         public async Task<ObjectDto<RoleDto>> RetrieveRoleByIdAsync(Guid roleId)
         {
             var dataRole = await _dbContext.Roles.AsNoTracking().FirstOrDefaultAsync(d => d.Id == roleId);
@@ -82,18 +63,8 @@ namespace NET.Starter.Core.Services.Security
             };
         }
 
-        /// <summary>
-        /// Creates a new role in the database.
-        /// </summary>
-        /// <param name="input">The role input containing data for the new role.</param>
-        /// <returns>
-        /// A <see cref="BaseDto"/> indicating the success or failure of the operation.
-        /// </returns>
         public async Task<BaseDto> CreateRoleAsync(RoleInput input)
         {
-            if (input.RoleId.HasValue)
-                return new("There is something wrong when creating role data, please contact system administrator", ResponseCode.Error);
-
             var (isValid, validationMessage) = await ValidateRoleInput(input);
             if (!isValid)
                 return new(validationMessage, ResponseCode.Error);
@@ -106,23 +77,13 @@ namespace NET.Starter.Core.Services.Security
             return new("Role data is successfully created", ResponseCode.Ok);
         }
 
-        /// <summary>
-        /// Updates an existing role in the database.
-        /// </summary>
-        /// <param name="input">The role input containing updated data for the role.</param>
-        /// <returns>
-        /// A <see cref="BaseDto"/> indicating the success or failure of the operation.
-        /// </returns>
-        public async Task<BaseDto> UpdateRoleAsync(RoleInput input)
+        public async Task<BaseDto> UpdateRoleAsync(Guid roleId, RoleInput input)
         {
-            if (!input.RoleId.HasValue)
-                return new("There is something wrong when updating role data, please contact system administrator", ResponseCode.Error);
-
-            var dataRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.Id == input.RoleId.Value);
+            var dataRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.Id == roleId);
             if (dataRole == null)
                 return new("Role data is not found", ResponseCode.NotFound);
 
-            var (isValid, validationMessage) = await ValidateRoleInput(input);
+            var (isValid, validationMessage) = await ValidateRoleInput(input, roleId);
             if (!isValid)
                 return new(validationMessage, ResponseCode.Error);
 
@@ -134,13 +95,6 @@ namespace NET.Starter.Core.Services.Security
             return new("Role data is successfully updated", ResponseCode.Ok);
         }
 
-        /// <summary>
-        /// Deletes a role by marking its status as inactive.
-        /// </summary>
-        /// <param name="roleId">The unique identifier of the role to delete.</param>
-        /// <returns>
-        /// A <see cref="BaseDto"/> indicating the success or failure of the operation.
-        /// </returns>
         public async Task<BaseDto> DeleteRoleAsync(Guid roleId)
         {
             var dataRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.Id == roleId);
@@ -162,12 +116,12 @@ namespace NET.Starter.Core.Services.Security
         /// <returns>
         /// A tuple containing a boolean indicating validity and a validation message.
         /// </returns>
-        private async Task<(bool isValid, string validationMessage)> ValidateRoleInput(RoleInput input)
+        private async Task<(bool isValid, string validationMessage)> ValidateRoleInput(RoleInput input, Guid? roleId = null)
         {
             if (!input.PermissionIds.Any())
                 return (false, "Please add at least one permission.");
 
-            var dataDuplicateRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.RoleCode == input.RoleCode && d.Id != input.RoleId);
+            var dataDuplicateRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.RoleCode == input.RoleCode && d.Id != roleId);
             if (dataDuplicateRole != null)
                 return (false, "Role code already exists.");
 

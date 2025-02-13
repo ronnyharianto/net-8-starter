@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NET.Starter.Core.Bases;
+using NET.Starter.Core.Services.Security.CustomModels;
 using NET.Starter.Core.Services.Security.Dtos;
 using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
@@ -21,22 +22,27 @@ namespace NET.Starter.Core.Services.Security
     /// <param name="mapper">The mapper service for object mapping.</param>
     /// <param name="logger">The logger service for capturing logs specific to the derived service.</param>
     /// <param name="securityOption">Configuration options related to security settings, such as secret keys and token expiration times.</param>
-    public class TokenService(ApplicationDbContext dbContext, IMapper mapper, ILogger<TokenService> logger, IOptions<SecurityConfig> securityOption)
+    internal class TokenService(ApplicationDbContext dbContext, IMapper mapper, ILogger<TokenService> logger, IOptions<SecurityConfig> securityOption)
         : BaseService<TokenService>(dbContext, mapper, logger)
     {
-        // Configuration settings related to security (e.g., secret keys, token expiration).
         private readonly SecurityConfig _securityConfig = securityOption.Value;
 
         /// <summary>
         /// Generates an access token and a refresh token for the given user with specified permissions.
         /// </summary>
         /// <param name="dataUser">The user for whom the tokens are generated.</param>
-        /// <param name="permissions">List of permissions assigned to the user.</param>
-        /// <returns>A TokenDto containing the access token, refresh token, and their expiration times.</returns>
-        public TokenDto GenerateToken(User dataUser, List<string> permissions)
+        /// <param name="permissions">A list of permissions assigned to the user, used to build claims for the access token.</param>
+        /// <returns>
+        /// A <see cref="TokenResult"/> containing the generated access token, refresh token, and their expiration times.
+        /// </returns>
+        /// <remarks>
+        /// - The access token is used for authentication and authorization within the application.
+        /// - The refresh token is used to obtain a new access token when the current one expires.
+        /// - Both tokens are generated securely and follow the defined expiration policies.
+        /// </remarks>
+        internal TokenResult GenerateToken(User dataUser, IEnumerable<string> permissions)
         {
-            // Log the beginning of the token generation process.
-            _logger.LogInformation("Start Generate Token with email address => {EmailAddress}, list permission => {Permissions}", dataUser.EmailAddress, permissions);
+            _logger.LogInformation("Starting Generate Token with email address => {EmailAddress}, list permission => {Permissions}", dataUser.EmailAddress, permissions);
 
             // Set expiration times for the access token and refresh token.
             var accessTokenExpireAt = DateTime.UtcNow.AddMinutes(_securityConfig.TokenExpired);
@@ -47,7 +53,7 @@ namespace NET.Starter.Core.Services.Security
             _logger.LogInformation("Successfully generated {TokenType} Token for {EmailAddress}", "Access", dataUser.EmailAddress);
 
             // Generate a refresh token with a special permission for token refresh.
-            var refreshToken = CreateSecurity(dataUser, refreshTokenExpireAt, new List<string> { PermissionConstants.RefreshToken });
+            var refreshToken = CreateSecurity(dataUser, refreshTokenExpireAt, [PermissionConstants.RefreshToken]);
             _logger.LogInformation("Successfully generated {TokenType} Token for {EmailAddress}", "Refresh", dataUser.EmailAddress);
 
             // Return the generated tokens along with their expiration times.
@@ -65,9 +71,9 @@ namespace NET.Starter.Core.Services.Security
         /// </summary>
         /// <param name="dataUser">The user for whom the token is created.</param>
         /// <param name="expireAt">The expiration time of the token.</param>
-        /// <param name="permissions">List of permissions assigned to the token.</param>
+        /// <param name="permissions">A list of permissions assigned to the user, used to build claims for the token.</param>
         /// <returns>A JWT string representing the generated token.</returns>
-        private string CreateSecurity(User dataUser, DateTime expireAt, List<string> permissions)
+        private string CreateSecurity(User dataUser, DateTime expireAt, IEnumerable<string> permissions)
         {
             // Encode the secret key for signing the token.
             var secretKey = Encoding.ASCII.GetBytes(_securityConfig.SecretKey);
@@ -89,7 +95,7 @@ namespace NET.Starter.Core.Services.Security
                     new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha512Signature), // Token signing algorithm.
                 Claims = new Dictionary<string, object>
                 {
-                    { PermissionConstants.TypeCode, permissions } // Add permissions as a custom claim.
+                    { PermissionConstants.TypeCode, permissions.ToList() } // Add permissions as a custom claim.
                 }
             };
 

@@ -48,12 +48,12 @@ namespace NET.Starter.Shared.Objects.Dtos
         /// <summary>
         /// Gets the response code.
         /// </summary>
-        public int Code { get; protected set; }
+        public int Code { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the response is successful.
         /// </summary>
-        public bool Succeeded { get; protected set; }
+        public bool Succeeded { get; private set; }
 
         /// <summary>
         /// Gets or sets the message associated with the response.

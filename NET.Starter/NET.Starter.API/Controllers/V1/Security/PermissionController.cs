@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NET.Starter.Core.Services.Security;
 using NET.Starter.Core.Services.Security.Dtos;
+using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Objects.Dtos;
@@ -10,10 +10,9 @@ namespace NET.Starter.API.Controllers.V1.Security
 {
     // Define the route for this controller as 'api/v1/Permission'
     [Route("api/v1/[controller]")]
-    public class PermissionController(PermissionService permissionService) : BaseController
+    public class PermissionController(IPermissionService permissionService) : BaseController
     {
-        // Field to hold the instance of the PermissionService injected through the constructor
-        private readonly PermissionService _permissionService = permissionService;
+        private readonly IPermissionService _permissionService = permissionService;
 
         /// <summary>
         /// Retrieves a list of all permissions.
@@ -25,11 +24,8 @@ namespace NET.Starter.API.Controllers.V1.Security
         /// </remarks>
         [AppAuthorize(PermissionConstants.Security.Permission.View)]
         [HttpGet("all")]
-        [SwaggerOperation(Summary = "Retrieve permissions", Description = "Retrieve all data of Permission")]
+        [SwaggerOperation(Summary = "Retrieve permissions")]
         public async Task<ObjectDto<IEnumerable<PermissionDto>>> RetrievePermissionsAsync()
-        {
-            // Call the service layer to retrieve the data
-            return await _permissionService.RetrievePermissionsAsync();
-        }
+            => await _permissionService.RetrievePermissionsAsync();
     }
 }

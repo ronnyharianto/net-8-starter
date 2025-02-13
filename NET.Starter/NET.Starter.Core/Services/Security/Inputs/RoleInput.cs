@@ -6,16 +6,6 @@
     public class RoleInput
     {
         /// <summary>
-        /// Gets or sets the unique identifier for the role.
-        /// </summary>
-        /// <remarks>
-        /// This property is nullable to support both create and update operations.
-        /// - If null, it indicates a new role is being created.
-        /// - If a value is provided, it indicates an update to an existing role.
-        /// </remarks>
-        public Guid? RoleId { get; set; }
-
-        /// <summary>
         /// Gets or sets the unique code for the role.
         /// </summary>
         /// <remarks>

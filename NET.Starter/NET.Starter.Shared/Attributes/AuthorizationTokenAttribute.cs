@@ -8,7 +8,7 @@
     /// Initializes a new instance of the <see cref="AuthorizationTokenAttribute"/> class.
     /// </remarks>
     /// <param name="token">The tokens required for the method.</param>
-    [AttributeUsage(AttributeTargets.Method)] // Restricts the usage of this attribute to methods only.
+    [AttributeUsage(AttributeTargets.Method)]
     public class AuthorizationTokenAttribute(params string[] token) : Attribute
     {
         /// <summary>

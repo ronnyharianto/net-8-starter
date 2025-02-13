@@ -17,17 +17,17 @@ namespace NET.Starter.Core.Services.Security.Configurations
         public RoleMapperConfiguration()
         {
             #region Transform Entity into Dto
-            // Maps the Role entity to the RoleDto.
-            // - RoleId in RoleDto is mapped from Id in the Role entity.
+
             CreateMap<Role, RoleDto>()
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(d => d.Id));
+
             #endregion
 
             #region Transform Input into Entity
-            // Maps the RoleInput object to the Role entity.
-            // - Ignores the Id property in the Role entity, as it is typically auto-generated.
+
             CreateMap<RoleInput, Role>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+            
             #endregion
         }
     }

@@ -12,10 +12,10 @@ namespace NET.Starter.Core.Services.Security.Configurations
         public PermissionMapperConfiguration()
         {
             #region Transform Entity into Dto
-            // Maps the Permission entity to the PermissionDto.
-            // The PermissionId property in PermissionDto is mapped from the Id property in the Permission entity.
+
             CreateMap<Permission, PermissionDto>()
                 .ForMember(dest => dest.PermissionId, opt => opt.MapFrom(d => d.Id));
+            
             #endregion
         }
     }
