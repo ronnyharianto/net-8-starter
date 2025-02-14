@@ -29,12 +29,11 @@ namespace NET.Starter.Shared
 
             // Configure Serilog with different log levels for specific namespaces
             var loggerConfig = new LoggerConfiguration()
-                .MinimumLevel.Information() // Default minimum log level
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Error) // Suppress detailed EF Core logs, only log errors to reduce noise in logs
-                .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker", LogEventLevel.Error) // Reduce logging noise from controller execution, log only errors
-                .MinimumLevel.Override("Microsoft.AspNetCore.Routing.EndpointMiddleware", LogEventLevel.Error) // Avoid logging every request routing step, only log errors
-                .MinimumLevel.Override("Microsoft.AspNetCore.Mvc.Infrastructure.ObjectResultExecutor", LogEventLevel.Error) // Suppress logging related to ObjectResult execution, unless there's an error
-                .WriteTo.Console(); // Output logs to the console
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Fatal) // Suppress detailed logs from Entity Framework Core.
+                .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning) // Suppress detailed logs from the ASP.NET Core routing middleware. Only log warning and errors (e.g., routing failures or misconfigurations) to avoid verbose request logs.
+                .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", LogEventLevel.Warning) // Suppress logs from the ASP.NET Core MVC framework. This hides logs such as 'Executing ActionResult' or 'Executing JsonResult' and only logs warnings and critical errors related to the MVC pipeline.
+                .WriteTo.Console();
 
             // Check if the GrafanaLoki configuration is present
             if (loggingConfig?.GrafanaLoki != null)

@@ -146,7 +146,7 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                         ValidIssuer = securityConfig.GetValue<string>("Issuer"),
                         ValidAudience = securityConfig.GetValue<string>("Audience"),
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityConfig.GetValue<string>("SecretKey") ?? string.Empty)),
-                        ClockSkew = TimeSpan.Zero // Eliminate token lifetime tolerance.
+                        ClockSkew = TimeSpan.Zero, // Eliminate token lifetime tolerance.                        
                     };
                 });
 

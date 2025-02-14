@@ -8,7 +8,7 @@
     /// Initializes a new instance of the <see cref="AppAuthorizeAttribute"/> class.
     /// </remarks>
     /// <param name="permissions">The permissions required for the method.</param>
-    [AttributeUsage(AttributeTargets.Method)] // Restricts the use of this attribute to methods only.
+    [AttributeUsage(AttributeTargets.Method)]
     public class AppAuthorizeAttribute(params string[] permissions) : Attribute
     {
         /// <summary>

@@ -79,14 +79,14 @@ namespace NET.Starter.API.Middlewares
                     if (IsAuthorize(context, permissions, _logger))
                     {
                         // Retrieve user-specific claims.
-                        var sub = identity.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"))?.Value;
+                        var fullName = identity.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"))?.Value;
+                        var emailAddress = identity.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"))?.Value;
                         var sid = identity.Claims.FirstOrDefault(c => c.Type.Equals("sid"))?.Value;
-                        var fcmId = identity.Claims.FirstOrDefault(c => c.Type.Equals("FcmId"))?.Value;
 
                         // Set the current user context using the retrieved claims.
-                        _currentUserAccessor.UserId = new Guid(sub ?? "00000000-0000-0000-0000-000000000000");
-                        _currentUserAccessor.UserName = sid ?? _currentUserAccessor.UserName;
-                        _currentUserAccessor.UserFcmTokenId = !string.IsNullOrWhiteSpace(fcmId) ? new Guid(fcmId) : null;
+                        _currentUserAccessor.UserId = new Guid(sid ?? "00000000-0000-0000-0000-000000000000");
+                        _currentUserAccessor.FullName = fullName ?? string.Empty;
+                        _currentUserAccessor.EmailAddress = emailAddress ?? string.Empty;
                         _currentUserAccessor.Permissions = permissions.Select(p => p.Value);
 
                         return; // User is authorized, allow the request.

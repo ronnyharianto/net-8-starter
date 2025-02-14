@@ -12,12 +12,6 @@
         public Guid UserId { get; set; }
 
         /// <summary>
-        /// Gets or sets the username of the authenticated user.
-        /// Example: "john_doe".
-        /// </summary>
-        public string UserName { get; set; } = string.Empty;
-
-        /// <summary>
         /// Gets or sets the full name of the authenticated user.
         /// Example: "John Doe".
         /// </summary>
@@ -27,13 +21,13 @@
         /// Gets or sets the email address of the user.
         /// Example: "john.doe@example.com".
         /// </summary>
-        public string Email { get; set; } = string.Empty;
+        public string EmailAddress { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the identifier for the user's FCM (Firebase Cloud Messaging) token.
         /// This is used for push notifications.
         /// </summary>
-        public Guid? UserFcmTokenId { get; set; }
+        //public Guid? UserFcmTokenId { get; set; }
 
         /// <summary>
         /// Gets or sets the list of permissions granted to the user.

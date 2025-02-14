@@ -50,11 +50,11 @@ namespace NET.Starter.Core.Services.Security
 
             // Generate an access token with the specified permissions.
             var accessToken = CreateSecurity(dataUser, accessTokenExpireAt, permissions);
-            _logger.LogInformation("Successfully generated {TokenType} Token for {EmailAddress}", "Access", dataUser.EmailAddress);
+            _logger.LogInformation("Successfully generated {TokenType} for {EmailAddress}", "Access Token", dataUser.EmailAddress);
 
             // Generate a refresh token with a special permission for token refresh.
             var refreshToken = CreateSecurity(dataUser, refreshTokenExpireAt, [PermissionConstants.RefreshToken]);
-            _logger.LogInformation("Successfully generated {TokenType} Token for {EmailAddress}", "Refresh", dataUser.EmailAddress);
+            _logger.LogInformation("Successfully generated {TokenType} for {EmailAddress}", "Refresh Token", dataUser.EmailAddress);
 
             // Return the generated tokens along with their expiration times.
             return new()
@@ -81,18 +81,17 @@ namespace NET.Starter.Core.Services.Security
             // Define the token descriptor, including claims, expiration, and signing credentials.
             var securityTokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), // Issued at timestamp.
-                    new Claim(JwtRegisteredClaimNames.Email, dataUser.EmailAddress),    // User's email address.
-                    new Claim(JwtRegisteredClaimNames.GivenName, dataUser.Fullname),    // User's full name.
-                    new Claim(JwtRegisteredClaimNames.Sid, dataUser.Id.ToString())      // User's unique ID.
-                }),
+                Subject = new(
+                [
+                    new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                    new(JwtRegisteredClaimNames.Email, dataUser.EmailAddress),
+                    new(JwtRegisteredClaimNames.GivenName, dataUser.Fullname),
+                    new(JwtRegisteredClaimNames.Sid, dataUser.Id.ToString())
+                ]),
                 Expires = expireAt, // Set the token's expiration time.
                 Issuer = _securityConfig.Issuer, // The token issuer.
                 Audience = _securityConfig.Audience, // The token audience.
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha512Signature), // Token signing algorithm.
+                SigningCredentials = new(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha512Signature), // Token signing algorithm.
                 Claims = new Dictionary<string, object>
                 {
                     { PermissionConstants.TypeCode, permissions.ToList() } // Add permissions as a custom claim.

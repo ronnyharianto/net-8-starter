@@ -10,6 +10,10 @@ namespace NET.Starter.Core.Bases
     /// <typeparam name="T">The type of the service inheriting from this base class. Used for logging purposes.</typeparam>
     /// <remarks>
     /// Initializes a new instance of the <see cref="BaseService{T}"/> class.
+    /// <para>
+    /// To trigger a rollback for each requests in the service layer, the <see cref="BaseService{T}"/> class and services that inherit from it
+    /// throw an appropriate <see cref="Exception"/> that aligns with the application's error handling strategy.
+    /// </para>
     /// </remarks>
     /// <param name="dbContext">The database context used for database operations.</param>
     /// <param name="mapper">The mapper service for object mapping.</param>
