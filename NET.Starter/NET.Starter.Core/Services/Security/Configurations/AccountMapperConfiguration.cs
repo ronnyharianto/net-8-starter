@@ -17,11 +17,8 @@ namespace NET.Starter.Core.Services.Security.Configurations
             CreateMap<User, LoginDto>()
                 .AfterMap((src, dest, context) =>
                 {
-                    if (context.TryGetItems(out var items) && items.TryGetValue("MapSpecificProperties", out object? value) && (bool)value)
-                    {
-                        dest.FullName = src.Fullname;
-                        dest.PermissionCodes = src.UserRoles.SelectMany(d => d.Role.RolePermissions.Select(d => d.Permission.PermissionCode)).OrderBy(d => d);
-                    }
+                    dest.FullName = src.Fullname;
+                    dest.PermissionCodes = src.UserRoles.SelectMany(d => d.Role.RolePermissions.Select(d => d.Permission.PermissionCode)).OrderBy(d => d);
                 })
                 .ForAllMembers(opt => opt.Ignore());
 

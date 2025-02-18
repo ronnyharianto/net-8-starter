@@ -72,7 +72,7 @@ namespace NET.Starter.Core.Services.Security
             var tokenResult = _tokenService.GenerateToken(user, permissions);
 
             // Map user and token data to LoginDto
-            var loginDto = _mapper.Map<LoginDto>(user, opts => opts.Items["MapSpecificProperties"] = true);
+            var loginDto = _mapper.Map<LoginDto>(user);
             _mapper.Map(tokenResult, loginDto);
 
             _logger.LogInformation("Login attempt successfully for user identifier: {UserIdentifier}.", input.UserIdentifier);
