@@ -24,9 +24,13 @@ namespace NET.Starter.Core.Services.Security
     {
         public async Task<ObjectDto<IEnumerable<RoleDto>>> RetrieveRolesAsync()
         {
+            _logger.LogInformation("Starting to retrieve all roles.");
+
             var dataRoles = _dbContext.Roles.AsNoTracking()
                                             .OrderBy(d => d.RoleCode)
                                             .Select(d => _mapper.Map<RoleDto>(d));
+
+            _logger.LogInformation("Successfully retrieved all roles.");
 
             return new(responseCode: ResponseCode.Ok)
             {
@@ -36,6 +40,8 @@ namespace NET.Starter.Core.Services.Security
 
         public PagingDto<RoleDto> RetrieveRolesPaging(PagingSearchInputBase input)
         {
+            _logger.LogInformation("Starting to retrieve paging of roles.");
+
             var retVal = new PagingDto<RoleDto>();
 
             var searchKey = input.SearchKey?.Trim() ?? string.Empty;
@@ -48,14 +54,27 @@ namespace NET.Starter.Core.Services.Security
 
             retVal.ApplyPagination(input.Page, input.PageSize, dataRoles);
 
+            _logger.LogInformation("Successfully retrieved paging of roles.");
+
             return retVal;
         }
 
         public async Task<ObjectDto<RoleDto>> RetrieveRoleByIdAsync(Guid roleId)
         {
-            var dataRole = await _dbContext.Roles.AsNoTracking().FirstOrDefaultAsync(d => d.Id == roleId);
+            _logger.LogInformation("Starting to retrieve role by id: {RoleId}.", roleId);
+
+            var dataRole = await _dbContext.Roles.AsNoTracking()
+                                                 .Include(r => r.RolePermissions)
+                                                    .ThenInclude(rp => rp.Permission)
+                                                 .FirstOrDefaultAsync(d => d.Id == roleId);
             if (dataRole == null)
+            {
+                _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
+
                 return new("Role data is not found", ResponseCode.NotFound);
+            }
+                
+            _logger.LogInformation("Successfully retrieved role by id: {RoleId}.", roleId);
 
             return new(responseCode: ResponseCode.Ok)
             {
@@ -65,46 +84,96 @@ namespace NET.Starter.Core.Services.Security
 
         public async Task<BaseDto> CreateRoleAsync(RoleInput input)
         {
+            _logger.LogInformation("Starting to create role.");
+
             var (isValid, validationMessage) = await ValidateRoleInput(input);
             if (!isValid)
-                return new(validationMessage, ResponseCode.Error);
+            {
+                _logger.LogError("Failed to create role. Reason : {ValidationMessage}", validationMessage);
 
-            var dataRole = _mapper.Map<Role>(input);
+                return new(validationMessage, ResponseCode.Error);
+            }
+
+            var dataRole = _mapper.Map<Role>(input, opts => opts.Items["IsCreate"] = true);
 
             await _dbContext.Roles.AddAsync(dataRole);
             await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("Successfully created role.");
 
             return new("Role data is successfully created", ResponseCode.Ok);
         }
 
         public async Task<BaseDto> UpdateRoleAsync(Guid roleId, RoleInput input)
         {
-            var dataRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.Id == roleId);
+            _logger.LogInformation("Starting to update role by id: {RoleId}.", roleId);
+
+            var dataRole = await _dbContext.Roles.Include(r => r.RolePermissions).FirstOrDefaultAsync(d => d.Id == roleId);
             if (dataRole == null)
+            {
+                _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
+
                 return new("Role data is not found", ResponseCode.NotFound);
+            }
 
             var (isValid, validationMessage) = await ValidateRoleInput(input, roleId);
             if (!isValid)
+            {
+                _logger.LogError("Failed to update role. Reason : {ValidationMessage}", validationMessage);
+
                 return new(validationMessage, ResponseCode.Error);
+            }
 
             _mapper.Map(input, dataRole);
 
-            _dbContext.Roles.Update(dataRole);
+            #region Delete permission does not exists on input
+
+            var deleteRolePermissions = from d in dataRole.RolePermissions
+                                        where !input.PermissionIds.Contains(d.PermissionId)
+                                        select d;
+
+            foreach (var rolePermission in deleteRolePermissions)
+            {
+                rolePermission.RowStatus = 1;
+            }
+
+            #endregion
+
+            #region Add permission does new on input
+
+            var addRolePermissions = from i in input.PermissionIds
+                                     where !dataRole.RolePermissions.Any(d => d.PermissionId == i)
+                                     select i;
+
+            if (addRolePermissions.Any())
+                await _dbContext.RolePermissions.AddRangeAsync(addRolePermissions.Select(permissionId => new RolePermission { RoleId = roleId, PermissionId = permissionId }));
+
+            #endregion
+
             await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("Successfully updated role by id: {RoleId}.", roleId);
 
             return new("Role data is successfully updated", ResponseCode.Ok);
         }
 
         public async Task<BaseDto> DeleteRoleAsync(Guid roleId)
         {
+            _logger.LogInformation("Starting to delete role by id: {RoleId}.", roleId);
+
             var dataRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.Id == roleId);
             if (dataRole == null)
-                return new("Role data is not found", ResponseCode.NotFound);
+            {
+                _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
 
+                return new("Role data is not found", ResponseCode.NotFound);
+            }
+                
             dataRole.RowStatus = 1;
 
-            _dbContext.Roles.Update(dataRole);
             await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("Successfully deleted role by id: {RoleId}.", roleId);
 
             return new("Role data is successfully deleted", ResponseCode.Ok);
         }
@@ -123,7 +192,7 @@ namespace NET.Starter.Core.Services.Security
 
             var dataDuplicateRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.RoleCode == input.RoleCode && d.Id != roleId);
             if (dataDuplicateRole != null)
-                return (false, "Role code already exists.");
+                return (false, "Role already exists.");
 
             return (true, string.Empty);
         }

@@ -21,9 +21,13 @@ namespace NET.Starter.Core.Services.Security
     {
         public async Task<ObjectDto<IEnumerable<PermissionDto>>> RetrievePermissionsAsync()
         {
+            _logger.LogInformation("Starting to retrieve all permissions.");
+
             var dataPermissions = _dbContext.Permissions.AsNoTracking()
                                                         .OrderBy(d => d.PermissionCode)
                                                         .Select(d => _mapper.Map<PermissionDto>(d));
+
+            _logger.LogInformation("Successfully retrieved all permissions.");
 
             return new(responseCode: ResponseCode.Ok)
             {

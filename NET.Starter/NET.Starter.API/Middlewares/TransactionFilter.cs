@@ -77,7 +77,7 @@ namespace NET.Starter.API.Middlewares
                                     else
                                     {
                                         await transaction.RollbackAsync();
-                                        _logger.LogError("Database transaction scope rolled back due to invalid response code");
+                                        _logger.LogInformation("Database transaction scope rolled back due to invalid http code");
                                     }
                                 }
                                 else

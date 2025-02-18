@@ -19,14 +19,24 @@ namespace NET.Starter.Core.Services.Security.Configurations
             #region Transform Entity into Dto
 
             CreateMap<Role, RoleDto>()
-                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(d => d.Id));
+                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(d => d.Id))
+                .ForMember(dest => dest.Permissions, opt => opt.MapFrom(d => d.RolePermissions.Select(d => d.Permission)));
 
             #endregion
 
             #region Transform Input into Entity
 
             CreateMap<RoleInput, Role>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore());
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .AfterMap((src, dest, context) => 
+                {
+                    bool isCreate = context.TryGetItems(out var items) && items.TryGetValue("IsCreate", out var value) && value is bool b && b;
+
+                    if (isCreate)
+                    {
+                        dest.RolePermissions = src.PermissionIds.Select(permissionId => new RolePermission { RoleId = dest.Id, PermissionId = permissionId }).ToHashSet();
+                    }
+                });
             
             #endregion
         }
