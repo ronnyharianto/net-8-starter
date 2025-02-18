@@ -88,10 +88,6 @@ namespace NET.Starter.Core.Services.Security
         /// </summary>
         /// <param name="input">The login input containing the user identifier (username or email) and password.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        /// <remarks>
-        /// If the user is found in the database, their bad password count is incremented and saved.
-        /// Logs the bad password attempt along with the updated count.
-        /// </remarks>
         private async Task HandleBadPasswordAttemptAsync(string userIdentifier)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(d => d.Username == userIdentifier || d.EmailAddress == userIdentifier);
