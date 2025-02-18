@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NET.Starter.Core.Services.Security;
 using NET.Starter.Core.Services.Security.Dtos;
 using NET.Starter.Core.Services.Security.Inputs;
 using NET.Starter.Core.Services.Security.Interfaces;
