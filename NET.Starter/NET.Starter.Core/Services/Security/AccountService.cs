@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NET.Starter.Core.Bases;
 using NET.Starter.Core.Services.Security.Dtos;
 using NET.Starter.Core.Services.Security.Inputs;
@@ -8,6 +9,7 @@ using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Enums;
+using NET.Starter.Shared.Objects.Configs;
 using NET.Starter.Shared.Objects.Dtos;
 
 namespace NET.Starter.Core.Services.Security
@@ -19,10 +21,15 @@ namespace NET.Starter.Core.Services.Security
     /// <param name="mapper">The mapper service for object mapping.</param>
     /// <param name="logger">The logger service for capturing logs specific to the derived service.</param>
     /// <param name="tokenService">The token service for generating and validating tokens.</param>
-    internal class AccountService(ApplicationDbContext dbContext, IMapper mapper, ILogger<AccountService> logger, TokenService tokenService)
-        : BaseService<AccountService>(dbContext, mapper, logger), IAccountService
+    internal class AccountService(
+        ApplicationDbContext dbContext, 
+        IMapper mapper, 
+        ILogger<AccountService> logger, 
+        TokenService tokenService, 
+        IOptions<SecurityConfig> securityConfig) : BaseService<AccountService>(dbContext, mapper, logger), IAccountService
     {
         private readonly TokenService _tokenService = tokenService;
+        private readonly SecurityConfig _securityConfig = securityConfig.Value;
 
         public async Task<ObjectDto<LoginDto>> LoginAsync(LoginInput input)
         {
@@ -42,19 +49,24 @@ namespace NET.Starter.Core.Services.Security
 
             if (user == null)
             {
-                _logger.LogWarning("Login attempt failed for user identifier: {UserIdentifier}.", input.UserIdentifier);
+                _logger.LogError("Login attempt failed for user identifier: {UserIdentifier}.", input.UserIdentifier);
 
                 await HandleBadPasswordAttemptAsync(input.UserIdentifier);
 
                 return new("There is something wrong with your username or password.", ResponseCode.UnAuthorized);
             }
 
-            // Reset bad password count upon successful login
-            if (user.BadPasswordCount > 0)
+            if (user.LockedUntil >= DateTime.UtcNow)
             {
-                user.BadPasswordCount = 0;
-                await _dbContext.SaveChangesAsync();
+                _logger.LogWarning("Login attempt failed for user identifier: {UserIdentifier}. Account is locked until: {LockedUntil}.", input.UserIdentifier, user.LockedUntil.Value.ToString("dd-MM-yyyy HH:mm:ss+00:00"));
+
+                return new("Your account is locked", ResponseCode.Forbidden);
             }
+
+            user.BadPasswordCount = 0;
+            user.LockedUntil = null;
+
+            await _dbContext.SaveChangesAsync();
 
             var permissions = user.UserRoles.SelectMany(ur => ur.Role.RolePermissions).Select(rp => rp.Permission.PermissionCode).Distinct();
             var tokenResult = _tokenService.GenerateToken(user, permissions);
@@ -63,9 +75,9 @@ namespace NET.Starter.Core.Services.Security
             var loginDto = _mapper.Map<LoginDto>(user, opts => opts.Items["MapSpecificProperties"] = true);
             _mapper.Map(tokenResult, loginDto);
 
-            _logger.LogInformation("Login process successfully completed for user identifier: {UserIdentifier}.", input.UserIdentifier);
+            _logger.LogInformation("Login attempt successfully for user identifier: {UserIdentifier}.", input.UserIdentifier);
 
-            return new ObjectDto<LoginDto>("Login successful.", ResponseCode.Ok)
+            return new("Login successful.", ResponseCode.Ok)
             {
                 Obj = loginDto
             };
@@ -86,11 +98,25 @@ namespace NET.Starter.Core.Services.Security
             if (user == null)
                 return;
 
-            user.BadPasswordCount += 1;
+            if (user.LockedUntil >= DateTime.UtcNow)
+            {
+                user.BadPasswordCount += 1;
+                user.LockedUntil = null;
+
+                _logger.LogInformation("User {UserIdentifier} has entered a bad password. Attempt count: {BadPasswordCount}", userIdentifier, user.BadPasswordCount);
+            }
+
+            if (user.BadPasswordCount >= _securityConfig.MaxLoginRetry)
+            {
+                user.BadPasswordCount = 0;
+                user.LockedUntil = DateTime.UtcNow.AddMinutes(_securityConfig.AutoUnlockAfter);
+
+                _logger.LogInformation("User {UserIdentifier} has entered a bad password too many times. Locked until: {LockedUntil}",
+                    userIdentifier,
+                    user.LockedUntil.Value.ToString("dd-MM-yyyy HH:mm:ss+00:00"));
+            }
 
             await _dbContext.SaveChangesAsync();
-
-            _logger.LogInformation("User {UserIdentifier} has entered a bad password. Attempt count: {BadPasswordCount}", userIdentifier, user.BadPasswordCount);
         }
     }
 }

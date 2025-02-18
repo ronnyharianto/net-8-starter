@@ -9,7 +9,13 @@
         /// Gets or sets the maximum number of failed login attempts before an account is locked or restricted.
         /// Default value: 5
         /// </summary>
-        public int MaximumLoginRetry { get; set; } = 5;
+        public int MaxLoginRetry { get; set; } = 5;
+
+        /// <summary>
+        /// Gets or sets the number of minutes after which a locked account is automatically unlocked.
+        /// Default value: 15
+        /// </summary>
+        public int AutoUnlockAfter { get; set; } = 15;
 
         /// <summary>
         /// Gets or sets the token issuer, typically the domain or name of the authentication provider.

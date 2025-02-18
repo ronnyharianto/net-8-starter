@@ -28,7 +28,7 @@ namespace NET.Starter.API.Middlewares
         /// <param name="next">The delegate to execute the next filter or action.</param>
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            bool isMutation = context.ActionDescriptor.EndpointMetadata.OfType<MutationAttribute>().Any(); // Indicates state-changing in database operations.
+            var mutationAttribute = context.ActionDescriptor.EndpointMetadata.OfType<MutationAttribute>().FirstOrDefault(); // Indicates state-changing in database operations.
             bool isCustomResponse = context.ActionDescriptor.EndpointMetadata.OfType<CustomResponseAttribute>().Any(); // Indicates response use custom response.
 
             try
@@ -67,23 +67,23 @@ namespace NET.Starter.API.Middlewares
                                 }
 
                                 // Handle mutations (state-changing operations).
-                                if (isMutation)
+                                if (mutationAttribute != null)
                                 {
-                                    if (baseDto?.Succeeded ?? false || isCustomResponse) 
+                                    if (mutationAttribute.AllowedResponseCodes.Contains(baseDto?.Code ?? -1) || isCustomResponse)
                                     {
                                         await transaction.CommitAsync();
-                                        _logger.LogInformation("Operation succeeded. Database transaction scope committed");
+                                        _logger.LogInformation("Database transaction scope committed");
                                     }
                                     else
                                     {
                                         await transaction.RollbackAsync();
-                                        _logger.LogError("Operation failed. Database transaction scope rollbacked");
+                                        _logger.LogError("Database transaction scope rolled back due to invalid response code");
                                     }
                                 }
                                 else
                                 {
                                     await transaction.RollbackAsync();
-                                    _logger.LogInformation("Non-mutation endpoint. Database transaction scope rollbacked");
+                                    _logger.LogInformation("Non-mutation endpoint. Database transaction scope rolled back");
                                 }
 
                                 break;

@@ -47,6 +47,12 @@ namespace NET.Starter.DataAccess.SqlServer.Models.Security
         public int BadPasswordCount { get; set; } = 0;
 
         /// <summary>
+        /// Gets or sets the locked until date for a specific user.
+        /// Default value is null.
+        /// </summary>
+        public DateTime? LockedUntil { get; set; }
+
+        /// <summary>
         /// Gets or sets the user roles associated with a specific user.
         /// This is a navigation property.
         /// </summary>
