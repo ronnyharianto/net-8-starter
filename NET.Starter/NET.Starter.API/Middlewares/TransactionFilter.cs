@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Storage;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
-using System.Net;
 
 namespace NET.Starter.API.Middlewares
 {
@@ -84,7 +83,7 @@ namespace NET.Starter.API.Middlewares
                                 else
                                 {
                                     await transaction.RollbackAsync();
-                                    _logger.LogError("Non-mutation endpoint. Database transaction scope rollbacked");
+                                    _logger.LogInformation("Non-mutation endpoint. Database transaction scope rollbacked");
                                 }
 
                                 break;

@@ -9,7 +9,6 @@ using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace NET.Starter.Core.Services.Security
 {
