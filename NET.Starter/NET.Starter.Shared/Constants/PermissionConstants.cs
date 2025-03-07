@@ -56,6 +56,18 @@
                 public const string Update = "Security.Role.Update";
                 public const string Delete = "Security.Role.Delete";
             }
+
+            /// <summary>
+            /// Nested class defining constants related to users in the security module.
+            /// </summary>
+            public static class User
+            {
+                public const string Menu = "Security.User.Menu";
+                public const string View = "Security.User.View";
+                public const string Create = "Security.User.Create";
+                public const string Update = "Security.User.Update";
+                public const string Delete = "Security.User.Delete";
+            }
         }
     }
 }

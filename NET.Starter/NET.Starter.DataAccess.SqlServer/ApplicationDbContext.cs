@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NET.Starter.DataAccess.SqlServer.Bases;
 using NET.Starter.DataAccess.SqlServer.Builders.Security;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
@@ -11,8 +12,10 @@ namespace NET.Starter.DataAccess.SqlServer
     /// Represents the application's database context, providing access to the database entities
     /// and configuring entity mappings for the application.
     /// </summary>
-    public class ApplicationDbContext(DbContextOptions options, CurrentUserAccessor currentUserAccessor) : DbContextBase(options, currentUserAccessor)
+    public class ApplicationDbContext(DbContextOptions options, CurrentUserAccessor currentUserAccessor, ILogger<ApplicationDbContext> logger) : DbContextBase(options, currentUserAccessor)
     {
+        private readonly ILogger<ApplicationDbContext> _logger = logger;
+
         #region Security
 
         public virtual DbSet<Permission> Permissions { get; set; }
@@ -46,6 +49,44 @@ namespace NET.Starter.DataAccess.SqlServer
             new UserFcmTokenEntityBuilder().Configure(modelBuilder.Entity<UserFcmToken>());
 
             #endregion
+        }
+
+        /// <summary>
+        /// Seeds the database with an admin user and assigns the admin role if it does not already exist.
+        /// </summary>
+        /// <remarks>
+        /// This method checks if a user with the username "admin" exists in the database.
+        /// If not, it creates an admin user with predefined credentials and assigns them an admin role.
+        /// The changes are then saved asynchronously.
+        /// </remarks>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// </returns>
+        internal async Task SeedDataUserAdminAsync()
+        {
+            if (!Users.Any(d => d.Username == "admin"))
+            {
+                Users.Add(new User
+                {
+                    Id = new Guid("73b4c7d1-e6a3-41dc-a8da-6d9a45092761"),
+                    Username = "admin",
+                    EmailAddress = "admin@example.com",
+                    Password = "1234qwER",
+                    Fullname = "Administrator",
+                    Created = new DateTime(2025, 2, 12, 13, 30, 00)
+                });
+
+                UserRoles.Add(new UserRole { 
+                    Id = new Guid("8595575f-0851-47b5-8950-7583a8f28927"), 
+                    UserId = new Guid("73b4c7d1-e6a3-41dc-a8da-6d9a45092761"), 
+                    RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), 
+                    Created = new DateTime(2025, 2, 12, 13, 30, 00) 
+                });
+
+                _logger.LogInformation("Seeding data user admin completed.");
+
+                await SaveChangesAsync();
+            }
         }
     }
 }

@@ -52,11 +52,18 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
             // Adds predefined data for the security permission.
             builder.HasData(
                 new Permission { Id = new Guid("a0d9d4d0-1b6f-4e4c-8e5e-a7c6a3b2abf1"), PermissionCode = PermissionConstants.Security.Permission.View, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
+                
                 new Permission { Id = new Guid("1a010b41-b5bf-4e15-8042-94bee253c835"), PermissionCode = PermissionConstants.Security.Role.Menu, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
                 new Permission { Id = new Guid("e298741f-3027-4299-bf56-66bd712219e0"), PermissionCode = PermissionConstants.Security.Role.View, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
                 new Permission { Id = new Guid("a8b4b425-8827-4fde-b2c5-1fc3e059f061"), PermissionCode = PermissionConstants.Security.Role.Create, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
                 new Permission { Id = new Guid("ef4baa13-1ed0-4284-8a77-2f6e315aecf8"), PermissionCode = PermissionConstants.Security.Role.Update, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
-                new Permission { Id = new Guid("b3a934db-1d2b-40fd-b6df-00b9594637ce"), PermissionCode = PermissionConstants.Security.Role.Delete, Created = new DateTime(2025, 2, 12, 13, 30, 00) }
+                new Permission { Id = new Guid("b3a934db-1d2b-40fd-b6df-00b9594637ce"), PermissionCode = PermissionConstants.Security.Role.Delete, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
+                
+                new Permission { Id = new Guid("11183f54-13f3-4c4c-b484-bd170342ca70"), PermissionCode = PermissionConstants.Security.User.Menu, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
+                new Permission { Id = new Guid("7d8b693b-a21f-4f7e-a0f9-b1f80a86e0bd"), PermissionCode = PermissionConstants.Security.User.View, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
+                new Permission { Id = new Guid("f8568aa0-aae2-4ed0-9783-b75ff180ebdf"), PermissionCode = PermissionConstants.Security.User.Create, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
+                new Permission { Id = new Guid("1bfb9a81-0f01-4981-b4d5-fce12f8b4d4d"), PermissionCode = PermissionConstants.Security.User.Update, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
+                new Permission { Id = new Guid("3c390638-d417-421a-a99f-611591c07a4d"), PermissionCode = PermissionConstants.Security.User.Delete, Created = new DateTime(2025, 2, 12, 13, 30, 00) }
             );
         }
     }

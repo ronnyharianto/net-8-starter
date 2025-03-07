@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using NET.Starter.API.Extensions.StartupExtensions;
 using NET.Starter.API.Middlewares;
 using NET.Starter.DataAccess.SqlServer;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace NET.Starter.API.Extensions.StartupExtensions
@@ -41,7 +42,11 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                     options.Filters.Add<TransactionFilter<ApplicationDbContext>>();
                 })
                 // Configure JSON serialization to ignore reference loops.
-                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                .AddNewtonsoftJson(x =>
+                {
+                    x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    x.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
 
             return builder;
         }

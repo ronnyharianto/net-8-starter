@@ -19,7 +19,7 @@ namespace NET.Starter.DataAccess.SqlServer
         /// This method creates a scoped service provider to resolve the <see cref="ApplicationDbContext"/>,
         /// applies pending migrations, and ensures that the database is created if it does not exist.
         /// </remarks>
-        public static WebApplication UseDbContext(this WebApplication app)
+        public async static Task<WebApplication> UseDbContext(this WebApplication app)
         {
             using var scope = app.Services.CreateScope(); // Create a scope for resolving services.
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -31,6 +31,10 @@ namespace NET.Starter.DataAccess.SqlServer
             dbContext.Database.EnsureCreated();
 
             Log.Logger.Information("Database migration completed.");
+
+            await dbContext.SeedDataUserAdminAsync();
+
+            Log.Logger.Information("Database seeding completed.");
 
             // Return the application instance for method chaining.
             return app;

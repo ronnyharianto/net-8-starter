@@ -71,7 +71,7 @@ namespace NET.Starter.Shared
             if (rsaConfig != null)
             {
                 // Initialize the CryptographyHelper with the retrieved RSA configuration.
-                CryptographyHelper.Initialize(rsaConfig);
+                CryptographyHelper.InitializeRsa(rsaConfig);
 
                 Log.Logger.Information("RSA configuration is available. Cryptographic for RSA operations will be available.");
             }

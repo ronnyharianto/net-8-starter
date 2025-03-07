@@ -6,27 +6,27 @@ using NET.Starter.DataAccess.SqlServer.Models.Security;
 namespace NET.Starter.Core.Services.Security.Configurations
 {
     /// <summary>
-    /// Defines mapping configurations for Role-related objects.
+    /// Defines mapping configurations for User-related objects.
     /// </summary>
     /// <remarks>
-    /// This configuration includes mappings for transforming Role entities into RoleDto objects 
-    /// and RoleInput objects into Role entities.
+    /// This configuration includes mappings for transforming User entities into UserDto objects 
+    /// and UserInput objects into User entities.
     /// </remarks>
-    internal class RoleMapperConfiguration : Profile
+    internal class UserMapperConfiguration : Profile
     {
-        public RoleMapperConfiguration()
+        public UserMapperConfiguration()
         {
             #region Transform Entity into Dto
 
-            CreateMap<Role, RoleDto>()
-                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(d => d.Id))
-                .ForMember(dest => dest.Permissions, opt => opt.MapFrom(d => d.RolePermissions.Select(d => d.Permission)));
+            CreateMap<User, UserDto>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(d => d.Id))
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(d => d.UserRoles.Select(d => d.Role)));
 
             #endregion
 
             #region Transform Input into Entity
 
-            CreateMap<RoleInput, Role>()
+            CreateMap<UserInput, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .AfterMap((src, dest, context) => 
                 {
@@ -34,7 +34,7 @@ namespace NET.Starter.Core.Services.Security.Configurations
 
                     if (isCreate)
                     {
-                        dest.RolePermissions = src.PermissionIds.Select(d => new RolePermission { RoleId = dest.Id, PermissionId = d }).ToHashSet();
+                        dest.UserRoles = src.RoleIds.Select(d => new UserRole { UserId = dest.Id, RoleId = d }).ToHashSet();
                     }
                 });
             
