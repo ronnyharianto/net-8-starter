@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
 
-namespace NET.Starter.API.Middlewares
+namespace NET.Starter.Core.Middlewares
 {
     /// <summary>
     /// Middleware filter to handle transaction logic for incoming requests.
@@ -50,7 +51,7 @@ namespace NET.Starter.API.Middlewares
                                 if (objectResult.Value is BaseDto tempDto)
                                 {
                                     baseDto = tempDto;
-                                    
+
                                     resultContext.HttpContext.Response.StatusCode = baseDto.Code; // Assign the status code from the response DTO if it exists.
                                     baseDto.Id = context.HttpContext.TraceIdentifier; // Assign a unique trace identifier to the response DTO.
                                 }

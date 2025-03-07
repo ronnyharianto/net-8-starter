@@ -88,6 +88,11 @@ app.UseCors();
 app.MapControllers();
 
 /// <summary>
+/// Enables anti-forgery protection for form submissions.
+/// </summary>
+app.UseAntiforgery();
+
+/// <summary>
 /// Starts the web application and begins listening for incoming requests.
 /// </summary>
 app.Run();

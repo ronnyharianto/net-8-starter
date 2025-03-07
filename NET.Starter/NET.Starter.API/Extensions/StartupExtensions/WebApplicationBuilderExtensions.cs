@@ -2,8 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NET.Starter.API.Extensions.StartupExtensions;
-using NET.Starter.API.Middlewares;
-using NET.Starter.DataAccess.SqlServer;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -35,12 +33,7 @@ namespace NET.Starter.API.Extensions.StartupExtensions
 
             // Add controllers and apply global filters.
             builder.Services
-                .AddControllers(options =>
-                {
-                    // Add custom filters for authorization and transactions.
-                    options.Filters.Add<AuthorizationFilter>();
-                    options.Filters.Add<TransactionFilter<ApplicationDbContext>>();
-                })
+                .AddControllers()
                 // Configure JSON serialization to ignore reference loops.
                 .AddNewtonsoftJson(x =>
                 {
