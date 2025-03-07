@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NET.Starter.Core.Middlewares;
 using NET.Starter.Core.Services.Security;
 using NET.Starter.Core.Services.Security.Interfaces;
+using NET.Starter.DataAccess.SqlServer;
 using System.Reflection;
 
 namespace NET.Starter.Core
@@ -17,6 +19,14 @@ namespace NET.Starter.Core
         /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection RegisterCore(this IServiceCollection services)
         {
+            // Apply the AuthorizationFilter and TransactionFilter filters to all controllers
+            services
+                .AddControllers(options =>
+                {
+                    options.Filters.Add<AuthorizationFilter>();
+                    options.Filters.Add<TransactionFilter<ApplicationDbContext>>();
+                });
+
             // Register AutoMapper with assemblies from the Core layer
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
@@ -25,7 +35,7 @@ namespace NET.Starter.Core
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();                
 
             return services;
         }

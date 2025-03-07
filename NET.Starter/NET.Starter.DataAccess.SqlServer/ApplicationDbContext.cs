@@ -5,6 +5,9 @@ using NET.Starter.DataAccess.SqlServer.Builders.Security;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
 using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Objects;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("NET.Starter.Core")]
 
 namespace NET.Starter.DataAccess.SqlServer
 {
@@ -12,7 +15,7 @@ namespace NET.Starter.DataAccess.SqlServer
     /// Represents the application's database context, providing access to the database entities
     /// and configuring entity mappings for the application.
     /// </summary>
-    public class ApplicationDbContext(DbContextOptions options, CurrentUserAccessor currentUserAccessor, ILogger<ApplicationDbContext> logger) : DbContextBase(options, currentUserAccessor)
+    internal class ApplicationDbContext(DbContextOptions options, CurrentUserAccessor currentUserAccessor, ILogger<ApplicationDbContext> logger) : DbContextBase(options, currentUserAccessor)
     {
         private readonly ILogger<ApplicationDbContext> _logger = logger;
 

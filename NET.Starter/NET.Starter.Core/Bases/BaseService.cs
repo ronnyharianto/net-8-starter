@@ -18,7 +18,7 @@ namespace NET.Starter.Core.Bases
     /// <param name="dbContext">The database context used for database operations.</param>
     /// <param name="mapper">The mapper service for object mapping.</param>
     /// <param name="logger">The logger service for capturing logs specific to the derived service.</param>
-    public class BaseService<T>(ApplicationDbContext dbContext, IMapper mapper, ILogger<T> logger)
+    internal class BaseService<T>(ApplicationDbContext dbContext, IMapper mapper, ILogger<T> logger)
     {
         /// <summary>
         /// The database context for accessing the application's database.

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Enums;
@@ -8,7 +9,7 @@ using NET.Starter.Shared.Objects;
 using NET.Starter.Shared.Objects.Dtos;
 using System.Security.Claims;
 
-namespace NET.Starter.API.Middlewares
+namespace NET.Starter.Core.Middlewares
 {
     /// <summary>
     /// Middleware filter to handle authorization logic for incoming requests.

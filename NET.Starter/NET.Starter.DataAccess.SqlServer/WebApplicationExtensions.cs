@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace NET.Starter.DataAccess.SqlServer
@@ -32,9 +33,12 @@ namespace NET.Starter.DataAccess.SqlServer
 
             Log.Logger.Information("Database migration completed.");
 
-            await dbContext.SeedDataUserAdminAsync();
+            if (app.Environment.IsDevelopment())
+            {
+                await dbContext.SeedDataUserAdminAsync();
 
-            Log.Logger.Information("Database seeding completed.");
+                Log.Logger.Information("Database seeding completed.");
+            }
 
             // Return the application instance for method chaining.
             return app;
