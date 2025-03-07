@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -7,20 +8,14 @@ using NET.Starter.Core.Services.Security.Dtos;
 using NET.Starter.Core.Services.Security.Inputs;
 using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.DataAccess.SqlServer;
-using NET.Starter.Shared.Constants;
+using NET.Starter.DataAccess.SqlServer.Models.Security;
 using NET.Starter.Shared.Enums;
+using NET.Starter.Shared.Helpers;
 using NET.Starter.Shared.Objects.Configs;
 using NET.Starter.Shared.Objects.Dtos;
 
 namespace NET.Starter.Core.Services.Security
 {
-    /// <summary>
-    /// Provides methods for managing user account-related operations, including authentication.
-    /// </summary>
-    /// <param name="dbContext">The database context used for database operations.</param>
-    /// <param name="mapper">The mapper service for object mapping.</param>
-    /// <param name="logger">The logger service for capturing logs specific to the derived service.</param>
-    /// <param name="tokenService">The token service for generating and validating tokens.</param>
     internal class AccountService(
         ApplicationDbContext dbContext, 
         IMapper mapper, 
@@ -40,27 +35,34 @@ namespace NET.Starter.Core.Services.Security
                                                     .ThenInclude(r => r.RolePermissions)
                                                         .ThenInclude(rp => rp.Permission)
                                              .FirstOrDefaultAsync(d =>
-                                                (
-                                                    EF.Functions.Like(d.Username, $"{input.UserIdentifier}") || 
-                                                    EF.Functions.Like(d.EmailAddress, $"{input.UserIdentifier}")
-                                                ) &&
-                                                EF.Functions.Collate(d.Password, CollationConstants.SQL_Latin1_General_CP1_CS_AS) == input.Password
+                                                EF.Functions.Like(d.Username, $"{input.UserIdentifier}") || 
+                                                EF.Functions.Like(d.EmailAddress, $"{input.UserIdentifier}")
                                              );
 
+            // Check if user exists
             if (user == null)
             {
-                _logger.LogError("Login attempt failed for user identifier: {UserIdentifier}.", input.UserIdentifier);
+                _logger.LogError("Login attempt failed for user identifier: {UserIdentifier}, {ErrorMessage}.", input.UserIdentifier, "User not found");
 
-                await HandleBadPasswordAttemptAsync(input.UserIdentifier);
+                return new("There is something wrong with your username or password.", ResponseCode.UnAuthorized);
+            }
+
+            // Check if password is correct
+            if (CryptographyHelper.VerifyPassword(input.Password, user.Password) == PasswordVerificationResult.Failed)
+            {
+                _logger.LogError("Login attempt failed for user identifier: {UserIdentifier}, {ErrorMessage}.", input.UserIdentifier, "Wrong password.");
+
+                await HandleBadPasswordAttemptAsync(input.UserIdentifier, user);
 
                 return new("There is something wrong with your username or password.", ResponseCode.UnAuthorized);
             }
 
             if (user.LockedUntil >= DateTime.UtcNow)
             {
-                _logger.LogWarning("Login attempt failed for user identifier: {UserIdentifier}. Account is locked until: {LockedUntil}.", input.UserIdentifier, user.LockedUntil.Value.ToString("dd-MM-yyyy HH:mm:ss+00:00"));
+                var errorMessage = $"Account is locked until: {user.LockedUntil.Value:dd-MM-yyyy HH:mm:ss+00:00}.";
+                _logger.LogWarning("Login attempt failed for user identifier: {UserIdentifier}. {ErrorMessage}.", input.UserIdentifier, errorMessage);
 
-                return new("Your account is locked", ResponseCode.Forbidden);
+                return new("Your account is locked, please try again later.", ResponseCode.Forbidden);
             }
 
             user.BadPasswordCount = 0;
@@ -71,13 +73,12 @@ namespace NET.Starter.Core.Services.Security
             var permissions = user.UserRoles.SelectMany(ur => ur.Role.RolePermissions).Select(rp => rp.Permission.PermissionCode).Distinct();
             var tokenResult = _tokenService.GenerateToken(user, permissions);
 
-            // Map user and token data to LoginDto
             var loginDto = _mapper.Map<LoginDto>(user);
             _mapper.Map(tokenResult, loginDto);
 
             _logger.LogInformation("Login attempt successfully for user identifier: {UserIdentifier}.", input.UserIdentifier);
 
-            return new("Login successful.", ResponseCode.Ok)
+            return new(responseCode: ResponseCode.Ok)
             {
                 Obj = loginDto
             };
@@ -86,14 +87,11 @@ namespace NET.Starter.Core.Services.Security
         /// <summary>
         /// Handles the process of recording a bad password attempt for a user.
         /// </summary>
-        /// <param name="input">The login input containing the user identifier (username or email) and password.</param>
+        /// <param name="userIdentifier">The identifier of the user.</param>
+        /// <param name="user">The user entity to update.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        private async Task HandleBadPasswordAttemptAsync(string userIdentifier)
+        private async Task HandleBadPasswordAttemptAsync(string userIdentifier, User user)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(d => d.Username == userIdentifier || d.EmailAddress == userIdentifier);
-            if (user == null)
-                return;
-
             if (user.LockedUntil >= DateTime.UtcNow)
             {
                 user.BadPasswordCount += 1;

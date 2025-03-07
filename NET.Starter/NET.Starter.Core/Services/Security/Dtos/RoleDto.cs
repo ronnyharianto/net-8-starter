@@ -25,6 +25,6 @@
         /// The collection is initialized as an empty array by default.
         /// Each permission is represented as a <see cref="PermissionDto"/>.
         /// </remarks>
-        public ICollection<PermissionDto> Permissions { get; set; } = [];
+        public IEnumerable<PermissionDto> Permissions { get; set; } = [];
     }
 }

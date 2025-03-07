@@ -13,12 +13,6 @@ using NET.Starter.Shared.Objects.Inputs;
 
 namespace NET.Starter.Core.Services.Security
 {
-    /// <summary>
-    /// Provides methods for managing roles in the system, including retrieving, creating, updating, and deleting roles.
-    /// </summary>
-    /// <param name="dbContext">The database context used for database operations.</param>
-    /// <param name="mapper">The mapper service for object mapping.</param>
-    /// <param name="logger">The logger service for capturing logs specific to the derived service.</param>
     internal class RoleService(ApplicationDbContext dbContext, IMapper mapper, ILogger<RoleService> logger)
         : BaseService<RoleService>(dbContext, mapper, logger), IRoleService
     {
@@ -26,15 +20,15 @@ namespace NET.Starter.Core.Services.Security
         {
             _logger.LogInformation("Starting to retrieve all roles.");
 
-            var dataRoles = _dbContext.Roles.AsNoTracking()
-                                            .OrderBy(d => d.RoleCode)
-                                            .Select(d => _mapper.Map<RoleDto>(d));
+            var roles = _dbContext.Roles.AsNoTracking()
+                                        .OrderBy(d => d.RoleCode)
+                                        .Select(d => _mapper.Map<RoleDto>(d));
 
             _logger.LogInformation("Successfully retrieved all roles.");
 
             return new(responseCode: ResponseCode.Ok)
             {
-                Obj = await dataRoles.ToListAsync()
+                Obj = await roles.ToListAsync()
             };
         }
 
@@ -47,12 +41,12 @@ namespace NET.Starter.Core.Services.Security
             var searchKey = input.SearchKey?.Trim() ?? string.Empty;
             var searchPattern = $"%{searchKey}%";
 
-            var dataRoles = _dbContext.Roles.AsNoTracking()
-                                            .Where(d => EF.Functions.Like(d.RoleCode, searchPattern))
-                                            .OrderByDescending(d => d.Modified ?? d.Created)
-                                            .Select(d => _mapper.Map<RoleDto>(d));
+            var roles = _dbContext.Roles.AsNoTracking()
+                                        .Where(d => EF.Functions.Like(d.RoleCode, searchPattern))
+                                        .OrderByDescending(d => d.Modified ?? d.Created)
+                                        .Select(d => _mapper.Map<RoleDto>(d));
 
-            retVal.ApplyPagination(input.Page, input.PageSize, dataRoles);
+            retVal.ApplyPagination(input.Page, input.PageSize, roles);
 
             _logger.LogInformation("Successfully retrieved paging of roles.");
 
@@ -63,11 +57,11 @@ namespace NET.Starter.Core.Services.Security
         {
             _logger.LogInformation("Starting to retrieve role by id: {RoleId}.", roleId);
 
-            var dataRole = await _dbContext.Roles.AsNoTracking()
-                                                 .Include(r => r.RolePermissions)
-                                                    .ThenInclude(rp => rp.Permission)
-                                                 .FirstOrDefaultAsync(d => d.Id == roleId);
-            if (dataRole == null)
+            var role = await _dbContext.Roles.AsNoTracking()
+                                             .Include(r => r.RolePermissions)
+                                                .ThenInclude(rp => rp.Permission)
+                                             .FirstOrDefaultAsync(d => d.Id == roleId);
+            if (role == null)
             {
                 _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
 
@@ -78,7 +72,7 @@ namespace NET.Starter.Core.Services.Security
 
             return new(responseCode: ResponseCode.Ok)
             {
-                Obj = _mapper.Map<RoleDto>(dataRole)
+                Obj = _mapper.Map<RoleDto>(role)
             };
         }
 
@@ -94,9 +88,9 @@ namespace NET.Starter.Core.Services.Security
                 return new(validationMessage, ResponseCode.Error);
             }
 
-            var dataRole = _mapper.Map<Role>(input, opts => opts.Items["IsCreate"] = true);
+            var role = _mapper.Map<Role>(input, opts => opts.Items["IsCreate"] = true);
 
-            await _dbContext.Roles.AddAsync(dataRole);
+            await _dbContext.Roles.AddAsync(role);
             await _dbContext.SaveChangesAsync();
 
             _logger.LogInformation("Successfully created role.");
@@ -108,8 +102,8 @@ namespace NET.Starter.Core.Services.Security
         {
             _logger.LogInformation("Starting to update role by id: {RoleId}.", roleId);
 
-            var dataRole = await _dbContext.Roles.Include(r => r.RolePermissions).FirstOrDefaultAsync(d => d.Id == roleId);
-            if (dataRole == null)
+            var role = await _dbContext.Roles.Include(r => r.RolePermissions).FirstOrDefaultAsync(d => d.Id == roleId);
+            if (role == null)
             {
                 _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
 
@@ -124,11 +118,11 @@ namespace NET.Starter.Core.Services.Security
                 return new(validationMessage, ResponseCode.Error);
             }
 
-            _mapper.Map(input, dataRole);
+            _mapper.Map(input, role);
 
             #region Delete permission does not exists on input
 
-            var deleteRolePermissions = from d in dataRole.RolePermissions
+            var deleteRolePermissions = from d in role.RolePermissions
                                         where !input.PermissionIds.Contains(d.PermissionId)
                                         select d;
 
@@ -142,7 +136,7 @@ namespace NET.Starter.Core.Services.Security
             #region Add permission does new on input
 
             var addRolePermissions = from i in input.PermissionIds
-                                     where !dataRole.RolePermissions.Any(d => d.PermissionId == i)
+                                     where !role.RolePermissions.Any(d => d.PermissionId == i)
                                      select i;
 
             if (addRolePermissions.Any())
@@ -161,15 +155,15 @@ namespace NET.Starter.Core.Services.Security
         {
             _logger.LogInformation("Starting to delete role by id: {RoleId}.", roleId);
 
-            var dataRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.Id == roleId);
-            if (dataRole == null)
+            var role = await _dbContext.Roles.FirstOrDefaultAsync(d => d.Id == roleId);
+            if (role == null)
             {
                 _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
 
                 return new("Role data is not found", ResponseCode.NotFound);
             }
                 
-            dataRole.RowStatus = 1;
+            role.RowStatus = 1;
 
             await _dbContext.SaveChangesAsync();
 

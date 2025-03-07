@@ -1,4 +1,5 @@
-﻿using NET.Starter.Shared.Objects.Configs;
+﻿using Microsoft.AspNetCore.Identity;
+using NET.Starter.Shared.Objects.Configs;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -6,6 +7,8 @@ namespace NET.Starter.Shared.Helpers
 {
     public static class CryptographyHelper
     {
+        #region RSA
+
         // Singleton RSA instance for cryptographic operations.
         private static readonly RSA _rsa = RSA.Create();
 
@@ -16,7 +19,7 @@ namespace NET.Starter.Shared.Helpers
         /// Initializes the RSA configuration with public and private keys.
         /// </summary>
         /// <param name="config">The RSA configuration containing keys.</param>
-        public static void Initialize(RsaConfig config)
+        public static void InitializeRsa(RsaConfig config)
         {
             _rsaConfig = config; // Store the RSA configuration for later use.
         }
@@ -62,5 +65,20 @@ namespace NET.Starter.Shared.Helpers
 
             return value;
         }
+
+        #endregion
+
+        #region Password Hashing
+
+        private readonly static PasswordHasher<string> _passwordHasher = new();
+
+        public static string HashPassword(string password) => _passwordHasher.HashPassword(default!, password);
+
+        public static PasswordVerificationResult VerifyPassword(string password, string hashedPassword) => 
+            _passwordHasher.VerifyHashedPassword(default!, hashedPassword, password);
+
+        #endregion
+
+        
     }
 }

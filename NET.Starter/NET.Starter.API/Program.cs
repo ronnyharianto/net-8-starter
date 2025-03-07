@@ -66,7 +66,7 @@ app.UseHttpLogging().UseSerilogRequestLogging();
 /// <summary>
 /// Initializes the database context on application startup.
 /// </summary>
-app.UseDbContext();
+await app.UseDbContext();
 
 if (app.Environment.IsDevelopment())
 {

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NET.Starter.DataAccess.SqlServer.Bases;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
+using NET.Starter.Shared.Helpers;
 
 namespace NET.Starter.DataAccess.SqlServer.Builders.Security
 {
@@ -29,7 +30,8 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
                 .HasMaxLength(100);
 
             builder
-                .Property(e => e.Password) //TODO: This should be encrypted
+                .Property(e => e.Password)
+                .HasConversion(v => CryptographyHelper.HashPassword(v), v => v)
                 .HasMaxLength(2000);
 
             builder
@@ -45,20 +47,6 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
                 .HasIndex(e => e.EmailAddress)
                 .HasFilter("[RowStatus] = 0")
                 .IsUnique();
-
-            SeedingData(builder);
-        }
-
-        /// <summary>
-        /// Seeds initial data into the User table.
-        /// </summary>
-        /// <param name="builder">The <see cref="EntityTypeBuilder{User}"/> used to configure the entity type.</param>
-        private static void SeedingData(EntityTypeBuilder<User> builder)
-        {
-            // Adds predefined data for the User table.
-            builder.HasData(
-                new User { Id = new Guid("73b4c7d1-e6a3-41dc-a8da-6d9a45092761"), Username = "admin", EmailAddress = "admin@example.com", Password = "1234qwER", Fullname = "Administrator", Created = new DateTime(2025, 2, 12, 13, 30, 00) }
-            );
         }
     }
 }

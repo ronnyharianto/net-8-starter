@@ -36,20 +36,6 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
                 .HasIndex(e => new { e.UserId, e.RoleId })
                 .HasFilter("[RowStatus] = 0")
                 .IsUnique();
-
-            SeedingData(builder);
-        }
-
-        /// <summary>
-        /// Seeds initial data into the UserRole table.
-        /// </summary>
-        /// <param name="builder">The <see cref="EntityTypeBuilder{UserRole}"/> used to configure the entity type.</param>
-        private static void SeedingData(EntityTypeBuilder<UserRole> builder)
-        {
-            // Adds predefined data for the UserRole table.
-            builder.HasData(
-                new UserRole { Id = new Guid("8595575f-0851-47b5-8950-7583a8f28927"), UserId = new Guid("73b4c7d1-e6a3-41dc-a8da-6d9a45092761"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), Created = new DateTime(2025, 2, 12, 13, 30, 00) }
-            );
         }
     }
 }
