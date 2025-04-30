@@ -87,12 +87,14 @@ namespace NET.Starter.Core.Middlewares
                         var fullName = identity.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"))?.Value;
                         var emailAddress = identity.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"))?.Value;
                         var sid = identity.Claims.FirstOrDefault(c => c.Type.Equals("sid"))?.Value;
+                        var userTimeZone = identity.Claims.FirstOrDefault(c => c.Type.Equals("timezone"))?.Value;
 
                         // Set the current user context using the retrieved claims.
                         _currentUserAccessor.UserId = new Guid(sid ?? "00000000-0000-0000-0000-000000000000");
                         _currentUserAccessor.FullName = fullName ?? string.Empty;
                         _currentUserAccessor.EmailAddress = emailAddress ?? string.Empty;
                         _currentUserAccessor.Permissions = permissions.Select(p => p.Value);
+                        _currentUserAccessor.UserTimeZone = userTimeZone ?? "UTC";
 
                         return;
                     }

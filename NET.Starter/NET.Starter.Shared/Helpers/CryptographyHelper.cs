@@ -5,6 +5,9 @@ using System.Text;
 
 namespace NET.Starter.Shared.Helpers
 {
+    /// <summary>
+    /// Provides helper methods for cryptographic operations.
+    /// </summary>
     public static class CryptographyHelper
     {
         #region RSA
@@ -70,15 +73,30 @@ namespace NET.Starter.Shared.Helpers
 
         #region Password Hashing
 
+        /// <summary>
+        /// The internal password hasher instance using the default options.
+        /// </summary>
         private readonly static PasswordHasher<string> _passwordHasher = new();
 
-        public static string HashPassword(string password) => _passwordHasher.HashPassword(default!, password);
+        /// <summary>
+        /// Hashes the specified plain-text password using a secure one-way algorithm.
+        /// </summary>
+        /// <param name="password">The plain-text password to hash.</param>
+        /// <returns>The hashed representation of the password.</returns>
+        public static string HashPassword(string password) =>
+            _passwordHasher.HashPassword(default!, password);
 
-        public static PasswordVerificationResult VerifyPassword(string password, string hashedPassword) => 
+        /// <summary>
+        /// Verifies whether the specified plain-text password matches the hashed password.
+        /// </summary>
+        /// <param name="password">The plain-text password to verify.</param>
+        /// <param name="hashedPassword">The previously hashed password to compare against.</param>
+        /// <returns>
+        /// A <see cref="PasswordVerificationResult"/> indicating the result of the verification process.
+        /// </returns>
+        public static PasswordVerificationResult VerifyPassword(string password, string hashedPassword) =>
             _passwordHasher.VerifyHashedPassword(default!, hashedPassword, password);
 
         #endregion
-
-        
     }
 }
