@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NET.Starter.DataAccess.SqlServer.Bases;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
+using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Helpers;
 
 namespace NET.Starter.DataAccess.SqlServer.Builders.Security
@@ -23,7 +24,8 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
 
             builder
                 .Property(e => e.Username)
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .UseCollation(CollationConstants.SQL_Latin1_General_CP1_CS_AS); // Use this collation to make username case-sensitive when comparing
 
             builder
                 .Property(e => e.EmailAddress)

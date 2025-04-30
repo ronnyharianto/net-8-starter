@@ -70,6 +70,10 @@ namespace NET.Starter.Core.Middlewares
                         return;
                     }
                 }
+                else if (!context.HttpContext.User.Identity?.IsAuthenticated ?? true)
+                {
+                    _logger.LogError("User is not authenticated.");
+                }
                 // Check if the user has valid claims from their identity.
                 else if (context.HttpContext.User.Identity is ClaimsIdentity identity && identity.Claims != null && identity.Claims.Any())
                 {
@@ -90,12 +94,11 @@ namespace NET.Starter.Core.Middlewares
                         _currentUserAccessor.EmailAddress = emailAddress ?? string.Empty;
                         _currentUserAccessor.Permissions = permissions.Select(p => p.Value);
 
-                        return; // User is authorized, allow the request.
+                        return;
                     }
-                }
 
-                // Log an error if the user lacks the required permissions.
-                _logger.LogError("User does not have required permissions.");
+                    _logger.LogError("User does not have required permissions.");
+                }
 
                 // Respond with an unauthorized response.
                 context.HttpContext.Response.StatusCode = response.Code;

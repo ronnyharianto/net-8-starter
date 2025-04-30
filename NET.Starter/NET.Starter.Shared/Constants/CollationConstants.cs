@@ -3,12 +3,12 @@
     public static class CollationConstants
     {
         /// <summary>
-        /// Use this collation for case-insensitive comparisons.
+        /// Use this collation for case-insensitive comparisons (SQL Server).
         /// </summary>
         public const string SQL_Latin1_General_CP1_CI_AS = "SQL_Latin1_General_CP1_CI_AS";
 
         /// <summary>
-        /// Use this collation for case-sensitive comparisons.
+        /// Use this collation for case-sensitive comparisons (SQL Server).
         /// </summary>
         public const string SQL_Latin1_General_CP1_CS_AS = "SQL_Latin1_General_CP1_CS_AS";
     }

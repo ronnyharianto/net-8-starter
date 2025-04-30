@@ -9,7 +9,7 @@
         /// <summary>
         /// Key used in JWT tokens to represent the permission type.
         /// </summary>
-        public const string TypeCode = "Permission";
+        public const string TypeCode = "permissions";
 
         /// <summary>
         /// Key used for accessing the endpoint to refresh a JWT token.

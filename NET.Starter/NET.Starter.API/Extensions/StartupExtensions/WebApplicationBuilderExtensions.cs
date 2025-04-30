@@ -126,12 +126,7 @@ namespace NET.Starter.API.Extensions.StartupExtensions
             var securityConfig = builder.Configuration.GetSection("SecurityConfig");
 
             builder.Services
-                .AddAuthentication(options =>
-                {
-                    // Set the default authentication and challenge schemes to JWT Bearer.
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     // Configure token validation parameters.
