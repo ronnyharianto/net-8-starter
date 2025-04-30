@@ -82,13 +82,34 @@ namespace NET.Starter.Shared
 
             #endregion
 
-            #region Register Configuration Options
+            #region Timezone Initialization
 
-            // Register configuration options from appsettings.json or environment variables.
-            // These configurations are bound using the Options Pattern and can be injected via IOptions<T>.
+            // Retrieve the Timezone configuration settings from the configuration system.
+            var timeZoneConfig = configuration.GetSection(nameof(TimeZoneConfig)).Get<TimeZoneConfig>();
 
-            // Security settings
-            services.Configure<SecurityConfig>(opt => configuration.Bind(nameof(SecurityConfig), opt));
+            if (timeZoneConfig != null)
+            {
+                TimeZoneHelper.Initialize(timeZoneConfig);
+
+                Log.Logger.Information("Timezone configuration is available. Timezone operations will be available.");
+            }
+            else
+            {
+                Log.Logger.Error("Timezone configuration is missing. Timezone operations will not be available.");
+            }
+
+                #endregion
+
+                #region Register Configuration Options
+
+                // Register configuration options from appsettings.json or environment variables.
+                // These configurations are bound using the Options Pattern and can be injected via IOptions<T>.
+
+                // Security settings
+                services.Configure<SecurityConfig>(opt => configuration.Bind(nameof(SecurityConfig), opt));
+
+            // Timezone settings
+            services.Configure<TimeZoneConfig>(opt => configuration.Bind(nameof(TimeZoneConfig), opt));
 
             #endregion
 

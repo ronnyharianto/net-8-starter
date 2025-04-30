@@ -52,10 +52,87 @@ If you are using Grafana for logging, you can run the following query in Grafana
 
 ---
 
+## **✅ Coding Rules & Tips**
+
+### 📌 Use async/await Properly
+- Prefer async/await over .Result or .Wait() to avoid deadlocks and improve performance.
+- ✅ Do:
+	```
+	var result = await myService.GetDataAsync();
+	```
+- ❌ Avoid:
+	```
+	var result = myService.GetDataAsync().Result;
+	```
+
+### 📌 Use `DateTime.UtcNow` Instead of `DateTime.Now`
+- **Why?** `DateTime.Now` depends on the server's timezone, which can lead to inconsistency across environments or if you change your environment (change on-premise into on-cloud infrastucture).
+- ✅ Do:
+	```
+	var now = DateTime.UtcNow;
+	```
+- ❌ Avoid:
+	```
+	var now = DateTime.Now;
+	```
+
+### 📌 Define Date or DateTime Column
+- Make sure to choose the correct type based on whether you need time precision or not.
+- If you only need date without time:
+	```
+	public DateOnly SomeDate { get; set; }
+	```
+- If you need both date and time:
+	```
+	public DateTime SomeDate { get; set; }
+	```
+
+### 📌 Use ILogger<T> for Logging
+- Prefer dependency injection over `Console.WriteLine`
+	```
+	private readonly ILogger<MyService> _logger;
+	```
+- Ensure your functions include meaningful logging to make it easier for maintainers to trace the system flow and diagnose problems.
+
+### 📌 Follow Naming Conventions
+- **PascalCase**: for classes, methods, properties.
+- **camelCase**: for local variables and method parameters.
+
+### 📌 Avoid Magic Numbers
+- Always assign meaningful names to constant values.
+- ✅ Do:
+	```
+	const int MaxRetries = 3;
+	for (int i = 0; i < MaxRetries; i++) { ... }
+	```
+- ❌ Avoid:
+	```
+	for (int i = 0; i < 3; i++) { ... }
+	```
+
+### 📌 Write XML Documentation
+- Always write XML documentation (///) for public methods, classes, and interfaces.
+- This improves IntelliSense support and helps maintainability.
+- ✅ Example:
+	```
+	/// <summary>
+	/// Calculates the total price including tax.
+	/// </summary>
+	/// <param name="price">The base price.</param>
+	/// <param name="taxRate">The tax rate in percentage.</param>
+	/// <returns>The total price including tax.</returns>
+	public decimal CalculateTotal(decimal price, decimal taxRate)
+	{
+		return price * (1 + taxRate / 100);
+	}
+	```
+
+---
+
 ## **🎯 Get Started**
 1. Clone this repository:
 	```
-	{app="net-starter-api", env="dev"} | json
+	git clone https://github.com/ronnyharianto/net-starter
 	```
 2. Install dependencies:
 	```

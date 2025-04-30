@@ -59,10 +59,12 @@ namespace NET.Starter.Core.Services.Security
 
             if (user.LockedUntil >= DateTime.UtcNow)
             {
-                var errorMessage = $"Account is locked until: {user.LockedUntil.Value:dd-MM-yyyy HH:mm:ss+00:00}.";
+                var lockedUntilSystemTimeZone = TimeZoneHelper.ConvertToTimezoneId(user.LockedUntil.Value);
+                var errorMessage = $"Account is locked until: {lockedUntilSystemTimeZone:dd-MM-yyyy HH:mm:ss}";
+
                 _logger.LogWarning("Login attempt failed for user identifier: {UserIdentifier}. {ErrorMessage}.", input.UserIdentifier, errorMessage);
 
-                return new("Your account is locked, please try again later.", ResponseCode.Forbidden);
+                return new($"Your account is locked until: {lockedUntilSystemTimeZone:dd-MM-yyyy HH:mm:ss}, please try again later.", ResponseCode.Forbidden);
             }
 
             // Reset bad password count and locked until when login is successful
@@ -93,22 +95,18 @@ namespace NET.Starter.Core.Services.Security
         /// <returns>A task representing the asynchronous operation.</returns>
         private async Task HandleBadPasswordAttemptAsync(string userIdentifier, User user)
         {
-            if (user.LockedUntil >= DateTime.UtcNow)
-            {
-                user.BadPasswordCount += 1;
-                user.LockedUntil = null;
+            user.BadPasswordCount += 1;
 
-                _logger.LogInformation("User {UserIdentifier} has entered a bad password. Attempt count: {BadPasswordCount}", userIdentifier, user.BadPasswordCount);
-            }
-
-            if (user.BadPasswordCount >= _securityConfig.MaxLoginRetry)
+            if (user.BadPasswordCount == _securityConfig.MaxLoginRetry)
             {
                 user.BadPasswordCount = 0;
                 user.LockedUntil = DateTime.UtcNow.AddMinutes(_securityConfig.AutoUnlockAfter);
 
+                var lockedUntilSystemTimeZone = TimeZoneHelper.ConvertToTimezoneId(user.LockedUntil.Value);
+
                 _logger.LogInformation("User {UserIdentifier} has entered a bad password too many times. Locked until: {LockedUntil}",
                     userIdentifier,
-                    user.LockedUntil.Value.ToString("dd-MM-yyyy HH:mm:ss+00:00"));
+                    lockedUntilSystemTimeZone.ToString("dd-MM-yyyy HH:mm:ss"));
             }
 
             await _dbContext.SaveChangesAsync();

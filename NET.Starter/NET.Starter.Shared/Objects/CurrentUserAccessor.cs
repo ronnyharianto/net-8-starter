@@ -30,6 +30,12 @@
         //public Guid? UserFcmTokenId { get; set; }
 
         /// <summary>
+        /// Gets or sets the time zone of the user.
+        /// Example: "UTC".
+        /// </summary>
+        public string UserTimeZone { get; set; } = "UTC";
+
+        /// <summary>
         /// Gets or sets the list of permissions granted to the user.
         /// Example for general purpose: ["RefreshToken", "MyPermission", "IamAdministrator", etc].
         /// Example for specific menu: ["MasterData.Company.Menu", "MasterData.Company.View", "MasterData.Company.Create", etc].
