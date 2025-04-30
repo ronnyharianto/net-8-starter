@@ -12,11 +12,5 @@ namespace NET.Starter.Core.Services.Security.Dtos
         /// Gets or sets the full name of the authenticated user.
         /// </summary>
         public string FullName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the list of permission codes assigned to the authenticated user.
-        /// These codes determine the user's access level within the system.
-        /// </summary>
-        public IEnumerable<string> PermissionCodes { get; set; } = [];
     }
 }

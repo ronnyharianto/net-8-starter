@@ -14,13 +14,7 @@ namespace NET.Starter.Core.Services.Security.Configurations
         {
             #region Transform Entity into Dto
 
-            CreateMap<User, LoginDto>()
-                .AfterMap((src, dest, context) =>
-                {
-                    dest.FullName = src.Fullname;
-                    dest.PermissionCodes = src.UserRoles.SelectMany(d => d.Role.RolePermissions.Select(d => d.Permission.PermissionCode)).OrderBy(d => d);
-                })
-                .ForAllMembers(opt => opt.Ignore());
+            CreateMap<User, LoginDto>();
 
             #endregion
 

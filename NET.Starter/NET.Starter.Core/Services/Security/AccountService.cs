@@ -65,6 +65,7 @@ namespace NET.Starter.Core.Services.Security
                 return new("Your account is locked, please try again later.", ResponseCode.Forbidden);
             }
 
+            // Reset bad password count and locked until when login is successful
             user.BadPasswordCount = 0;
             user.LockedUntil = null;
 
