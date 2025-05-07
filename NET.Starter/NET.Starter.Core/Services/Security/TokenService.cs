@@ -16,10 +16,6 @@ namespace NET.Starter.Core.Services.Security
     /// <summary>
     /// Provides methods for generating JWT access and refresh tokens for authenticated users.
     /// </summary>
-    /// <param name="dbContext">The database context used for database operations.</param>
-    /// <param name="mapper">The mapper service for object mapping.</param>
-    /// <param name="logger">The logger service for capturing logs specific to the derived service.</param>
-    /// <param name="securityOption">Configuration options related to security settings, such as secret keys and token expiration times.</param>
     internal class TokenService(
         ApplicationDbContext dbContext, 
         IMapper mapper, 
@@ -36,30 +32,21 @@ namespace NET.Starter.Core.Services.Security
         /// <param name="dataUser">The user for whom the tokens are generated.</param>
         /// <param name="permissions">A list of permissions assigned to the user, used to build claims for the access token.</param>
         /// <returns>
-        /// A <see cref="TokenResult"/> containing the generated access token, refresh token, and their expiration times.
+        /// A <see cref="TokenResult"/> containing the generated access token and refresh token along with their expiration times.
         /// </returns>
-        /// <remarks>
-        /// - The access token is used for authentication and authorization within the application.
-        /// - The refresh token is used to obtain a new access token when the current one expires.
-        /// - Both tokens are generated securely and follow the defined expiration policies.
-        /// </remarks>
-        internal TokenResult GenerateToken(User dataUser, IEnumerable<string> permissions)
+        internal TokenResult GenerateToken(User dataUser, Guid companyId, IEnumerable<string> permissions)
         {
-            _logger.LogInformation("Starting Generate Token with email address => {EmailAddress}, list permission => {Permissions}", dataUser.EmailAddress, permissions);
+            _logger.LogInformation("Starting token generation for user Id: {UserId} to access company Id: {CompanyId}, with permission: {Permissions}", dataUser.Id, companyId, permissions);
 
-            // Set expiration times for the access token and refresh token.
             var accessTokenExpireAt = DateTime.UtcNow.AddMinutes(_securityConfig.TokenExpired);
             var refreshTokenExpireAt = DateTime.UtcNow.AddDays(_securityConfig.SessionExpired);
 
-            // Generate an access token with the specified permissions.
-            var accessToken = CreateSecurity(dataUser, accessTokenExpireAt, permissions);
-            _logger.LogInformation("Successfully generated {TokenType} for {EmailAddress}", "Access Token", dataUser.EmailAddress);
+            var accessToken = CreateSecurity(dataUser, accessTokenExpireAt, companyId, permissions);
+            _logger.LogInformation("Successfully generated {TokenType} for user Id: {UserId} to access company Id: {CompanyId}", "Access Token", dataUser.Id, companyId);
 
-            // Generate a refresh token with a special permission for token refresh.
-            var refreshToken = CreateSecurity(dataUser, refreshTokenExpireAt, [PermissionConstants.RefreshToken]);
-            _logger.LogInformation("Successfully generated {TokenType} for {EmailAddress}", "Refresh Token", dataUser.EmailAddress);
+            var refreshToken = CreateSecurity(dataUser, refreshTokenExpireAt, companyId, [PermissionConstants.RefreshToken]);
+            _logger.LogInformation("Successfully generated {TokenType} for user Id: {UserId} to access company Id: {CompanyId}", "Refresh Token", dataUser.Id, companyId);
 
-            // Return the generated tokens along with their expiration times.
             return new()
             {
                 AccessToken = accessToken,
@@ -74,14 +61,13 @@ namespace NET.Starter.Core.Services.Security
         /// </summary>
         /// <param name="dataUser">The user for whom the token is created.</param>
         /// <param name="expireAt">The expiration time of the token.</param>
+        /// <param name="companyId">The company ID associated with the token.</param>
         /// <param name="permissions">A list of permissions assigned to the user, used to build claims for the token.</param>
         /// <returns>A JWT string representing the generated token.</returns>
-        private string CreateSecurity(User dataUser, DateTime expireAt, IEnumerable<string> permissions)
+        private string CreateSecurity(User dataUser, DateTime expireAt, Guid companyId, IEnumerable<string> permissions)
         {
-            // Encode the secret key for signing the token.
             var secretKey = Encoding.ASCII.GetBytes(_securityConfig.SecretKey);
 
-            // Define the token descriptor, including claims, expiration, and signing credentials.
             var securityTokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new(
@@ -90,23 +76,22 @@ namespace NET.Starter.Core.Services.Security
                     new(JwtRegisteredClaimNames.Email, dataUser.EmailAddress),
                     new(JwtRegisteredClaimNames.GivenName, dataUser.Fullname),
                     new(JwtRegisteredClaimNames.Sid, dataUser.Id.ToString()),
-                    new("timezone", _timeZoneConfig.SystemTimeZone)
+                    new(CustomClaimTypeConstants.Company, companyId.ToString()),
+                    new(CustomClaimTypeConstants.TimeZone, _timeZoneConfig.SystemTimeZone)
                 ]),
-                Expires = expireAt, // Set the token's expiration time.
-                Issuer = _securityConfig.Issuer, // The token issuer.
-                Audience = _securityConfig.Audience, // The token audience.
-                SigningCredentials = new(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha512Signature), // Token signing algorithm.
+                Expires = expireAt,
+                Issuer = _securityConfig.Issuer,
+                Audience = _securityConfig.Audience,
+                SigningCredentials = new(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha512Signature),
                 Claims = new Dictionary<string, object>
                 {
-                    { PermissionConstants.TypeCode, permissions.ToList() } // Add permissions as a custom claim.
+                    { PermissionConstants.TypeCode, permissions.ToList() }
                 }
             };
 
-            // Create and write the JWT using a token handler.
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(securityTokenDescriptor);
 
-            // Return the token as a string.
             return tokenHandler.WriteToken(token);
         }
     }

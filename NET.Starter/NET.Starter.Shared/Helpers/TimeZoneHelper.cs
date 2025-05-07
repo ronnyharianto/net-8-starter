@@ -1,4 +1,5 @@
 ﻿using NET.Starter.Shared.Objects.Configs;
+using NET.Starter.Shared.Objects.Dtos;
 
 namespace NET.Starter.Shared.Helpers
 {
@@ -86,5 +87,32 @@ namespace NET.Starter.Shared.Helpers
                 ? localDateTime
                 : ConvertToUtc(localDateTime, _timeZoneConfig.SystemTimeZone);
         }
+
+        /// <summary>
+        /// Retrieves all available system time zones as a list of time zone DTOs.
+        /// Each item contains the time zone ID and its display name.
+        /// </summary>
+        /// <returns>An enumerable of <see cref="TimeZoneDto"/> containing time zone information.</returns>
+        public static IEnumerable<TimeZoneDto> RetrieveTimezone()
+        {
+            return TimeZoneInfo.GetSystemTimeZones()
+                .Select(tz => new TimeZoneDto
+                {
+                    Id = tz.Id,
+                    DisplayName = tz.DisplayName
+                });
+        }
+
+        /// <summary>
+        /// Checks whether the provided time zone ID is valid on the current system.
+        /// </summary>
+        /// <param name="timeZoneId">The time zone ID to validate.</param>
+        /// <returns><c>true</c> if the time zone ID is valid; otherwise, <c>false</c>.</returns>
+        public static bool ValidateTimeZoneId(string timeZoneId)
+        {
+            return TimeZoneInfo.TryFindSystemTimeZoneById(timeZoneId, out _);
+        }
+
+
     }
 }

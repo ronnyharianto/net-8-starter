@@ -18,33 +18,33 @@ namespace NET.Starter.Core.Services.Security
     {
         public async Task<BaseDto> ActivateUserAsync(Guid userId)
         {
-            _logger.LogInformation("Starting to activate user by id: {UserId}.", userId);
+            _logger.LogInformation("Starting user activation for Id: {UserId}.", userId);
 
             var user = await _dbContext.Users.FirstOrDefaultAsync(d => d.Id == userId);
             if (user == null)
             {
-                _logger.LogError("User data is not found for id: {UserId}.", userId);
+                _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User data is not found", ResponseCode.NotFound);
+                return new("User not found.", ResponseCode.NotFound);
             }
 
             user.IsActive = true;
 
             await _dbContext.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully activated user by id: {UserId}.", userId);
+            _logger.LogInformation("User activation successful for Id: {UserId}.", userId);
 
-            return new("User data is successfully activated", ResponseCode.Ok);
+            return new("User has been successfully activated.", ResponseCode.Ok);
         }
 
         public async Task<BaseDto> CreateUserAsync(UserInput input)
         {
-            _logger.LogInformation("Starting to create user.");
+            _logger.LogInformation("Starting user creation: {Username}.", input.Username);
 
             var (isValid, validationMessage) = await ValidateUserInput(input);
             if (!isValid)
             {
-                _logger.LogError("Failed to create user. Reason : {ValidationMessage}", validationMessage);
+                _logger.LogError("User creation failed. Reason : {ErrorMessage}.", validationMessage);
 
                 return new(validationMessage, ResponseCode.Error);
             }
@@ -54,66 +54,70 @@ namespace NET.Starter.Core.Services.Security
             await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully created user.");
+            _logger.LogInformation("User creation successful: {Username}.", user.Username);
 
-            return new("User data is successfully created", ResponseCode.Ok);
+            return new("User has been successfully created.", ResponseCode.Ok);
         }
 
         public async Task<BaseDto> DeactivateUserAsync(Guid userId)
         {
-            _logger.LogInformation("Starting to deactivate user by id: {UserId}.", userId);
+            _logger.LogInformation("Starting user deactivation for Id: {UserId}.", userId);
 
             var user = await _dbContext.Users.FirstOrDefaultAsync(d => d.Id == userId);
             if (user == null)
             {
-                _logger.LogError("User data is not found for id: {UserId}.", userId);
+                _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User data is not found", ResponseCode.NotFound);
+                return new("User not found.", ResponseCode.NotFound);
             }
 
             user.IsActive = false;
 
             await _dbContext.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully deactivated user by id: {UserId}.", userId);
+            _logger.LogInformation("User deactivation successful for Id: {UserId}.", userId);
 
-            return new("User data is successfully deactivated", ResponseCode.Ok);
+            return new("User has been successfully deactivated.", ResponseCode.Ok);
         }
 
         public async Task<BaseDto> DeleteUserAsync(Guid userId)
         {
-            _logger.LogInformation("Starting to delete user by id: {UserId}.", userId);
+            _logger.LogInformation("Starting user deletion for Id: {UserId}.", userId);
 
             var user = await _dbContext.Users.FirstOrDefaultAsync(d => d.Id == userId);
             if (user == null)
             {
-                _logger.LogError("User data is not found for id: {UserId}.", userId);
+                _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User data is not found", ResponseCode.NotFound);
+                return new("User not found.", ResponseCode.NotFound);
             }
 
             user.RowStatus = 1;
 
             await _dbContext.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully deleted user by id: {UserId}.", userId);
+            _logger.LogInformation("User deletion successful for Id: {UserId}.", userId);
 
-            return new("User data is successfully deleted", ResponseCode.Ok);
+            return new("User has been successfully deleted.", ResponseCode.Ok);
         }
 
         public async Task<ObjectDto<UserDto>> RetrieveUserByIdAsync(Guid userId)
         {
-            _logger.LogInformation("Starting to retrieve user by id: {UserId}.", userId);
+            _logger.LogInformation("Starting to retrieve user for Id: {UserId}.", userId);
 
-            var user = await _dbContext.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).AsNoTracking().FirstOrDefaultAsync(d => d.Id == userId);
+            var user = await _dbContext.Users.Include(u => u.UserCompanies)
+                                                .ThenInclude(uc => uc.UserCompanyRoles)
+                                                    .ThenInclude(ur => ur.Role)
+                                             .AsNoTracking()
+                                             .FirstOrDefaultAsync(d => d.Id == userId);
             if (user == null)
             {
-                _logger.LogError("User data is not found for id: {UserId}.", userId);
+                _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User data is not found", ResponseCode.NotFound);
+                return new("User not found", ResponseCode.NotFound);
             }
 
-            _logger.LogInformation("Successfully retrieved user by id: {UserId}.", userId);
+            _logger.LogInformation("User successfully retrieved for Id: {UserId}.", userId);
 
             return new(responseCode: ResponseCode.Ok)
             {
@@ -123,7 +127,10 @@ namespace NET.Starter.Core.Services.Security
 
         public PagingDto<UserDto> RetrieveUsersPaging(PagingSearchInputBase input)
         {
-            _logger.LogInformation("Starting to retrieve paging of users.");
+            _logger.LogInformation("Starting to retrieve paginated list of users.");
+
+            _logger.LogInformation("Pagination parameters - Page: {Page}, PageSize: {PageSize}, SearchKey: \"{SearchKey}\"",
+                input.Page, input.PageSize, input.SearchKey ?? string.Empty);
 
             var retVal = new PagingDto<UserDto>();
 
@@ -141,62 +148,103 @@ namespace NET.Starter.Core.Services.Security
 
             retVal.ApplyPagination(input.Page, input.PageSize, users);
 
-            _logger.LogInformation("Successfully retrieved paging of users.");
+            _logger.LogInformation("Successfully retrieved paginated list of users. Total items: {TotalItems}", retVal.RecordsTotal);
 
             return retVal;
         }
 
         public async Task<BaseDto> UpdateUserAsync(Guid userId, UserInput input)
         {
-            _logger.LogInformation("Starting to update user by id: {UserId}.", userId);
+            _logger.LogInformation("Starting update user for Id: {UserId}.", userId);
 
             var (isValid, validationMessage) = await ValidateUserInput(input, userId);
             if (!isValid)
             {
-                _logger.LogError("Failed to update user. Reason : {ValidationMessage}", validationMessage);
+                _logger.LogError("Failed update user. Reason: {ValidationMessage}.", validationMessage);
 
                 return new(validationMessage, ResponseCode.Error);
             }
 
-            var user = await _dbContext.Users.Include(u => u.UserRoles).FirstOrDefaultAsync(d => d.Id == userId);
+            var user = await _dbContext.Users.Include(u => u.UserCompanies).ThenInclude(uc => uc.UserCompanyRoles).FirstOrDefaultAsync(d => d.Id == userId);
             if (user == null)
             {
-                _logger.LogError("User data is not found for id: {UserId}.", userId);
+                _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User data is not found", ResponseCode.NotFound);
+                return new("User not found", ResponseCode.NotFound);
             }
 
             _mapper.Map(input, user);
 
-            #region Delete role does not exists on input
+            #region Delete mapping user company does not exists on input
 
-            var deleteRoles = from d in user.UserRoles
-                              where !input.RoleIds.Contains(d.RoleId)
-                              select d;
+            var deleteUserCompanies = from d in user.UserCompanies
+                                      join i in input.UserCompanies on d.Id equals i.UserCompanyId into iLeft
+                                      from i in iLeft.DefaultIfEmpty()
+                                      where i == null
+                                      select d;
 
-            foreach (var userRole in deleteRoles)
+            foreach (var deleteUserCompany in deleteUserCompanies)
             {
-                userRole.RowStatus = 1;
+                deleteUserCompany.RowStatus = 1;
             }
+
+            #region Edit mapping user company exists on input
+
+            var editUserCompanies = from d in user.UserCompanies
+                                    join i in input.UserCompanies on d.Id equals i.UserCompanyId
+                                    select d;
+
+            foreach (var editUserCompany in editUserCompanies)
+            {
+                _mapper.Map(input.UserCompanies.First(d => d.UserCompanyId == editUserCompany.Id), editUserCompany);
+
+                var userCompanyInput = input.UserCompanies.First(d => d.UserCompanyId == editUserCompany.Id);
+
+                #region Delete role does not exists on input
+
+                var deleteRoles = from d in editUserCompany.UserCompanyRoles
+                                  where !userCompanyInput.RoleIds.Contains(d.RoleId)
+                                  select d;
+
+                foreach (var deleteRole in deleteRoles)
+                {
+                    deleteRole.RowStatus = 1;
+                }
+
+                #endregion
+
+                #region Add role does not exists on input
+
+                var addRoles = from i in userCompanyInput.RoleIds
+                               where !editUserCompany.UserCompanyRoles.Any(d => d.RoleId == i)
+                               select i;
+
+                if (addRoles.Any())
+                    await _dbContext.UserCompanyRoles.AddRangeAsync(addRoles.Select(d => new UserCompanyRole { UserCompanyId = editUserCompany.Id, RoleId = d }));
+
+                #endregion
+            }
+
+            #endregion
 
             #endregion
 
             #region Add role does not exists on input
 
-            var addRoles = from i in input.RoleIds
-                           where !user.UserRoles.Any(d => d.RoleId == i)
-                           select i;
+            var addUserCompanies = from i in input.UserCompanies
+                                   where !user.UserCompanies.Any(d => d.Id == i.UserCompanyId)
+                                   select i;
 
-            if (addRoles.Any())
-                await _dbContext.UserRoles.AddRangeAsync(addRoles.Select(d => new UserRole { UserId = user.Id, RoleId = d }));
+            if (addUserCompanies.Any())
+                await _dbContext.UserCompanies.AddRangeAsync(_mapper.Map<ICollection<UserCompany>>(addUserCompanies, opts => opts.Items["IsCreate"] = true));
 
             #endregion
 
             await _dbContext.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully updated user by id: {UserId}.", userId);
+            _logger.LogInformation("Successfully updated user for Id: {UserId}.", userId);
 
-            return new("User data is successfully updated", ResponseCode.Ok);
+            return new("User successfully updated", ResponseCode.Ok);
         }
 
         /// <summary>
@@ -246,7 +294,7 @@ namespace NET.Starter.Core.Services.Security
             if (!isValidPassword)
                 return (false, messageValidPassword);
 
-            if (!input.RoleIds.Any())
+            if (!input.UserCompanies.SelectMany(d => d.RoleIds).Any())
                 return (false, "Please add at least one role.");
 
             var dataDuplicateUser = await _dbContext.Users.FirstOrDefaultAsync(d => 

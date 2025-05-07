@@ -53,15 +53,9 @@ namespace NET.Starter.DataAccess.SqlServer.Models.Security
         public DateTime? LockedUntil { get; set; }
 
         /// <summary>
-        /// Gets or sets the user roles associated with a specific user.
+        /// Gets or sets the user companies associated with a specific user.
         /// This is a navigation property.
         /// </summary>
-        public virtual ICollection<UserRole> UserRoles { get; set; } = [];
-
-        /// <summary>
-        /// Gets or sets the user fcm tokens associated with a specific user.
-        /// This is a navigation property.
-        /// </summary>
-        public virtual ICollection<UserFcmToken> UserFcmTokens { get; set; } = [];
+        public virtual ICollection<UserCompany> UserCompanies { get; set; } = [];
     }
 }

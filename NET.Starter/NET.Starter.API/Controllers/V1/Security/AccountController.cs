@@ -1,30 +1,48 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NET.Starter.Core.Services.Security.Dtos;
+using NET.Starter.Core.Services.Organization.Dtos;
+using NET.Starter.Core.Services.Security.CustomModels;
 using NET.Starter.Core.Services.Security.Inputs;
 using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.Shared.Attributes;
+using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {
-    // Define the route for this controller as 'api/v1/Account'
     [Route("api/v1/[controller]")]
     public class AccountController(IAccountService accountService) : BaseController
     {
-        // Field to hold the instance of the AccountService injected through the constructor
         private readonly IAccountService _accountService = accountService;
 
         [AllowAnonymous]
         [Mutation([ResponseCode.Ok, ResponseCode.UnAuthorized])]
         [HttpPost("login")]
         [SwaggerOperation(Summary = "Login account")]
-        public async Task<ObjectDto<LoginDto>> LoginAsync(LoginInput input)
+        public async Task<ObjectDto<TokenResult>> LoginAsync(LoginInput input) => await _accountService.LoginAsync(input);
+
+        [AppAuthorize(PermissionConstants.RefreshToken)]
+        [HttpGet("refresh-token")]
+        [SwaggerOperation(Summary = "Refresh token")]
+        public async Task<ObjectDto<TokenResult>> RefreshTokenAsync() => await _accountService.RefreshTokenAsync();
+
+        [AppAuthorize]
+        [HttpGet("my-companies")]
+        [SwaggerOperation(Summary = "Retrieve my companies")]
+        public async Task<ObjectDto<IEnumerable<CompanyDto>>> RetrieveMyCompaniesAsync() => await _accountService.RetrieveMyCompaniesAsync();
+
+        [AppAuthorize]
+        [HttpGet("change-company/{companyId:guid}")]
+        [SwaggerOperation(Summary = "Change company")]
+        public async Task<ObjectDto<TokenResult>> ChangeCompanyAsync(Guid companyId)
         {
-            // Call the service layer to retrieve the data
-            return await _accountService.LoginAsync(input);
+            var tokenResult = await _accountService.RefreshTokenAsync(companyId);
+
+            if (!tokenResult.Succeeded) tokenResult.Message = "Changing company failed because user not found.";
+
+            return tokenResult;
         }
     }
 }

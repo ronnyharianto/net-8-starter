@@ -15,11 +15,8 @@ namespace NET.Starter.Core
         /// <summary>
         /// Registers services and configurations for the Core layer into the dependency injection container.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to which services are added.</param>
-        /// <returns>The modified <see cref="IServiceCollection"/>.</returns>
         public static IServiceCollection RegisterCore(this IServiceCollection services)
         {
-            // Apply the AuthorizationFilter and TransactionFilter filters to all controllers
             services
                 .AddControllers(options =>
                 {
@@ -27,15 +24,17 @@ namespace NET.Starter.Core
                     options.Filters.Add<TransactionFilter<ApplicationDbContext>>();
                 });
 
-            // Register AutoMapper with assemblies from the Core layer
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            // Register Services with scoped lifetimes
+            #region Register Services with scoped lifetimes
+
             services.AddScoped<TokenService>();
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IUserService, UserService>();                
+            services.AddScoped<IUserService, UserService>();
+
+            #endregion            
 
             return services;
         }

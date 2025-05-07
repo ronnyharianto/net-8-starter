@@ -20,7 +20,7 @@ namespace NET.Starter.DataAccess.SqlServer.Models.Security
         /// Gets or sets the user roles associated with a specific role.
         /// This is a navigation property.
         /// </summary>
-        public virtual ICollection<UserRole> UserRoles { get; set; } = [];
+        public virtual ICollection<UserCompanyRole> UserCompanyRoles { get; set; } = [];
 
         /// <summary>
         /// Gets or sets the role permissions associated with a specific role.
