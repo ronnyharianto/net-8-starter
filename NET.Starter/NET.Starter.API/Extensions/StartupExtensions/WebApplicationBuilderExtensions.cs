@@ -10,16 +10,10 @@ namespace NET.Starter.API.Extensions.StartupExtensions
     /// <summary>
     /// Extension methods for configuring services and middleware in the application pipeline.
     /// </summary>
-    /// <remarks>
-    /// This class provides helper methods to simplify common configuration tasks such as 
-    /// setting up controllers, authentication, Swagger, and CORS policies. These methods 
-    /// extend the functionality of <see cref="WebApplicationBuilder"/> to streamline setup 
-    /// for ASP.NET Core applications.
-    /// </remarks>
     public static class WebApplicationBuilderExtensions
     {
         /// <summary>
-        /// Configures the application to use controllers with antiforgery settings and global filters.
+        /// Configures the application to use controllers.
         /// </summary>
         /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance being extended.</param>
         /// <returns>The same <see cref="WebApplicationBuilder"/> instance for chaining further configurations.</returns>
@@ -31,7 +25,6 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                 options.SuppressXFrameOptionsHeader = true;
             });
 
-            // Add controllers and apply global filters.
             builder.Services
                 .AddControllers()
                 // Configure JSON serialization to ignore reference loops.
@@ -53,10 +46,8 @@ namespace NET.Starter.API.Extensions.StartupExtensions
         {
             builder.Services.AddSwaggerGen(c =>
             {
-                // Configure basic API metadata.
                 c.SwaggerDoc("v1", new() { Title = "NET.Starter.API", Version = "v1" });
 
-                // Add a JWT Bearer authentication definition for the Swagger UI.
                 c.AddSecurityDefinition("Bearer", new()
                 {
                     Type = SecuritySchemeType.Http,
@@ -67,7 +58,6 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                     Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')"
                 });
 
-                // Define security requirements for endpoints.
                 c.AddSecurityRequirement(new()
                 {
                     {
@@ -83,7 +73,6 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                     }
                 });
 
-                // Enable annotation support in Swagger.
                 c.EnableAnnotations();
             });
 
@@ -102,12 +91,11 @@ namespace NET.Starter.API.Extensions.StartupExtensions
         {
             builder.Services.AddCors(options =>
             {
-                // Configure CORS to allow specific methods, headers, and credentials.
                 options.AddDefaultPolicy(cosrBuilder =>
                     cosrBuilder
-                        .AllowAnyMethod()
                         .WithOrigins(corsOrigin ?? [])
-                        .AllowAnyHeader()
+                        .WithMethods("GET", "POST", "PUT", "DELETE")
+                        .WithHeaders("Content-Type", "Authorization", "X-Requested-With")
                         .AllowCredentials()
                 );
             });
@@ -122,14 +110,12 @@ namespace NET.Starter.API.Extensions.StartupExtensions
         /// <returns>The same <see cref="WebApplicationBuilder"/> instance for chaining further configurations.</returns>
         public static WebApplicationBuilder AddAuthentication(this WebApplicationBuilder builder)
         {
-            // Retrieve security configuration settings.
             var securityConfig = builder.Configuration.GetSection("SecurityConfig");
 
             builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    // Configure token validation parameters.
                     options.TokenValidationParameters = new()
                     {
                         ValidateIssuer = true,
@@ -139,11 +125,10 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                         ValidIssuer = securityConfig.GetValue<string>("Issuer"),
                         ValidAudience = securityConfig.GetValue<string>("Audience"),
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityConfig.GetValue<string>("SecretKey") ?? string.Empty)),
-                        ClockSkew = TimeSpan.Zero, // Eliminate token lifetime tolerance.                        
+                        ClockSkew = TimeSpan.Zero,
                     };
                 });
 
-            // Add authorization services.
             builder.Services.AddAuthorization();
 
             return builder;

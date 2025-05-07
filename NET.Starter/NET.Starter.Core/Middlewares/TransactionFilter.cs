@@ -15,22 +15,15 @@ namespace NET.Starter.Core.Middlewares
     /// commits the transaction if the request is successful,
     /// or rolls back the transaction if an error occurs.
     /// </summary>
-    /// <typeparam name="TApplicationDbContext">The type of the application's DbContext.</typeparam>
     public class TransactionFilter<TApplicationDbContext>(TApplicationDbContext dbContext, ILogger<TransactionFilter<TApplicationDbContext>> logger) : IAsyncActionFilter
         where TApplicationDbContext : DbContext
     {
         private readonly TApplicationDbContext _dbContext = dbContext;
         private readonly ILogger<TransactionFilter<TApplicationDbContext>> _logger = logger;
 
-        /// <summary>
-        /// Executes the action within a database transaction scope.
-        /// </summary>
-        /// <param name="context">The action context.</param>
-        /// <param name="next">The delegate to execute the next filter or action.</param>
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var mutationAttribute = context.ActionDescriptor.EndpointMetadata.OfType<MutationAttribute>().FirstOrDefault(); // Indicates state-changing in database operations.
-            bool isCustomResponse = context.ActionDescriptor.EndpointMetadata.OfType<CustomResponseAttribute>().Any(); // Indicates response use custom response.
+            var mutationAttribute = context.ActionDescriptor.EndpointMetadata.OfType<MutationAttribute>().FirstOrDefault(); // Indicates state-changing in database operations
 
             try
             {
@@ -39,8 +32,7 @@ namespace NET.Starter.Core.Middlewares
 
                 var resultContext = await next();
 
-                // Check if the result exists and no exception occurred during action execution.
-                if (resultContext.Exception == null)
+                if (resultContext.Exception == null) // If the result exists and no exception occurred during action execution.
                 {
                     switch (resultContext.Result)
                     {
@@ -52,25 +44,13 @@ namespace NET.Starter.Core.Middlewares
                                 {
                                     baseDto = tempDto;
 
-                                    resultContext.HttpContext.Response.StatusCode = baseDto.Code; // Assign the status code from the response DTO if it exists.
-                                    baseDto.Id = context.HttpContext.TraceIdentifier; // Assign a unique trace identifier to the response DTO.
-                                }
-                                else if (!isCustomResponse)
-                                {
-                                    // Enforce that the result must inherit from BaseDto if CustomResponseAttribute is not used.
-                                    var errorMessage = "Use ResponseBase or its inheritance";
-                                    resultContext.Result = new JsonResult(new BaseDto(errorMessage, ResponseCode.Error)
-                                    {
-                                        Id = context.HttpContext.TraceIdentifier
-                                    });
-
-                                    throw new InvalidOperationException(errorMessage);
+                                    resultContext.HttpContext.Response.StatusCode = baseDto.Code;
+                                    baseDto.Id = context.HttpContext.TraceIdentifier;
                                 }
 
-                                // Handle mutations (state-changing operations).
                                 if (mutationAttribute != null)
                                 {
-                                    if (mutationAttribute.AllowedResponseCodes.Contains(baseDto?.Code ?? -1) || isCustomResponse)
+                                    if (mutationAttribute.AcceptedResponseCodes.Contains(baseDto?.Code ?? -1))
                                     {
                                         await transaction.CommitAsync();
                                         _logger.LogInformation("Database transaction scope committed");
@@ -78,7 +58,7 @@ namespace NET.Starter.Core.Middlewares
                                     else
                                     {
                                         await transaction.RollbackAsync();
-                                        _logger.LogInformation("Database transaction scope rolled back due to invalid http code");
+                                        _logger.LogInformation("Database transaction scope rolled back due to unexpected http code");
                                     }
                                 }
                                 else
@@ -107,7 +87,7 @@ namespace NET.Starter.Core.Middlewares
                     HandleUnexpectedException(context, resultContext.Exception, "Error occured from action");
 
                     resultContext.Result = context.Result;
-                    resultContext.Exception = null;
+                    resultContext.Exception = null; // Clear the exception, so frontend doesn't see it
                 }
             }
             catch (Exception ex)

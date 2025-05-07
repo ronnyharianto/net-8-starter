@@ -7,17 +7,6 @@ namespace NET.Starter.Core.Bases
     /// <summary>
     /// A base service class that provides common dependencies to derived service classes.
     /// </summary>
-    /// <typeparam name="T">The type of the service inheriting from this base class. Used for logging purposes.</typeparam>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="BaseService{T}"/> class.
-    /// <para>
-    /// To trigger a rollback for each requests in the service layer, the <see cref="BaseService{T}"/> class and services that inherit from it
-    /// throw an appropriate <see cref="Exception"/> that aligns with the application's error handling strategy.
-    /// </para>
-    /// </remarks>
-    /// <param name="dbContext">The database context used for database operations.</param>
-    /// <param name="mapper">The mapper service for object mapping.</param>
-    /// <param name="logger">The logger service for capturing logs specific to the derived service.</param>
     internal class BaseService<T>(ApplicationDbContext dbContext, IMapper mapper, ILogger<T> logger)
     {
         /// <summary>
@@ -26,12 +15,12 @@ namespace NET.Starter.Core.Bases
         protected readonly ApplicationDbContext _dbContext = dbContext;
 
         /// <summary>
-        /// The mapper service for converting between domain models and DTOs.
+        /// The mapper service for object mapping.
         /// </summary>
         protected readonly IMapper _mapper = mapper;
 
         /// <summary>
-        /// The logger service for logging information, warnings, and errors.
+        /// The logger service for capturing logs specific to the derived service.
         /// </summary>
         protected readonly ILogger<T> _logger = logger;
     }

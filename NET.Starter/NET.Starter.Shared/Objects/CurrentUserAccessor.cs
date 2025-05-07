@@ -7,36 +7,35 @@
     public class CurrentUserAccessor
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the user.
+        /// Unique identifier of the user.
         /// </summary>
         public Guid UserId { get; set; }
 
         /// <summary>
-        /// Gets or sets the full name of the authenticated user.
+        /// Full name of the authenticated user.
         /// Example: "John Doe".
         /// </summary>
         public string FullName { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the email address of the user.
+        /// Email address of the user.
         /// Example: "john.doe@example.com".
         /// </summary>
         public string EmailAddress { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the identifier for the user's FCM (Firebase Cloud Messaging) token.
-        /// This is used for push notifications.
+        /// Unique identifier of the company currently accessed by the user.
         /// </summary>
-        //public Guid? UserFcmTokenId { get; set; }
+        public Guid CompanyId { get; set; }
 
         /// <summary>
-        /// Gets or sets the time zone of the user.
+        /// Time zone of the user.
         /// Example: "UTC".
         /// </summary>
         public string UserTimeZone { get; set; } = "UTC";
 
         /// <summary>
-        /// Gets or sets the list of permissions granted to the user.
+        /// List of permissions granted to the user.
         /// Example for general purpose: ["RefreshToken", "MyPermission", "IamAdministrator", etc].
         /// Example for specific menu: ["MasterData.Company.Menu", "MasterData.Company.View", "MasterData.Company.Create", etc].
         /// </summary>

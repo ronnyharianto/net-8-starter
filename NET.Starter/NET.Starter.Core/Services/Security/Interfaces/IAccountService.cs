@@ -1,22 +1,39 @@
-﻿using NET.Starter.Core.Services.Security.Dtos;
+﻿using NET.Starter.Core.Services.Organization.Dtos;
+using NET.Starter.Core.Services.Security.CustomModels;
 using NET.Starter.Core.Services.Security.Inputs;
 using NET.Starter.Shared.Objects.Dtos;
 
 namespace NET.Starter.Core.Services.Security.Interfaces
 {
     /// <summary>
-    /// Provides methods for managing user account-related operations, including authentication.
+    /// Defines operations related to user authentication and company switching.
     /// </summary>
     public interface IAccountService
     {
         /// <summary>
-        /// Authenticates a user based on the provided login credentials.
+        /// Authenticates a user using the provided login credentials.
         /// </summary>
-        /// <param name="input">An object containing the user's login credentials.</param>
+        /// <param name="input">The login credentials.</param>
         /// <returns>
-        /// A task representing the asynchronous operation. The task result contains an <see cref="ObjectDto{T}"/> 
-        /// with the authentication result and associated data of type <see cref="LoginDto"/>.
+        /// An <see cref="ObjectDto{T}"/> containing the authentication result and associated <see cref="TokenResult"/> data.
         /// </returns>
-        Task<ObjectDto<LoginDto>> LoginAsync(LoginInput input);
+        Task<ObjectDto<TokenResult>> LoginAsync(LoginInput input);
+
+        /// <summary>
+        /// Retrieves the list of companies associated with the currently authenticated user.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="ObjectDto{T}"/> containing a list of <see cref="CompanyDto"/> instances linked to the authenticated user.
+        /// </returns>
+        Task<ObjectDto<IEnumerable<CompanyDto>>> RetrieveMyCompaniesAsync();
+
+        /// <summary>
+        /// Refreshes the authentication token for the currently authenticated user.
+        /// </summary>
+        /// <param name="companyId">The Id of the company to refresh the token for.</param>
+        /// <returns>
+        /// An <see cref="ObjectDto{T}"/> containing the updated authentication result and associated <see cref="TokenResult"/> data.
+        /// </returns>
+        Task<ObjectDto<TokenResult>> RefreshTokenAsync(Guid? companyId = null);
     }
 }
