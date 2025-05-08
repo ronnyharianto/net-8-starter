@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
+using System.Net;
 
 namespace NET.Starter.Core.Middlewares
 {
@@ -112,7 +113,7 @@ namespace NET.Starter.Core.Middlewares
 
         private void HandleUnexpectedException(ActionExecutingContext context, Exception ex, string errorMessage)
         {
-            var errorResponse = new BaseDto($"An error occurred. Trace ID: {context.HttpContext.TraceIdentifier}", ResponseCode.Error)
+            var errorResponse = new BaseDto($"An error occurred. Trace ID: {context.HttpContext.TraceIdentifier}", HttpStatusCode.InternalServerError)
             {
                 Id = context.HttpContext.TraceIdentifier
             };

@@ -1,6 +1,6 @@
 ﻿using NET.Starter.Shared.Attributes;
+using NET.Starter.Shared.Objects.Dtos;
 using System.ComponentModel;
-using WADIG_CIST.BackEnd.Shared.Objects.Dtos;
 
 namespace NET.Starter.Shared.Helpers
 {

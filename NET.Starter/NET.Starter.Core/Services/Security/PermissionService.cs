@@ -7,6 +7,7 @@ using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
+using System.Net;
 
 namespace NET.Starter.Core.Services.Security
 {
@@ -29,7 +30,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("Successfully retrieved all permissions.");
 
-            return new(responseCode: ResponseCode.Ok)
+            return new(httpStatusCode: HttpStatusCode.OK)
             {
                 Obj = await dataPermissions.ToListAsync()
             };

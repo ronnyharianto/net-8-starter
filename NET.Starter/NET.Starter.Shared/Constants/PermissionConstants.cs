@@ -17,11 +17,6 @@
         public const string RefreshToken = "RefreshToken";
 
         /// <summary>
-        /// Key used for accessing the endpoint to retrieve the current user's permissions.
-        /// </summary>
-        public const string MyPermission = "MyPermission";
-
-        /// <summary>
         /// Nested class defining constants related to identity and roles.
         /// Used to identify user roles for authorization or role-based access control (RBAC).
         /// </summary>

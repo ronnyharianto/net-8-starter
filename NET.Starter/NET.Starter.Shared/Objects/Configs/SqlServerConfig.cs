@@ -6,7 +6,7 @@
     public class SqlServerConfig
     {
         /// <summary>
-        /// Gets or sets the connection string used to connect to the SQL Server database.
+        /// Connection string used to connect to the SQL Server database.
         /// </summary>
         /// <remarks>
         /// The default value is an empty string. This property should be populated with
@@ -15,7 +15,7 @@
         public string ConnectionString { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the timeout duration (in seconds) for database commands.
+        /// Timeout duration (in seconds) for database commands.
         /// </summary>
         /// <remarks>
         /// The default value is 60 seconds. Adjust this value based on the expected duration

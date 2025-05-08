@@ -37,12 +37,9 @@ namespace NET.Starter.Shared.Helpers
             if (_rsaConfig == null) // Check if RSA configuration is initialized.
                 return string.Empty;
 
-            _rsa.ImportFromPem(_rsaConfig.PublicKey); // Load the public key for encryption.
+            _rsa.ImportFromPem(_rsaConfig.PublicKey);
 
-            // Encrypt the value using RSA and OAEP with SHA-512 padding.
             var encrypted = _rsa.Encrypt(Encoding.UTF8.GetBytes(value), RSAEncryptionPadding.OaepSHA512);
-
-            // Convert the encrypted byte array to a Base64 string.
             var encryptedBase64 = Convert.ToBase64String(encrypted);
 
             return encryptedBase64;
@@ -58,12 +55,9 @@ namespace NET.Starter.Shared.Helpers
             if (_rsaConfig == null) // Check if RSA configuration is initialized.
                 return string.Empty;
 
-            _rsa.ImportFromPem(_rsaConfig.PrivateKey); // Load the private key for decryption.
+            _rsa.ImportFromPem(_rsaConfig.PrivateKey);
 
-            // Convert the Base64 string to a byte array and decrypt it.
             var decrypted = _rsa.Decrypt(Convert.FromBase64String(encryptedValue), RSAEncryptionPadding.OaepSHA512);
-
-            // Convert the decrypted byte array to a UTF-8 string.
             var value = Encoding.UTF8.GetString(decrypted);
 
             return value;
@@ -83,8 +77,7 @@ namespace NET.Starter.Shared.Helpers
         /// </summary>
         /// <param name="password">The plain-text password to hash.</param>
         /// <returns>The hashed representation of the password.</returns>
-        public static string HashPassword(string password) =>
-            _passwordHasher.HashPassword(default!, password);
+        public static string HashPassword(string password) => _passwordHasher.HashPassword(default!, password);
 
         /// <summary>
         /// Verifies whether the specified plain-text password matches the hashed password.
@@ -94,8 +87,7 @@ namespace NET.Starter.Shared.Helpers
         /// <returns>
         /// A <see cref="PasswordVerificationResult"/> indicating the result of the verification process.
         /// </returns>
-        public static PasswordVerificationResult VerifyPassword(string password, string hashedPassword) =>
-            _passwordHasher.VerifyHashedPassword(default!, hashedPassword, password);
+        public static PasswordVerificationResult VerifyPassword(string password, string hashedPassword) => _passwordHasher.VerifyHashedPassword(default!, hashedPassword, password);
 
         #endregion
     }

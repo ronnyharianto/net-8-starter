@@ -20,11 +20,9 @@ namespace NET.Starter.Core.Services.Security
         ApplicationDbContext dbContext, 
         IMapper mapper, 
         ILogger<TokenService> logger, 
-        IOptions<SecurityConfig> securityOption,
-        IOptions<TimeZoneConfig> timeZoneOption) : BaseService<TokenService>(dbContext, mapper, logger)
+        IOptions<SecurityConfig> securityOption) : BaseService<TokenService>(dbContext, mapper, logger)
     {
         private readonly SecurityConfig _securityConfig = securityOption.Value;
-        private readonly TimeZoneConfig _timeZoneConfig = timeZoneOption.Value;
 
         /// <summary>
         /// Generates an access token and a refresh token for the given user with specified permissions.
@@ -77,7 +75,6 @@ namespace NET.Starter.Core.Services.Security
                     new(JwtRegisteredClaimNames.GivenName, dataUser.Fullname),
                     new(JwtRegisteredClaimNames.Sid, dataUser.Id.ToString()),
                     new(CustomClaimTypeConstants.Company, companyId.ToString()),
-                    new(CustomClaimTypeConstants.TimeZone, _timeZoneConfig.SystemTimeZone)
                 ]),
                 Expires = expireAt,
                 Issuer = _securityConfig.Issuer,

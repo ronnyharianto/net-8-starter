@@ -100,13 +100,13 @@ namespace NET.Starter.Shared
 
                 #endregion
 
-                #region Register Configuration Options
+            #region Register Configuration Options
 
-                // Register configuration options from appsettings.json or environment variables.
-                // These configurations are bound using the Options Pattern and can be injected via IOptions<T>.
+            // Register configuration options from appsettings.json or environment variables.
+            // These configurations are bound using the Options Pattern and can be injected via IOptions<T>.
 
-                // Security settings
-                services.Configure<SecurityConfig>(opt => configuration.Bind(nameof(SecurityConfig), opt));
+            // Security settings
+            services.Configure<SecurityConfig>(opt => configuration.Bind(nameof(SecurityConfig), opt));
 
             // Timezone settings
             services.Configure<TimeZoneConfig>(opt => configuration.Bind(nameof(TimeZoneConfig), opt));

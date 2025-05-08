@@ -1,12 +1,12 @@
 ﻿using NET.Starter.Shared.Enums;
+using System.Net;
 
 namespace NET.Starter.Shared.Objects.Dtos
 {
     /// <summary>
     /// Represents a paginated response containing a data payload.
     /// </summary>
-    /// <typeparam name="T">The type of the paginated data.</typeparam>
-    public class PagingDto<T>(string? message = null, ResponseCode responseCode = ResponseCode.BadRequest) : BaseDto(message, responseCode)
+    public class PagingDto<T>(string? message = null, HttpStatusCode httpStatusCode = HttpStatusCode.BadRequest) : BaseDto(message, httpStatusCode)
         where T : class
     {
         /// <summary> Current page number. </summary>
@@ -38,7 +38,6 @@ namespace NET.Starter.Shared.Objects.Dtos
         /// </summary>
         /// <param name="totalData">The total number of records.</param>
         /// <param name="pageSize">The number of records per page.</param>
-        /// <returns>The total number of pages.</returns>
         private static int CalculateTotalPage(int totalData, int pageSize) => (totalData + pageSize - 1) / pageSize;
 
         /// <summary>

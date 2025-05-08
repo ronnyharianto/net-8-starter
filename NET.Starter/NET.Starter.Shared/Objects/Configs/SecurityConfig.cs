@@ -6,45 +6,45 @@
     public class SecurityConfig
     {
         /// <summary>
-        /// Gets or sets the maximum number of failed login attempts before an account is locked or restricted.
+        /// Maximum number of failed login attempts before an account is locked or restricted.
         /// Default value: 5
         /// </summary>
         public int MaxLoginRetry { get; set; } = 5;
 
         /// <summary>
-        /// Gets or sets the number of minutes after which a locked account is automatically unlocked.
+        /// Number of minutes after which a locked account is automatically unlocked.
         /// Default value: 15
         /// </summary>
         public int AutoUnlockAfter { get; set; } = 15;
 
         /// <summary>
-        /// Gets or sets the token issuer, typically the domain or name of the authentication provider.
+        /// The token issuer, typically the domain or name of the authentication provider.
         /// Example: "https://yourapp.com"
         /// </summary>
         public string Issuer { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the audience that the token is intended for.
+        /// The audience that the token is intended for.
         /// This should match the client application consuming the authentication.
         /// Example: "your-client-id"
         /// </summary>
         public string Audience { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the secret key used for signing JWT tokens.
+        /// The secret key used for signing JWT tokens.
         /// Ensure this key is strong and securely stored.
         /// </summary>
         public string SecretKey { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the token expiration time in minutes.
+        /// The token expiration time in minutes.
         /// Defines how long an authentication token remains valid before it expires.
         /// Example: 15 (for 15 minutes)
         /// </summary>
         public int TokenExpired { get; set; }
 
         /// <summary>
-        /// Gets or sets the session expiration time in days.
+        /// The session expiration time in days.
         /// Determines how long a user session remains active before requiring re-authentication.
         /// Example: 7 (for 7 days)
         /// </summary>
