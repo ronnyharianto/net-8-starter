@@ -25,8 +25,7 @@ namespace NET.Starter.Shared.Helpers
         /// <param name="data">The object to serialize.</param>
         /// <param name="indented">Whether to format the JSON output for readability.</param>
         /// <returns>The JSON string representation of the object.</returns>
-        public static string SerializeObject(object? data, bool indented = false) =>
-            JsonConvert.SerializeObject(data, indented ? Formatting.Indented : Formatting.None, _settings);
+        public static string SerializeObject(object? data, bool indented = false) => JsonConvert.SerializeObject(data, indented ? Formatting.Indented : Formatting.None, _settings);
 
         /// <summary>
         /// Converts a JSON string to an object of the specified type.
@@ -34,7 +33,6 @@ namespace NET.Starter.Shared.Helpers
         /// <typeparam name="T">The type of the object to deserialize.</typeparam>
         /// <param name="jsonString">The JSON string to deserialize.</param>
         /// <returns>The deserialized object, or null if the conversion fails.</returns>
-        public static T? DeserializeObject<T>(string jsonString) =>
-            JsonConvert.DeserializeObject<T>(jsonString, _settings);
+        public static T? DeserializeObject<T>(string jsonString) => JsonConvert.DeserializeObject<T>(jsonString, _settings);
     }
 }

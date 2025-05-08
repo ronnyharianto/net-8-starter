@@ -1,18 +1,13 @@
 ﻿namespace NET.Starter.Shared.Attributes
 {
     /// <summary>
-    /// Custom attribute used to specify the required permissions for a method.
-    /// This attribute is typically applied to controller actions to enforce permission-based access control.
+    /// Custom attribute used to specify the required permissions for a controller action.
     /// </summary>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="AppAuthorizeAttribute"/> class.
-    /// </remarks>
-    /// <param name="permissions">The permissions required for the method.</param>
     [AttributeUsage(AttributeTargets.Method)]
     public class AppAuthorizeAttribute(params string[] permissions) : Attribute
     {
         /// <summary>
-        /// Gets the list of permissions required to access the method.
+        /// List of permissions required to access the method.
         /// </summary>
         public string[] Permissions { get; } = permissions;
     }

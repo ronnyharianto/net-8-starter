@@ -29,12 +29,6 @@
         public Guid CompanyId { get; set; }
 
         /// <summary>
-        /// Time zone of the user.
-        /// Example: "UTC".
-        /// </summary>
-        public string UserTimeZone { get; set; } = "UTC";
-
-        /// <summary>
         /// List of permissions granted to the user.
         /// Example for general purpose: ["RefreshToken", "MyPermission", "IamAdministrator", etc].
         /// Example for specific menu: ["MasterData.Company.Menu", "MasterData.Company.View", "MasterData.Company.Create", etc].

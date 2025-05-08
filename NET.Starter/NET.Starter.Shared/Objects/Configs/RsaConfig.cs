@@ -6,12 +6,12 @@
     public class RsaConfig
     {
         /// <summary>
-        /// Gets or sets the RSA public key in PEM format.
+        /// RSA public key in PEM format.
         /// </summary>
         public string PublicKey { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the RSA private key in PEM format.
+        /// RSA private key in PEM format.
         /// </summary>
         public string PrivateKey { get; set; } = string.Empty;
     }

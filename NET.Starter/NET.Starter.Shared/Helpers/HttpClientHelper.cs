@@ -5,14 +5,11 @@ using System.Text;
 namespace NET.Starter.Shared.Helpers
 {
     /// <summary>
-    /// Provides helper methods for making HTTP requests with logging and optional authorization.
+    /// Provides helper methods for making HTTP requests.
     /// </summary>
     /// <remarks>
     /// Initializes a new instance of the <see cref="HttpClientHelper"/> class.
-    /// Sets the default timeout to 30 minutes.
     /// </remarks>
-    /// <param name="client">An instance of <see cref="HttpClient"/>.</param>
-    /// <param name="logger">An instance of <see cref="ILogger{TCategoryName}"/> for logging.</param>
     public class HttpClientHelper(HttpClient client, ILogger<HttpClientHelper> logger)
     {
         private readonly HttpClient _client = client;
@@ -21,7 +18,6 @@ namespace NET.Starter.Shared.Helpers
         /// <summary>
         /// Sends a POST request with form URL-encoded data.
         /// </summary>
-        /// <typeparam name="T">The type of the response object.</typeparam>
         /// <param name="url">The endpoint URL to send the request to.</param>
         /// <param name="formUrlEncodedData">The form data as key-value pairs.</param>
         /// <returns>A deserialized response object, or null if the response cannot be deserialized.</returns>
@@ -37,14 +33,12 @@ namespace NET.Starter.Shared.Helpers
 
             _logger.LogInformation("Response Text => {responseText}", responseText);
 
-            return JsonHelper.DeserializeObject<T>(responseText); // Handle possible deserialization exceptions.
+            return JsonHelper.DeserializeObject<T>(responseText);
         }
 
         /// <summary>
         /// Sends a POST request with a JSON body and optional Basic Authentication.
         /// </summary>
-        /// <typeparam name="TRequest">The type of the request body.</typeparam>
-        /// <typeparam name="TResponse">The type of the response object.</typeparam>
         /// <param name="url">The endpoint URL to send the request to.</param>
         /// <param name="requestBody">The object to be serialized into the JSON body.</param>
         /// <param name="basicAuth">Optional Basic Authentication header value in Base64 format.</param>
@@ -65,13 +59,12 @@ namespace NET.Starter.Shared.Helpers
 
             _logger.LogInformation("Response Text => {responseText}", responseText);
 
-            return JsonHelper.DeserializeObject<TResponse>(responseText); // Handle potential JSON parsing errors.
+            return JsonHelper.DeserializeObject<TResponse>(responseText);
         }
 
         /// <summary>
         /// Sends a GET request with an optional Bearer token.
         /// </summary>
-        /// <typeparam name="T">The type of the response object.</typeparam>
         /// <param name="url">The endpoint URL to send the request to.</param>
         /// <param name="token">Optional Bearer token for authorization.</param>
         /// <returns>A deserialized response object, or null if the response cannot be deserialized.</returns>
@@ -87,7 +80,7 @@ namespace NET.Starter.Shared.Helpers
 
             _logger.LogInformation("Response Text => {responseText}", responseText);
 
-            return JsonHelper.DeserializeObject<T>(responseText); // Handle possible deserialization exceptions.
+            return JsonHelper.DeserializeObject<T>(responseText);
         }
     }
 }

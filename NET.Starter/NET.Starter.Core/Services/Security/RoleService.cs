@@ -10,6 +10,7 @@ using NET.Starter.DataAccess.SqlServer.Models.Security;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
 using NET.Starter.Shared.Objects.Inputs;
+using System.Net;
 
 namespace NET.Starter.Core.Services.Security
 {
@@ -26,7 +27,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("Successfully retrieved all roles.");
 
-            return new(responseCode: ResponseCode.Ok)
+            return new(httpStatusCode: HttpStatusCode.OK)
             {
                 Obj = await roles.ToListAsync()
             };
@@ -65,12 +66,12 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
 
-                return new("Role data is not found", ResponseCode.NotFound);
+                return new("Role data is not found", HttpStatusCode.NotFound);
             }
                 
             _logger.LogInformation("Successfully retrieved role by id: {RoleId}.", roleId);
 
-            return new(responseCode: ResponseCode.Ok)
+            return new(httpStatusCode: HttpStatusCode.OK)
             {
                 Obj = _mapper.Map<RoleDto>(role)
             };
@@ -85,7 +86,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("Failed to create role. Reason : {ValidationMessage}", validationMessage);
 
-                return new(validationMessage, ResponseCode.Error);
+                return new(validationMessage, HttpStatusCode.InternalServerError);
             }
 
             var role = _mapper.Map<Role>(input, opts => opts.Items["IsCreate"] = true);
@@ -95,7 +96,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("Successfully created role.");
 
-            return new("Role data is successfully created", ResponseCode.Ok);
+            return new("Role data is successfully created", HttpStatusCode.OK);
         }
 
         public async Task<BaseDto> UpdateRoleAsync(Guid roleId, RoleInput input)
@@ -107,7 +108,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
 
-                return new("Role data is not found", ResponseCode.NotFound);
+                return new("Role data is not found", HttpStatusCode.NotFound);
             }
 
             var (isValid, validationMessage) = await ValidateRoleInput(input, roleId);
@@ -115,7 +116,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("Failed to update role. Reason : {ValidationMessage}", validationMessage);
 
-                return new(validationMessage, ResponseCode.Error);
+                return new(validationMessage, HttpStatusCode.InternalServerError);
             }
 
             _mapper.Map(input, role);
@@ -148,7 +149,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("Successfully updated role by id: {RoleId}.", roleId);
 
-            return new("Role data is successfully updated", ResponseCode.Ok);
+            return new("Role data is successfully updated", HttpStatusCode.OK);
         }
 
         public async Task<BaseDto> DeleteRoleAsync(Guid roleId)
@@ -160,7 +161,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
 
-                return new("Role data is not found", ResponseCode.NotFound);
+                return new("Role data is not found", HttpStatusCode.NotFound);
             }
                 
             role.RowStatus = 1;
@@ -169,7 +170,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("Successfully deleted role by id: {RoleId}.", roleId);
 
-            return new("Role data is successfully deleted", ResponseCode.Ok);
+            return new("Role data is successfully deleted", HttpStatusCode.OK);
         }
 
         /// <summary>

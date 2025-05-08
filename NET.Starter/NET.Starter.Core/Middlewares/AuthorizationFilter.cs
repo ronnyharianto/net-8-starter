@@ -7,6 +7,7 @@ using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects;
 using NET.Starter.Shared.Objects.Dtos;
+using System.Net;
 using System.Security.Claims;
 
 namespace NET.Starter.Core.Middlewares
@@ -26,7 +27,7 @@ namespace NET.Starter.Core.Middlewares
         {
             try
             {
-                var response = new BaseDto("Authorization has been denied for this request.", ResponseCode.UnAuthorized)
+                var response = new BaseDto("Authorization has been denied for this request.", HttpStatusCode.Unauthorized)
                 {
                     Id = context.HttpContext.TraceIdentifier
                 };
@@ -41,17 +42,7 @@ namespace NET.Starter.Core.Middlewares
                 var headerToken = context.HttpContext.Request.Headers.Authorization;
                 _logger.LogInformation("Authorization header received. Token: {Token}", string.IsNullOrWhiteSpace(headerToken) ? "No token provided" : headerToken);
 
-                var authorizationToken = context.ActionDescriptor.EndpointMetadata.OfType<AuthorizationTokenAttribute>().FirstOrDefault();
-                if (authorizationToken != null) // If not null, the endpoint requires specific authorization tokens.
-                {
-                    if (authorizationToken.Token.Any(d => d.Equals(headerToken, StringComparison.Ordinal)))
-                    {
-                        _logger.LogInformation("Authorization valid for the provided token.");
-
-                        return;
-                    }
-                }
-                else if (!context.HttpContext.User.Identity?.IsAuthenticated ?? true) // If not authenticated, the user is not authorized.
+                if (!context.HttpContext.User.Identity?.IsAuthenticated ?? true) // If not authenticated, the user is not authorized.
                 {
                     _logger.LogError("User is not authenticated.");
                 }
@@ -64,14 +55,12 @@ namespace NET.Starter.Core.Middlewares
                         var fullName = identity.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"))?.Value;
                         var emailAddress = identity.Claims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"))?.Value;
                         var sid = identity.Claims.FirstOrDefault(c => c.Type.Equals("sid"))?.Value;
-                        var userTimeZone = identity.Claims.FirstOrDefault(c => c.Type.Equals(CustomClaimTypeConstants.TimeZone))?.Value;
                         var companyId = identity.Claims.FirstOrDefault(c => c.Type.Equals(CustomClaimTypeConstants.Company))?.Value;
 
                         _currentUserAccessor.UserId = new Guid(sid ?? "00000000-0000-0000-0000-000000000000");
                         _currentUserAccessor.FullName = fullName ?? string.Empty;
                         _currentUserAccessor.EmailAddress = emailAddress ?? string.Empty;
                         _currentUserAccessor.Permissions = permissions.Select(p => p.Value);
-                        _currentUserAccessor.UserTimeZone = userTimeZone ?? "UTC";
                         _currentUserAccessor.CompanyId = new Guid(companyId ?? "00000000-0000-0000-0000-000000000000");
 
                         return;
@@ -87,7 +76,7 @@ namespace NET.Starter.Core.Middlewares
             {
                 _logger.LogError(ex, "An error occurred while processing authorization.");
 
-                var errorResponse = new BaseDto("An error occurred while authorizing the request.", ResponseCode.Error)
+                var errorResponse = new BaseDto("An error occurred while authorizing the request.", HttpStatusCode.InternalServerError)
                 {
                     Id = context.HttpContext.TraceIdentifier
                 };

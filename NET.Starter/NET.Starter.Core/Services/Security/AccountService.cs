@@ -15,6 +15,7 @@ using NET.Starter.Shared.Helpers;
 using NET.Starter.Shared.Objects;
 using NET.Starter.Shared.Objects.Configs;
 using NET.Starter.Shared.Objects.Dtos;
+using System.Net;
 
 namespace NET.Starter.Core.Services.Security
 {
@@ -49,7 +50,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("Login failed for user: {UserIdentifier}. Reason: {ErrorMessage}.", input.UserIdentifier, "User not found");
 
-                return new("The username or password you entered is incorrect.", ResponseCode.UnAuthorized);
+                return new("The username or password you entered is incorrect.", HttpStatusCode.Unauthorized);
             }
 
             if (CryptographyHelper.VerifyPassword(input.Password, user.Password) == PasswordVerificationResult.Failed)
@@ -58,7 +59,7 @@ namespace NET.Starter.Core.Services.Security
 
                 await HandleBadPasswordAttemptAsync(input.UserIdentifier, user);
 
-                return new("The username or password you entered is incorrect.", ResponseCode.UnAuthorized);
+                return new("The username or password you entered is incorrect.", HttpStatusCode.Unauthorized);
             }
 
             if (user.LockedUntil >= DateTime.UtcNow)
@@ -68,7 +69,7 @@ namespace NET.Starter.Core.Services.Security
 
                 _logger.LogWarning("Login failed for user: {UserIdentifier}. Reason: {ErrorMessage}.", input.UserIdentifier, errorMessage);
 
-                return new($"Your account is locked until {lockedUntilSystemTimeZone:dd-MM-yyyy HH:mm:ss}, please try again later.", ResponseCode.Forbidden);
+                return new($"Your account is locked until {lockedUntilSystemTimeZone:dd-MM-yyyy HH:mm:ss}, please try again later.", HttpStatusCode.Forbidden);
             }
 
             // Reset bad password count and locked until when login is successful
@@ -81,7 +82,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("Login successful for user: {UserIdentifier}.", input.UserIdentifier);
 
-            return new(responseCode: ResponseCode.Ok) 
+            return new(httpStatusCode: HttpStatusCode.OK) 
             { 
                 Obj = tokenResult 
             };
@@ -104,14 +105,14 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("Generate token failed for user Id: {UserId}. Reason: {ErrorMessage}.", _currentUserAccessor.UserId, "User not found");
 
-                return new("Generate token failed because user not found.", ResponseCode.NotFound);
+                return new("Generate token failed because user not found.", HttpStatusCode.NotFound);
             }
 
             var tokenResult = ProcessGenerateToken(user, companyId);
 
             _logger.LogInformation("Successfully generated token for user Id: {UserId} to companyId: {CompanyId}.", _currentUserAccessor.UserId, companyId);
 
-            return new(responseCode: ResponseCode.Ok)
+            return new(httpStatusCode: HttpStatusCode.OK)
             {
                 Obj = tokenResult
             };
@@ -126,12 +127,12 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogWarning("No companies found for user Id: {UserId}.", _currentUserAccessor.UserId);
 
-                return new("No companies are assigned to your account.", ResponseCode.NotFound);
+                return new("No companies are assigned to your account.", HttpStatusCode.NotFound);
             }
 
             _logger.LogInformation("Successfully retrieved companies for user ID: {UserId}.", _currentUserAccessor.UserId);
 
-            return new(responseCode: ResponseCode.Ok)
+            return new(httpStatusCode: HttpStatusCode.OK)
             {
                 Obj = myCompanies.Select(d => _mapper.Map<CompanyDto>(d.Company))
             };

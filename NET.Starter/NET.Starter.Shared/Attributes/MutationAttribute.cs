@@ -9,7 +9,7 @@ namespace NET.Starter.Shared.Attributes
     /// </summary>
     /// <remarks>
     /// The <see cref="MutationAttribute"/> is used to identify methods that represent mutation 
-    /// operations in the application. When applied, the attribute specifies a list of allowed 
+    /// operations in the application. When applied, the attribute specifies a list of accepted 
     /// response codes (<see cref="AcceptedResponseCodes"/>). 
     ///
     /// Each response code listed in <see cref="AcceptedResponseCodes"/> signifies that, upon 
@@ -17,18 +17,15 @@ namespace NET.Starter.Shared.Attributes
     /// will commit the database transaction rather than rolling it back. If no response codes are 
     /// explicitly defined, the attribute defaults to allowing <see cref="ResponseCode.Ok"/> only.
     /// </remarks>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="MutationAttribute"/> class.
-    /// </remarks>
     /// <param name="acceptedResponseCodes">
-    /// An optional array of allowed response codes. If <c>null</c> or not provided, 
+    /// An optional array of accepted response codes. If <c>null</c> or not provided, 
     /// the default behavior allows only <see cref="ResponseCode.Ok"/> to trigger a commit.
     /// </param>
     [AttributeUsage(AttributeTargets.Method)]
     public class MutationAttribute(ResponseCode[]? acceptedResponseCodes = null) : Attribute
     {
         /// <summary>
-        /// Gets the list of allowed response codes for the mutation operation.
+        /// List of accepted response codes for the mutation operation.
         /// </summary>
         /// <remarks>
         /// For each response code included in this array, the middleware will commit 

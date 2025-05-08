@@ -1,13 +1,13 @@
 ﻿using NET.Starter.Shared.Enums;
+using System.Net;
 
 namespace NET.Starter.Shared.Objects.Dtos
 {
     /// <summary>
     /// Represents a response that contains a payload of a value type.
     /// </summary>
-    /// <typeparam name="T">The value type of the response payload.</typeparam>
-    public class StructDto<T>(string? message = null, ResponseCode responseCode = ResponseCode.BadRequest)
-        : BaseDto(message, responseCode)
+    public class StructDto<T>(string? message = null, HttpStatusCode httpStatusCode = HttpStatusCode.BadRequest)
+        : BaseDto(message, httpStatusCode)
         where T : struct
     {
         /// <summary>

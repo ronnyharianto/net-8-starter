@@ -8,7 +8,7 @@ namespace NET.Starter.Shared.Objects.Configs
     public class LoggingConfig
     {
         /// <summary>
-        /// Gets or sets the Grafana Loki configuration.
+        /// Grafana Loki configuration.
         /// </summary>
         public GrafanaLoki? GrafanaLoki { get; set; }
     }
@@ -19,20 +19,20 @@ namespace NET.Starter.Shared.Objects.Configs
     public class GrafanaLoki
     {
         /// <summary>
-        /// Gets or sets the endpoint URL for Grafana Loki, 
-        /// which is used as the log aggregation system.
-        /// Example: "http://127.0.0.1:3100".
+        /// Endpoint URL for Grafana Loki, which is used as the log aggregation system.
+        /// <para>Example: "http://127.0.0.1:3100".</para>
         /// </summary>
         public string EndpointUrl { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the list of labels to categorize logs in Loki.
-        /// Labels help in filtering and searching logs in Grafana.
+        /// list of labels to categorize logs in Loki. Labels help in filtering and searching logs in Grafana.
+        /// <para>
         /// Example:
         /// [
         ///     { "Key": "app", "Value": "my-app" },
         ///     { "Key": "env", "Value": "development" }
         /// ]
+        /// </para>
         /// </summary>
         public IEnumerable<LokiLabel>? LokiLabels { get; set; }
     }

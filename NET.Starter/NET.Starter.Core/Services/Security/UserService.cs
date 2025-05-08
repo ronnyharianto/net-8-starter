@@ -10,6 +10,7 @@ using NET.Starter.DataAccess.SqlServer.Models.Security;
 using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
 using NET.Starter.Shared.Objects.Inputs;
+using System.Net;
 
 namespace NET.Starter.Core.Services.Security
 {
@@ -25,7 +26,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User not found.", ResponseCode.NotFound);
+                return new("User not found.", HttpStatusCode.NotFound);
             }
 
             user.IsActive = true;
@@ -34,7 +35,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("User activation successful for Id: {UserId}.", userId);
 
-            return new("User has been successfully activated.", ResponseCode.Ok);
+            return new("User has been successfully activated.", HttpStatusCode.OK);
         }
 
         public async Task<BaseDto> CreateUserAsync(UserInput input)
@@ -46,7 +47,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("User creation failed. Reason : {ErrorMessage}.", validationMessage);
 
-                return new(validationMessage, ResponseCode.Error);
+                return new(validationMessage, HttpStatusCode.InternalServerError);
             }
 
             var user = _mapper.Map<User>(input, opts => opts.Items["IsCreate"] = true);
@@ -56,7 +57,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("User creation successful: {Username}.", user.Username);
 
-            return new("User has been successfully created.", ResponseCode.Ok);
+            return new("User has been successfully created.", HttpStatusCode.OK);
         }
 
         public async Task<BaseDto> DeactivateUserAsync(Guid userId)
@@ -68,7 +69,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User not found.", ResponseCode.NotFound);
+                return new("User not found.", HttpStatusCode.NotFound);
             }
 
             user.IsActive = false;
@@ -77,7 +78,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("User deactivation successful for Id: {UserId}.", userId);
 
-            return new("User has been successfully deactivated.", ResponseCode.Ok);
+            return new("User has been successfully deactivated.", HttpStatusCode.OK);
         }
 
         public async Task<BaseDto> DeleteUserAsync(Guid userId)
@@ -89,7 +90,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User not found.", ResponseCode.NotFound);
+                return new("User not found.", HttpStatusCode.NotFound);
             }
 
             user.RowStatus = 1;
@@ -98,7 +99,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("User deletion successful for Id: {UserId}.", userId);
 
-            return new("User has been successfully deleted.", ResponseCode.Ok);
+            return new("User has been successfully deleted.", HttpStatusCode.OK);
         }
 
         public async Task<ObjectDto<UserDto>> RetrieveUserByIdAsync(Guid userId)
@@ -114,12 +115,12 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User not found", ResponseCode.NotFound);
+                return new("User not found", HttpStatusCode.NotFound);
             }
 
             _logger.LogInformation("User successfully retrieved for Id: {UserId}.", userId);
 
-            return new(responseCode: ResponseCode.Ok)
+            return new(httpStatusCode: HttpStatusCode.OK)
             {
                 Obj = _mapper.Map<UserDto>(user)
             };
@@ -162,7 +163,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("Failed update user. Reason: {ValidationMessage}.", validationMessage);
 
-                return new(validationMessage, ResponseCode.Error);
+                return new(validationMessage, HttpStatusCode.InternalServerError);
             }
 
             var user = await _dbContext.Users.Include(u => u.UserCompanies).ThenInclude(uc => uc.UserCompanyRoles).FirstOrDefaultAsync(d => d.Id == userId);
@@ -170,7 +171,7 @@ namespace NET.Starter.Core.Services.Security
             {
                 _logger.LogError("User not found for Id: {UserId}.", userId);
 
-                return new("User not found", ResponseCode.NotFound);
+                return new("User not found", HttpStatusCode.NotFound);
             }
 
             _mapper.Map(input, user);
@@ -244,7 +245,7 @@ namespace NET.Starter.Core.Services.Security
 
             _logger.LogInformation("Successfully updated user for Id: {UserId}.", userId);
 
-            return new("User successfully updated", ResponseCode.Ok);
+            return new("User successfully updated", HttpStatusCode.OK);
         }
 
         /// <summary>
