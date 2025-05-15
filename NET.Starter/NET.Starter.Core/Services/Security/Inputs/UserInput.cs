@@ -6,7 +6,7 @@
 
         public required string EmailAddress { get; set; }
 
-        public required string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         public required string Fullname { get; set; }
 
@@ -18,6 +18,8 @@
         public Guid? UserCompanyId { get; set; }
 
         public Guid CompanyId { get; set; }
+        
+        public bool IsDefault { get; set; }
 
         public IEnumerable<Guid> RoleIds { get; set; } = [];
     }

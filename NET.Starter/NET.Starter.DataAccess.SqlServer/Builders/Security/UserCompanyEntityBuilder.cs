@@ -39,7 +39,7 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
 
             builder
                 .HasIndex(e => new { e.UserId })
-                .HasFilter("[IsDefault] = 1")
+                .HasFilter("[IsDefault] = 1 AND [RowStatus] = 0")
                 .IsUnique();
         }
     }

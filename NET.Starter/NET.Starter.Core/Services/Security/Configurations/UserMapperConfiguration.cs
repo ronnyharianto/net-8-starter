@@ -24,6 +24,7 @@ namespace NET.Starter.Core.Services.Security.Configurations
 
             CreateMap<UserInput, User>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Password, opt => opt.Ignore())
                 .ForMember(dest => dest.UserCompanies, opt => opt.Ignore())
                 .AfterMap((src, dest, context) => 
                 {
@@ -39,12 +40,33 @@ namespace NET.Starter.Core.Services.Security.Configurations
                                 RoleId = d
                             }).ToHashSet()
                         }).ToHashSet();
+
+                        dest.Password = src.Password;
+                    }
+                    else
+                    {
+                        // Only update password if it's not empty
+
+                        if (!string.IsNullOrEmpty(src.Password))
+                        {
+                            dest.Password = src.Password;
+                        }
                     }
                 });
 
             CreateMap<UserCompanyInput, UserCompany>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
-                .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom((src, dest, destMember, context) =>
+                {
+                    try
+                    {
+                        return context.Items.TryGetValue("UserId", out object? value) && value is Guid ? value : dest.UserId;
+                    }
+                    catch 
+                    {
+                        return dest.UserId;
+                    }
+                }))
                 .ForMember(dest => dest.UserCompanyRoles, opt => opt.Ignore())
                 .AfterMap((src, dest, context) =>
                 {

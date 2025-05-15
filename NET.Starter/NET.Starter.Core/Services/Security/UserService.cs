@@ -41,7 +41,7 @@ namespace NET.Starter.Core.Services.Security
         {
             _logger.LogInformation("Starting user creation: {Username}.", input.Username);
 
-            var (isValid, validationMessage) = await ValidateUserInput(input);
+            var (isValid, validationMessage) = await ValidateUserInput(input, mandatoryValidatePassword: true);
             if (!isValid)
             {
                 _logger.LogError("User creation failed. Reason : {ErrorMessage}.", validationMessage);
@@ -188,6 +188,8 @@ namespace NET.Starter.Core.Services.Security
                 deleteUserCompany.RowStatus = 1;
             }
 
+            #endregion
+
             #region Edit mapping user company exists on input
 
             var editUserCompanies = from d in user.UserCompanies
@@ -227,8 +229,6 @@ namespace NET.Starter.Core.Services.Security
 
             #endregion
 
-            #endregion
-
             #region Add role does not exists on input
 
             var addUserCompanies = from i in input.UserCompanies
@@ -236,7 +236,11 @@ namespace NET.Starter.Core.Services.Security
                                    select i;
 
             if (addUserCompanies.Any())
-                await _dbContext.UserCompanies.AddRangeAsync(_mapper.Map<ICollection<UserCompany>>(addUserCompanies, opts => opts.Items["IsCreate"] = true));
+                await _dbContext.UserCompanies.AddRangeAsync(_mapper.Map<ICollection<UserCompany>>(addUserCompanies, opts =>
+                {
+                    opts.Items["IsCreate"] = true;
+                    opts.Items["UserId"] = user.Id;
+                }));
 
             #endregion
 
@@ -288,14 +292,20 @@ namespace NET.Starter.Core.Services.Security
             return (true, string.Empty);
         }
 
-        private async Task<(bool isValid, string validationMessage)> ValidateUserInput(UserInput input, Guid? userId = null)
+        private async Task<(bool isValid, string validationMessage)> ValidateUserInput(UserInput input, Guid? userId = null, bool mandatoryValidatePassword = false)
         {
-            var (isValidPassword, messageValidPassword) = PasswordValidation(input.Password);
-            if (!isValidPassword)
-                return (false, messageValidPassword);
+            if (mandatoryValidatePassword || !string.IsNullOrEmpty(input.Password))
+            {
+                var (isValidPassword, messageValidPassword) = PasswordValidation(input.Password);
+                if (!isValidPassword)
+                    return (false, messageValidPassword);
+            }
 
             if (!input.UserCompanies.SelectMany(d => d.RoleIds).Any())
                 return (false, "Please add at least one role.");
+
+            if (input.UserCompanies.Count(d => d.IsDefault) > 1)
+                return (false, "Only one default user company is allowed.");
 
             var dataDuplicateUser = await _dbContext.Users.FirstOrDefaultAsync(d => 
                 (d.Username == input.Username || d.EmailAddress == input.EmailAddress) &&

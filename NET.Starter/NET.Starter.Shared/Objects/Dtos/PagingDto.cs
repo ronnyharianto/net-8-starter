@@ -37,7 +37,7 @@ namespace NET.Starter.Shared.Objects.Dtos
         /// </summary>
         /// <param name="totalData">The total number of records.</param>
         /// <param name="pageSize">The number of records per page.</param>
-        private static int CalculateTotalPage(int totalData, int pageSize) => (totalData + pageSize - 1) / pageSize;
+        private static int CalculateTotalPage(int totalData, int pageSize) => pageSize > 0 ? (totalData + pageSize - 1) / pageSize : 0;
 
         /// <summary>
         /// Applies pagination to the given data source and updates the pagination properties.
@@ -48,12 +48,12 @@ namespace NET.Starter.Shared.Objects.Dtos
         /// <param name="message">Optional success message.</param>
         public void ApplyPagination(int page, int pageSize, IQueryable<T>? obj, string? message = null)
         {
-            Page = page;
-            PageSize = pageSize;
+            Page = page > 0 ? page : 1;
+            PageSize = pageSize > 0 ? pageSize : 0;
             RecordsFiltered = obj?.Count() ?? 0;
             RecordsTotal = obj?.Count() ?? 0;
             TotalPage = CalculateTotalPage(RecordsTotal, PageSize);
-            Obj = obj?.Skip((page - 1) * pageSize).Take(pageSize);
+            Obj = obj?.Skip((page - 1) * PageSize).Take(PageSize);
 
             MarkAsSuccess(message);
         }
