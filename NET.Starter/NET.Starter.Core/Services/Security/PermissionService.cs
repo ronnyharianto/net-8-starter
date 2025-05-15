@@ -5,7 +5,6 @@ using NET.Starter.Core.Bases;
 using NET.Starter.Core.Services.Security.Dtos;
 using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.DataAccess.SqlServer;
-using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
 using System.Net;
 

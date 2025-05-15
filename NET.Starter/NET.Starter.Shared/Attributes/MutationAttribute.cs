@@ -1,37 +1,41 @@
-﻿using NET.Starter.Shared.Enums;
+﻿using System.Net;
 
 namespace NET.Starter.Shared.Attributes
 {
     /// <summary>
-    /// Custom attribute used to mark a method as a mutation operation.
-    /// Typically applied in scenarios where the method represents a change or modification 
-    /// to the underlying data in transactional operations.
+    /// Attribute untuk menandai metode sebagai operasi mutasi.
+    /// Biasanya digunakan untuk metode yang melakukan perubahan terhadap data,
+    /// terutama dalam konteks transaksi.
     /// </summary>
     /// <remarks>
-    /// The <see cref="MutationAttribute"/> is used to identify methods that represent mutation 
-    /// operations in the application. When applied, the attribute specifies a list of accepted 
-    /// response codes (<see cref="AcceptedResponseCodes"/>). 
-    ///
-    /// Each response code listed in <see cref="AcceptedResponseCodes"/> signifies that, upon 
-    /// encountering the corresponding response during the execution of the method, the middleware 
-    /// will commit the database transaction rather than rolling it back. If no response codes are 
-    /// explicitly defined, the attribute defaults to allowing <see cref="ResponseCode.Ok"/> only.
+    /// <see cref="MutationAttribute"/> digunakan untuk menandai bahwa sebuah metode merupakan 
+    /// operasi mutasi. Atribut ini memberi tahu middleware bahwa metode tersebut dapat 
+    /// memicu commit terhadap transaksi database berdasarkan kode status HTTP hasil eksekusinya.
+    /// 
+    /// Jika tidak ada kode status yang didefinisikan secara eksplisit melalui 
+    /// <paramref name="acceptedHttpStatusCodes"/>, maka secara default hanya 
+    /// <see cref="HttpStatusCode.OK"/> (200) yang dianggap valid untuk memicu commit transaksi.
+    /// Kode status lainnya akan memicu rollback.
     /// </remarks>
-    /// <param name="acceptedResponseCodes">
-    /// An optional array of accepted response codes. If <c>null</c> or not provided, 
-    /// the default behavior allows only <see cref="ResponseCode.Ok"/> to trigger a commit.
+    /// <param name="acceptedHttpStatusCodes">
+    /// (Opsional) Daftar kode status HTTP yang dianggap valid untuk memicu commit transaksi.
+    /// Jika <c>null</c> atau tidak disediakan, maka hanya <see cref="HttpStatusCode.OK"/> yang dianggap valid.
     /// </param>
     [AttributeUsage(AttributeTargets.Method)]
-    public class MutationAttribute(ResponseCode[]? acceptedResponseCodes = null) : Attribute
+    public class MutationAttribute(HttpStatusCode[]? acceptedHttpStatusCodes = null) : Attribute
     {
         /// <summary>
-        /// List of accepted response codes for the mutation operation.
+        /// Daftar kode status HTTP yang diterima untuk memicu commit transaksi.
         /// </summary>
         /// <remarks>
-        /// For each response code included in this array, the middleware will commit 
-        /// the database transaction when the corresponding response is encountered. 
-        /// If the response code is not included, the transaction will be rolled back by default.
+        /// Setiap kode status dalam array ini menunjukkan bahwa, jika metode menghasilkan 
+        /// kode tersebut, middleware akan melakukan commit terhadap transaksi database. 
+        /// Kode status yang tidak terdapat dalam daftar ini akan menyebabkan rollback.
+        /// 
+        /// <see cref="HttpStatusCode.OK"/> (200) selalu dimasukkan secara default,
+        /// bahkan jika tidak ditentukan secara eksplisit.
         /// </remarks>
-        public int[] AcceptedResponseCodes { get; } = (acceptedResponseCodes?.Cast<int>() ?? []).Append((int)ResponseCode.Ok).Distinct().ToArray();
+        public int[] AcceptedResponseCodes { get; } =
+            (acceptedHttpStatusCodes?.Cast<int>() ?? []).Append((int)HttpStatusCode.OK).Distinct().ToArray();
     }
 }

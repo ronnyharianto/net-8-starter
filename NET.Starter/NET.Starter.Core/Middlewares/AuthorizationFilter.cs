@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Constants;
-using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects;
 using NET.Starter.Shared.Objects.Dtos;
 using System.Net;

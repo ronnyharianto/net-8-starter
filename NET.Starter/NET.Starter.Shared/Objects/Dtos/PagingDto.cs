@@ -1,5 +1,4 @@
-﻿using NET.Starter.Shared.Enums;
-using System.Net;
+﻿using System.Net;
 
 namespace NET.Starter.Shared.Objects.Dtos
 {

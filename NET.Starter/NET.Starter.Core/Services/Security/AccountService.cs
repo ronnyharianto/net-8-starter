@@ -10,7 +10,6 @@ using NET.Starter.Core.Services.Security.Inputs;
 using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.DataAccess.SqlServer;
 using NET.Starter.DataAccess.SqlServer.Models.Security;
-using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Helpers;
 using NET.Starter.Shared.Objects;
 using NET.Starter.Shared.Objects.Configs;

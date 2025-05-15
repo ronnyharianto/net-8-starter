@@ -6,9 +6,9 @@ using NET.Starter.Core.Services.Security.Inputs;
 using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Constants;
-using NET.Starter.Shared.Enums;
 using NET.Starter.Shared.Objects.Dtos;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {
@@ -18,7 +18,7 @@ namespace NET.Starter.API.Controllers.V1.Security
         private readonly IAccountService _accountService = accountService;
 
         [AllowAnonymous]
-        [Mutation([ResponseCode.Ok, ResponseCode.UnAuthorized])]
+        [Mutation([HttpStatusCode.OK, HttpStatusCode.Unauthorized])]
         [HttpPost("login")]
         [SwaggerOperation(Summary = "Login account")]
         public async Task<ObjectDto<TokenResult>> LoginAsync(LoginInput input) => await _accountService.LoginAsync(input);
