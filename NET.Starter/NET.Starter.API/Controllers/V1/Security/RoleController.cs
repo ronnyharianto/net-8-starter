@@ -17,13 +17,13 @@ namespace NET.Starter.API.Controllers.V1.Security
 
         [AppAuthorize(PermissionConstants.Security.Role.View)]
         [HttpGet("all")]
-        [SwaggerOperation(Summary = "Retrieve roles")]
+        [SwaggerOperation(Summary = "Retrieve all role")]
         public async Task<ObjectDto<IEnumerable<RoleDto>>> RetrieveRolesAsync() => await _roleService.RetrieveRolesAsync();
 
         [AppAuthorize(PermissionConstants.Security.Role.View)]
         [HttpGet("paging")]
-        [SwaggerOperation(Summary = "Retrieve paginated roles")]
-        public PagingDto<RoleDto> RetrievePagingRole([FromQuery] PagingSearchInputBase input) => _roleService.RetrieveRolesPaging(input);
+        [SwaggerOperation(Summary = "Retrieve paginated role")]
+        public PagingDto<RoleDto> RetrieveRolesPaging([FromQuery] PagingSearchInputBase input) => _roleService.RetrieveRolesPaging(input);
 
         [AppAuthorize(PermissionConstants.Security.Role.View)]
         [HttpGet("{roleId:guid}")]

@@ -17,7 +17,7 @@ namespace NET.Starter.API.Controllers.V1.Security
 
         [AppAuthorize(PermissionConstants.Security.User.View)]
         [HttpGet("paging")]
-        [SwaggerOperation(Summary = "Retrieve paginated users")]
+        [SwaggerOperation(Summary = "Retrieve paginated user")]
         public PagingDto<UserDto> RetrievePagingUser([FromQuery] PagingSearchInputBase input) => _userService.RetrieveUsersPaging(input);
 
         [AppAuthorize(PermissionConstants.Security.User.View)]

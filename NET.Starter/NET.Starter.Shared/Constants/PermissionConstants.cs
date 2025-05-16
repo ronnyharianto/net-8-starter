@@ -25,24 +25,13 @@
             public const string Admin = "IamAdministrator";
         }
 
-        /// <summary>
-        /// Nested class defining constants related to security features.
-        /// Used for security-related operations such as authentication and authorization.
-        /// </summary>
         public static class Security
         {
-            /// <summary>
-            /// Represents the permission type for viewing security features.
-            /// </summary>
             public static class Permission
             {
                 public const string View = "Security.Permission.View";
             }
 
-            /// <summary>
-            /// Nested class defining constants related to roles in the security module.
-            /// Used for role-based access control (RBAC).
-            /// </summary>
             public static class Role
             {
                 public const string Menu = "Security.Role.Menu";
@@ -52,9 +41,6 @@
                 public const string Delete = "Security.Role.Delete";
             }
 
-            /// <summary>
-            /// Nested class defining constants related to users in the security module.
-            /// </summary>
             public static class User
             {
                 public const string Menu = "Security.User.Menu";
@@ -62,6 +48,27 @@
                 public const string Create = "Security.User.Create";
                 public const string Update = "Security.User.Update";
                 public const string Delete = "Security.User.Delete";
+            }
+        }
+
+        public static class Organization
+        {
+            public static class Company
+            {
+                public const string Menu = "Organization.Company.Menu";
+                public const string View = "Organization.Company.View";
+                public const string Create = "Organization.Company.Create";
+                public const string Update = "Organization.Company.Update";
+                public const string Delete = "Organization.Company.Delete";
+            }
+
+            public static class Branch
+            {
+                public const string Menu = "Organization.Branch.Menu";
+                public const string View = "Organization.Branch.View";
+                public const string Create = "Organization.Branch.Create";
+                public const string Update = "Organization.Branch.Update";
+                public const string Delete = "Organization.Branch.Delete";
             }
         }
     }

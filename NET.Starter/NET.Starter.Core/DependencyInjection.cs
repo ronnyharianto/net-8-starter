@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NET.Starter.Core.Middlewares;
+using NET.Starter.Core.Services.Organization;
 using NET.Starter.Core.Services.Security;
 using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.DataAccess.SqlServer;
@@ -33,6 +34,9 @@ namespace NET.Starter.Core
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IBranchService, BranchService>();
 
             #endregion            
 

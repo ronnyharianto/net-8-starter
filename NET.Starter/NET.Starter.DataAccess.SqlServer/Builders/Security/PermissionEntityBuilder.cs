@@ -58,7 +58,19 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
                 new Permission { Id = new Guid("7d8b693b-a21f-4f7e-a0f9-b1f80a86e0bd"), PermissionCode = PermissionConstants.Security.User.View, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
                 new Permission { Id = new Guid("f8568aa0-aae2-4ed0-9783-b75ff180ebdf"), PermissionCode = PermissionConstants.Security.User.Create, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
                 new Permission { Id = new Guid("1bfb9a81-0f01-4981-b4d5-fce12f8b4d4d"), PermissionCode = PermissionConstants.Security.User.Update, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
-                new Permission { Id = new Guid("3c390638-d417-421a-a99f-611591c07a4d"), PermissionCode = PermissionConstants.Security.User.Delete, Created = new DateTime(2025, 2, 12, 13, 30, 00) }
+                new Permission { Id = new Guid("3c390638-d417-421a-a99f-611591c07a4d"), PermissionCode = PermissionConstants.Security.User.Delete, Created = new DateTime(2025, 2, 12, 13, 30, 00) },
+
+                new Permission { Id = new Guid("9f6aedbf-7102-4551-977b-136c0d2f9795"), PermissionCode = PermissionConstants.Organization.Company.Menu, Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+                new Permission { Id = new Guid("70f1b765-b00f-4372-8e7d-3858a019724c"), PermissionCode = PermissionConstants.Organization.Company.View, Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+                new Permission { Id = new Guid("c890b98e-2c1a-4a8b-a43f-0079e5064c80"), PermissionCode = PermissionConstants.Organization.Company.Create, Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+                new Permission { Id = new Guid("c668b06d-da4f-4c8d-aa27-3c2737c30904"), PermissionCode = PermissionConstants.Organization.Company.Update, Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+                new Permission { Id = new Guid("ee38dda5-52ce-45a5-ba94-8dfb75704778"), PermissionCode = PermissionConstants.Organization.Company.Delete, Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+
+                new Permission { Id = new Guid("040306c7-db67-47ca-b942-fe786a1eaafd"), PermissionCode = PermissionConstants.Organization.Branch.Menu, Created = new DateTime(2025, 5, 16, 12, 49, 00) },
+                new Permission { Id = new Guid("93caa8ca-bdbb-4cfd-92e5-a42c8b5fd510"), PermissionCode = PermissionConstants.Organization.Branch.View, Created = new DateTime(2025, 5, 16, 12, 49, 00) },
+                new Permission { Id = new Guid("c8fc725c-1d1e-424a-a533-ae57eb7ee518"), PermissionCode = PermissionConstants.Organization.Branch.Create, Created = new DateTime(2025, 5, 16, 12, 49, 00) },
+                new Permission { Id = new Guid("697046ea-6118-48ac-a9b7-c0652aa76262"), PermissionCode = PermissionConstants.Organization.Branch.Update, Created = new DateTime(2025, 5, 16, 12, 49, 00) },
+                new Permission { Id = new Guid("53632736-e1d9-428d-8bc5-09b75cf8f4e8"), PermissionCode = PermissionConstants.Organization.Branch.Delete, Created = new DateTime(2025, 5, 16, 12, 49, 00) }
             );
         }
     }

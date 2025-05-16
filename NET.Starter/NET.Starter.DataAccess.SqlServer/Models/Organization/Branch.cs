@@ -1,5 +1,4 @@
 using NET.Starter.DataAccess.SqlServer.Bases;
-using NET.Starter.DataAccess.SqlServer.Models.Security;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Helpers;
 using System.ComponentModel.DataAnnotations.Schema;

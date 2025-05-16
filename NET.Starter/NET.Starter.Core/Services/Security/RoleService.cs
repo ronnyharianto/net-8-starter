@@ -102,20 +102,20 @@ namespace NET.Starter.Core.Services.Security
         {
             _logger.LogInformation("Starting to update role by id: {RoleId}.", roleId);
 
-            var role = await _dbContext.Roles.Include(r => r.RolePermissions).FirstOrDefaultAsync(d => d.Id == roleId);
-            if (role == null)
-            {
-                _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
-
-                return new("Role data is not found", HttpStatusCode.NotFound);
-            }
-
             var (isValid, validationMessage) = await ValidateRoleInput(input, roleId);
             if (!isValid)
             {
                 _logger.LogError("Failed to update role. Reason : {ValidationMessage}", validationMessage);
 
                 return new(validationMessage, HttpStatusCode.InternalServerError);
+            }
+
+            var role = await _dbContext.Roles.Include(r => r.RolePermissions).FirstOrDefaultAsync(d => d.Id == roleId);
+            if (role == null)
+            {
+                _logger.LogError("Role data is not found for id: {RoleId}.", roleId);
+
+                return new("Role data is not found", HttpStatusCode.NotFound);
             }
 
             _mapper.Map(input, role);

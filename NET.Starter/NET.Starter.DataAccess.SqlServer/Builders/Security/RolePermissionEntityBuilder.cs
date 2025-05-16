@@ -68,7 +68,21 @@ namespace NET.Starter.DataAccess.SqlServer.Builders.Security
                 new RolePermission { Id = new Guid("6344bbaf-73cb-4f5e-8250-2f8130f062de"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("7d8b693b-a21f-4f7e-a0f9-b1f80a86e0bd"), Created = new DateTime(2025, 2, 12, 13, 30, 00) },
                 new RolePermission { Id = new Guid("c3b9b0ba-9e9b-4db0-a66a-13412c77002f"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("f8568aa0-aae2-4ed0-9783-b75ff180ebdf"), Created = new DateTime(2025, 2, 12, 13, 30, 00) },
                 new RolePermission { Id = new Guid("eeb6d346-4e4b-4273-b030-9a15218bf037"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("1bfb9a81-0f01-4981-b4d5-fce12f8b4d4d"), Created = new DateTime(2025, 2, 12, 13, 30, 00) },
-                new RolePermission { Id = new Guid("c686e3ae-9a80-4474-872a-33340d19961f"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("3c390638-d417-421a-a99f-611591c07a4d"), Created = new DateTime(2025, 2, 12, 13, 30, 00) }
+                new RolePermission { Id = new Guid("c686e3ae-9a80-4474-872a-33340d19961f"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("3c390638-d417-421a-a99f-611591c07a4d"), Created = new DateTime(2025, 2, 12, 13, 30, 00) },
+
+                // Company
+                new RolePermission { Id = new Guid("4db012d0-ee9e-4318-8c61-0f705b6768f4"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("9f6aedbf-7102-4551-977b-136c0d2f9795"), Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+                new RolePermission { Id = new Guid("acc6e9f3-31ff-4b53-b076-e1b38a4c0be5"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("70f1b765-b00f-4372-8e7d-3858a019724c"), Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+                new RolePermission { Id = new Guid("7a8e8489-f395-49b1-bfed-cf192a527f44"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("c890b98e-2c1a-4a8b-a43f-0079e5064c80"), Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+                new RolePermission { Id = new Guid("e72ca2b3-f609-4101-84e2-a1cb2fdbe087"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("c668b06d-da4f-4c8d-aa27-3c2737c30904"), Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+                new RolePermission { Id = new Guid("67148cfa-2023-4469-bfb9-df2d75935072"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("ee38dda5-52ce-45a5-ba94-8dfb75704778"), Created = new DateTime(2025, 5, 16, 12, 32, 00) },
+
+                // Branch
+                new RolePermission { Id = new Guid("9ee866c9-cd4e-4764-960e-b7a95cf59174"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("040306c7-db67-47ca-b942-fe786a1eaafd"), Created = new DateTime(2025, 5, 16, 12, 49, 00) },
+                new RolePermission { Id = new Guid("97b5d1fa-2dcc-49c5-935d-27861db8df45"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("93caa8ca-bdbb-4cfd-92e5-a42c8b5fd510"), Created = new DateTime(2025, 5, 16, 12, 49, 00) },
+                new RolePermission { Id = new Guid("0fe734ee-503e-4c48-9dc3-eabc25fa9b0a"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("c8fc725c-1d1e-424a-a533-ae57eb7ee518"), Created = new DateTime(2025, 5, 16, 12, 49, 00) },
+                new RolePermission { Id = new Guid("d1c666a6-81df-4186-830a-93099993d401"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("697046ea-6118-48ac-a9b7-c0652aa76262"), Created = new DateTime(2025, 5, 16, 12, 49, 00) },
+                new RolePermission { Id = new Guid("9a7d1244-7f3c-45cb-91bb-b49c3dfef35d"), RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"), PermissionId = new Guid("53632736-e1d9-428d-8bc5-09b75cf8f4e8"), Created = new DateTime(2025, 5, 16, 12, 49, 00) }
             );
         }
     }
