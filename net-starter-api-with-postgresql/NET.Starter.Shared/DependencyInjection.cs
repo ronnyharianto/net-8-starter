@@ -66,7 +66,7 @@ namespace NET.Starter.Shared
             }
             else
             {
-                Log.Logger.Error("Google Cloud Storage configuration is missing. File storage operations to Google Cloud Storage will not be available.");
+                Log.Logger.Warning("Google Cloud Storage disabled, because configuration is missing.");
             }
 
             #endregion
@@ -87,11 +87,11 @@ namespace NET.Starter.Shared
                     })
                 });
 
-                Log.Logger.Information("Firebase Cloud Messaging configuration found; Firebase Messaging enabled.");
+                Log.Logger.Information("Firebase Messaging enabled.");
             }
             else
             {
-                Log.Logger.Error("Firebase Cloud Messaging configuration is missing. Firebase Cloud Messaging operations will not be available.");
+                Log.Logger.Warning("Firebase Messaging disabled, because configuration is missing.");
             }
 
             #endregion
@@ -115,7 +115,7 @@ namespace NET.Starter.Shared
             }
             else
             {
-                Log.Logger.Error("RSA configuration is missing. Cryptographic for RSA operations will not be available.");
+                Log.Logger.Warning("RSA Cryptography disabled, because configuration is missing.");
             }
 
             #endregion
@@ -123,13 +123,13 @@ namespace NET.Starter.Shared
             #region Timezone Initialization
 
             var timeZoneConfig = configuration.GetSection(nameof(TimeZoneConfig)).Get<TimeZoneConfig>();
-            if (timeZoneConfig != null)
+            if (timeZoneConfig != null && timeZoneConfig.Enabled)
             {
                 TimeZoneHelper.Initialize(timeZoneConfig);
             }
             else
             {
-                Log.Logger.Error("Timezone configuration is missing. Timezone operations will not be available.");
+                Log.Logger.Warning("Timezone helper disabled, because configuration is missing or set to disabled.");
             }
 
             #endregion

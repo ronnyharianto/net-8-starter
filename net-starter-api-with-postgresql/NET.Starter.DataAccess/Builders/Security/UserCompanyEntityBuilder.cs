@@ -27,6 +27,11 @@ namespace NET.Starter.DataAccess.Builders.Security
                 .HasIndex(e => new { e.UserId, e.CompanyId })
                 .HasFilter("\"RowStatus\" = 0")
                 .IsUnique();
+
+            builder
+                .HasIndex(e => new { e.UserId })
+                .HasFilter("\"RowStatus\" = 0 AND \"IsDefault\" = true")
+                .IsUnique();
         }
     }
 }

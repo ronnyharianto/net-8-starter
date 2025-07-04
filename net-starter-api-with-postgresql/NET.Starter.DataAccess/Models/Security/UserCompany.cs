@@ -9,6 +9,7 @@ namespace NET.Starter.DataAccess.Models.Security
     /// <para><b>Important constraints:</b></para>
     /// <list type="bullet">
     ///   <item><description>Combination of <see cref="UserId"/> and <see cref="CompanyId"/> must be unique.</description></item>
+    ///   <item><description>Each user can only have one default company.</description></item>
     ///   <item><description>Supports soft deletion via <see cref="EntityBase.RowStatus"/>.</description></item>
     /// </list>
     /// </summary>

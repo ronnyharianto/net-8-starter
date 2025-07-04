@@ -9,6 +9,7 @@ using NET.Starter.DataAccess.Models.Security;
 using NET.Starter.DataAccess.Models.System;
 using NET.Starter.Shared.Objects;
 using System.Runtime.CompilerServices;
+using static NET.Starter.Shared.Constants.GeneralConstants;
 
 [assembly: InternalsVisibleTo("NET.Starter.Core")]
 
@@ -100,7 +101,8 @@ namespace NET.Starter.DataAccess
                     Id = new Guid("5e5ca559-34be-42f2-ab42-90d6c66e889c"),
                     Code = "0001",
                     Name = "NET Starter Company",
-                    Created = new DateTime(2025, 5, 7, 8, 51, 0)
+                    Created = EFCoreMigration.Created,
+                    CreatedBy = EFCoreMigration.CreatedBy
                 });
 
                 _logger.LogInformation("Seeding data for example company 0001 added.");
@@ -113,7 +115,8 @@ namespace NET.Starter.DataAccess
                     Id = new Guid("129ea8c9-9a01-4afa-84ed-85caca7d0a59"),
                     Code = "0002",
                     Name = "NET Boilerplate Company",
-                    Created = new DateTime(2025, 5, 7, 8, 51, 0)
+                    Created = EFCoreMigration.Created,
+                    CreatedBy = EFCoreMigration.CreatedBy
                 });
 
                 _logger.LogInformation("Seeding data for example company 0002 added.");
@@ -129,9 +132,39 @@ namespace NET.Starter.DataAccess
                 {
                     Id = new Guid("73b4c7d1-e6a3-41dc-a8da-6d9a45092761"),
                     Username = "admin",
-                    EmailAddress = "supersandre@gmail.com",
+                    EmailAddress = "v.ronny.harianto@gmail.com",
                     Password = "1234qwER",
-                    Created = new DateTime(2025, 2, 12, 13, 30, 0, DateTimeKind.Utc)
+                    FullName = "Ronny Harianto",
+                    IsActive = true,
+                    UserCompanies = [
+                        new() 
+                        {
+                            Id = new Guid("e4afd4c8-a7d6-4e2f-875e-2eef8a83a6e5"),
+                            CompanyId = new Guid("5e5ca559-34be-42f2-ab42-90d6c66e889c"),
+                            IsDefault = true,
+                            UserCompanyRoles = [
+                                new() 
+                                {
+                                    Id = new Guid("db56dbc2-92eb-4256-8d1e-5dcdc4b6b199"),
+                                    RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"),
+                                    Created = EFCoreMigration.Created,
+                                    CreatedBy = EFCoreMigration.CreatedBy
+                                }
+                            ],
+                            Created = EFCoreMigration.Created,
+                            CreatedBy = EFCoreMigration.CreatedBy
+                        },
+                        new()
+                        {
+                            Id = new Guid("9126ed92-0e37-4f0a-90da-3b06025d4a50"),
+                            CompanyId = new Guid("129ea8c9-9a01-4afa-84ed-85caca7d0a59"),
+                            IsDefault = false,
+                            Created = EFCoreMigration.Created,
+                            CreatedBy = EFCoreMigration.CreatedBy
+                        }
+                    ],
+                    Created = EFCoreMigration.Created,
+                    CreatedBy = EFCoreMigration.CreatedBy
                 });
 
                 _logger.LogInformation("Seeding data user admin added.");

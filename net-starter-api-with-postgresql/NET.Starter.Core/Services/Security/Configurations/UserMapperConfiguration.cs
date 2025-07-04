@@ -7,7 +7,7 @@ namespace NET.Starter.Core.Services.Security.Configurations
 {
     internal class UserMapperConfiguration : Profile
     {
-        internal UserMapperConfiguration()
+        public UserMapperConfiguration()
         {
             #region Transform Entity into Dto
 
