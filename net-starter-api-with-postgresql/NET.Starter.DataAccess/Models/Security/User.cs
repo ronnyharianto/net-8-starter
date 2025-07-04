@@ -35,6 +35,9 @@ namespace NET.Starter.DataAccess.Models.Security
 
         public string PictureUrl { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Default Value: true
+        /// </summary>
         public bool IsActive { get; set; } = true;
 
         /// <summary>

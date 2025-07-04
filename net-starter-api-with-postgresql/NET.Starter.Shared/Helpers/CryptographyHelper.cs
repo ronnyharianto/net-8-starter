@@ -26,7 +26,7 @@ namespace NET.Starter.Shared.Helpers
         internal static void InitializeRsa(RsaConfig config)
         {
             _rsaConfig = config;
-            Log.Logger.Information("RSA configuration initialized with provided keys.");
+            Log.Logger.Information("RSA Cryptography enabled.");
         }
 
         /// <summary>

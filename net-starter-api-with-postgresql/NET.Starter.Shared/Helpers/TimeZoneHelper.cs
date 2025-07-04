@@ -20,7 +20,7 @@ namespace NET.Starter.Shared.Helpers
         internal static void Initialize(TimeZoneConfig config)
         {
             _timeZoneConfig = config;
-            Log.Information("TimeZoneHelper initialized with system timezone: {TimeZoneId}", config.SystemTimeZone);
+            Log.Information("Timezone helper enabled with system timezone: {TimeZoneId}", config.SystemTimeZone);
         }
 
         /// <summary>

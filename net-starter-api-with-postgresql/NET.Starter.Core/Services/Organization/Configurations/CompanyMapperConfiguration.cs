@@ -7,7 +7,7 @@ namespace NET.Starter.Core.Services.Organization.Configurations
 {
     internal class CompanyMapperConfiguration : Profile
     {
-        internal CompanyMapperConfiguration()
+        public CompanyMapperConfiguration()
         {
             #region Transform Entity into Dto
 

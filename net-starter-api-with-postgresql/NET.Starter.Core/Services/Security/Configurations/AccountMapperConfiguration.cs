@@ -6,7 +6,7 @@ namespace NET.Starter.Core.Services.Security.Configurations
 {
     internal class AccountMapperConfiguration : Profile
     {
-        internal AccountMapperConfiguration()
+        public AccountMapperConfiguration()
         {
             #region Transform Custom Model into Dto
 

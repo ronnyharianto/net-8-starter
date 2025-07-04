@@ -33,7 +33,7 @@ namespace NET.Starter.Shared.Helpers
 
             BucketName = config.BucketName;
 
-            Log.Logger.Information("Google Cloud Storage initialized for bucket {BucketName}.", BucketName);
+            Log.Logger.Information("Google Cloud Storage enabled for bucket {BucketName}.", BucketName);
         }
 
         /// <summary>

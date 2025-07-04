@@ -103,7 +103,7 @@ namespace NET.Starter.API.Extensions.StartupExtensions
                 );
             });
 
-            Log.Logger.Information("CORS configured for origins: {CORS Origins}", string.Join(", ", corsOrigin ?? []));
+            Log.Logger.Information("CORS configured for origins: {Origins}", string.Join(", ", corsOrigin ?? []));
             return builder;
         }
 

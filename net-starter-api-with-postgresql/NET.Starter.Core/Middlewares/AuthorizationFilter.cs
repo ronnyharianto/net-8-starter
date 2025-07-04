@@ -6,6 +6,7 @@ using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Constants;
 using NET.Starter.Shared.Objects;
 using NET.Starter.Shared.Objects.Dtos;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 
@@ -54,7 +55,7 @@ namespace NET.Starter.Core.Middlewares
                     if (IsAuthorize(context, permissions, _logger))
                     {
                         // Extract identity info and populate CurrentUserAccessor
-                        _currentUserAccessor.UserId = new Guid(claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value ?? Guid.Empty.ToString());
+                        _currentUserAccessor.UserId = new Guid(claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sid)?.Value ?? Guid.Empty.ToString());
                         _currentUserAccessor.FullName = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value ?? string.Empty;
                         _currentUserAccessor.EmailAddress = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? string.Empty;
                         _currentUserAccessor.CompanyId = new Guid(claims.FirstOrDefault(c => c.Type == CustomClaimTypeConstants.CurrentCompany)?.Value ?? Guid.Empty.ToString());

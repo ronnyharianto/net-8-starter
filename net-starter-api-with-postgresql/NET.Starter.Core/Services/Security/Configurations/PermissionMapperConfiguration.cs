@@ -6,7 +6,7 @@ namespace NET.Starter.Core.Services.Security.Configurations
 {
     internal class PermissionMapperConfiguration : Profile
     {
-        internal PermissionMapperConfiguration()
+        public PermissionMapperConfiguration()
         {
             #region Transform Entity into Dto
 
