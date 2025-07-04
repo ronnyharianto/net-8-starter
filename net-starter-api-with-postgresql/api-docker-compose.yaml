@@ -1,0 +1,7 @@
+services:
+  sellio-api:
+    container_name: net-starter-api
+    # image akan dioverride oleh docker-compose.override.yml
+    restart: unless-stopped
+    ports:
+      - 5000:5000
