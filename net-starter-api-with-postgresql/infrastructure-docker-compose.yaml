@@ -1,0 +1,13 @@
+services:
+  postgres:
+    container_name: postgresql
+    image: postgres:17.4
+    environment:
+      - POSTGRES_PASSWORD=1234qwer
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - /docker/pgdata:/var/lib/postgresql/data

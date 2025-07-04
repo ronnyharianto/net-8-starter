@@ -1,0 +1,45 @@
+name: Deploy API to Server (Build on Server)
+
+on:
+  push:
+    branches:
+      - z-main  # use random branch name so the workflow doesn't run on every push
+    paths:
+      - 'NET.Starter.API/**'
+      - 'NET.Starter.Core/**'
+      - 'NET.Starter.DataAccess/**'
+      - 'NET.Starter.Shared/**'
+      - 'Dockerfile.API'
+
+jobs:
+  deploy:
+    name: Build & Deploy API on Remote Server with docker-compose
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.head_commit.message, 'skip deploy') == false
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/net-starter/src
+            git pull origin main
+
+            COMMIT_HASH=$(git rev-parse --short HEAD)
+            echo "Deploy commit $COMMIT_HASH"
+
+            # Generate docker-compose.override.yml dengan tag versi commit hash
+            cat > api-docker-compose.override.yml <<-EOL
+            services:
+              sellio-api:
+                image: net-starter-api:$COMMIT_HASH
+                build:
+                  context: .
+                  dockerfile: Dockerfile.API
+            EOL
+
+            docker compose -f api-docker-compose.yaml -f api-docker-compose.override.yml up -d --build
+
+            bash Tools/api-image-cleanup.sh

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30 d17.14
+VisualStudioVersion = 17.14.36203.30
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET.Starter.API", "NET.Starter.API\NET.Starter.API.csproj", "{255134D6-BE8B-4477-8791-2F47327ACC31}"
 EndProject
@@ -10,6 +10,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET.Starter.DataAccess", "NET.Starter.DataAccess\NET.Starter.DataAccess.csproj", "{14311D0F-D386-486D-9898-4097B7CBD3EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NET.Starter.Core", "NET.Starter.Core\NET.Starter.Core.csproj", "{7C4B1A24-C5DA-42D0-A8A5-FB7C758AB5D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.github\workflows\api-deploy.yml = .github\workflows\api-deploy.yml
+		api-docker-compose.yaml = api-docker-compose.yaml
+		api-image-cleanup.sh = api-image-cleanup.sh
+		Dockerfile.API = Dockerfile.API
+		infrastructure-docker-compose.yaml = infrastructure-docker-compose.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

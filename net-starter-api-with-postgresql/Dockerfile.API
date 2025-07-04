@@ -1,0 +1,36 @@
+﻿# Menggunakan SDK .NET 8 sebagai build environment
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 5000
+
+ENV ASPNETCORE_URLS="http://+:5000"
+ENV ASPNETCORE_ENVIRONMENT=Development
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy project file untuk restore caching
+COPY ["NET.Starter.API/NET.Starter.API.csproj", "NET.Starter.API/"]
+COPY ["NET.Starter.Core/NET.Starter.Core.csproj", "NET.Starter.Core/"]
+COPY ["NET.Starter.DataAccess/NET.Starter.DataAccess.csproj", "NET.Starter.DataAccess/"]
+COPY ["NET.Starter.Shared/NET.Starter.Shared.csproj", "NET.Starter.Shared/"]
+
+# Restore dependencies
+RUN dotnet restore "NET.Starter.API/NET.Starter.API.csproj"
+
+# Copy semua kode sumber
+COPY . .
+
+# Build project dengan referensinya
+RUN dotnet build "NET.Starter.API/NET.Starter.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+# Publish dengan referensi project
+RUN dotnet publish "NET.Starter.API/NET.Starter.API.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+
+COPY --from=publish /app/publish .
+
+ENTRYPOINT ["dotnet", "NET.Starter.API.dll"]
