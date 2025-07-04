@@ -64,10 +64,6 @@ namespace NET.Starter.Core.Services.Security
                 Subject = new(
                 [
                     new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                    new(JwtRegisteredClaimNames.Email, dataUser.EmailAddress),
-                    new(JwtRegisteredClaimNames.GivenName, dataUser.FullName),
-                    new(JwtRegisteredClaimNames.Sid, dataUser.Id.ToString()),
-                    new(CustomClaimTypeConstants.CurrentCompany, companyId.ToString()),
                 ]),
                 Expires = expireAt,
                 Issuer = _securityOption.Value.JwtOption.Issuer,
@@ -75,7 +71,11 @@ namespace NET.Starter.Core.Services.Security
                 SigningCredentials = new(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha512Signature),
                 Claims = new Dictionary<string, object>
                 {
-                    { CustomClaimTypeConstants.TypeCode, permissions.ToList() }
+                    { JwtRegisteredClaimNames.Email, dataUser.EmailAddress },
+                    { JwtRegisteredClaimNames.GivenName, dataUser.FullName },
+                    { JwtRegisteredClaimNames.Sid, dataUser.Id.ToString() },
+                    { CustomJwtRegisteredClaimNames.CurrentCompany, companyId.ToString() },
+                    { CustomJwtRegisteredClaimNames.TypeCode, permissions.ToList() }
                 }
             };
 

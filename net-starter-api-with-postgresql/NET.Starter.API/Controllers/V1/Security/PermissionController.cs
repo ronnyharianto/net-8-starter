@@ -14,7 +14,6 @@ namespace NET.Starter.API.Controllers.V1.Security
         [AppAuthorize(Role.Modify)]
         [HttpGet("all")]
         [SwaggerOperation(Summary = "Retrieve all permission")]
-        [NonAction]
         public async Task<ObjectDto<IEnumerable<PermissionDto>>> RetrievePermissionsAsync()
             => await _permissionService.RetrievePermissionsAsync();
     }

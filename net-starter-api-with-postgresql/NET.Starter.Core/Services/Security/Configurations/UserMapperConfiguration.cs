@@ -42,7 +42,35 @@ namespace NET.Starter.Core.Services.Security.Configurations
                         { 
                             UserId = dest.Id, 
                             CompanyId = d.CompanyId,
+                            IsDefault = d.IsDefault,
                             UserCompanyRoles = d.RoleIds.Select(e => new UserCompanyRole { RoleId = e }).ToHashSet()
+                        }).ToHashSet();
+                    }
+                });
+
+            CreateMap<UserCompanyInput, UserCompany>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom((src, dest, destMember, context) =>
+                {
+                    try
+                    {
+                        return context.Items.TryGetValue("UserId", out object? value) && value is Guid ? value : dest.UserId;
+                    }
+                    catch
+                    {
+                        return dest.UserId;
+                    }
+                }))
+                .ForMember(dest => dest.UserCompanyRoles, opt => opt.Ignore())
+                .AfterMap((src, dest, context) =>
+                {
+                    bool isCreate = context.TryGetItems(out var items) && items.TryGetValue("IsCreate", out var value) && value is bool b && b;
+
+                    if (isCreate)
+                    {
+                        dest.UserCompanyRoles = src.RoleIds.Select(d => new UserCompanyRole
+                        {
+                            RoleId = d
                         }).ToHashSet();
                     }
                 });

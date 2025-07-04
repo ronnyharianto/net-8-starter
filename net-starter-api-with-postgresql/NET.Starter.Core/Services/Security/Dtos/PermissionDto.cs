@@ -4,6 +4,6 @@
     {
         public Guid PermissionId { get; set; }
 
-        public required string PermissionCode { get; set; }
+        public required string Code { get; set; }
     }
 }

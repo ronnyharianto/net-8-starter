@@ -4,7 +4,7 @@
     {
         public Guid RoleId { get; set; }
 
-        public required string RoleCode { get; set; }
+        public required string Code { get; set; }
 
         public IEnumerable<PermissionDto> Permissions { get; set; } = [];
     }
