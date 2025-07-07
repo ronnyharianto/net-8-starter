@@ -1,0 +1,5 @@
+.dt-search > .form-control {
+    display: initial;
+    width: auto;
+    margin-left: 1rem;
+}

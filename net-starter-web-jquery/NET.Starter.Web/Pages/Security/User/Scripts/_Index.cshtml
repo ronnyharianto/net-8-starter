@@ -1,0 +1,253 @@
+﻿<script type="text/javascript">
+    class ManageUser {
+        constructor() {
+            this.canModify = AccountHelper.userPermission().some(d => d == "Security.User.Modify");
+            this.canDelete = AccountHelper.userPermission().some(d => d == "Security.User.Delete");
+            this.userId = null, this.validator = null, this.companies = [], this.roles = [];
+            this.initialUserCompany = { 
+                userCompanyId: null, 
+                companyId: null, 
+                isDefault: false, 
+                roleIds: []
+            };
+
+            this.$divFilter = $('#divFilter');
+            this.$ddlFltCompany = $('#ddlFltCompany');
+            this.$btnFilter = $('#btnFilter'), this.$btnReset = $('#btnReset');
+
+            this.$gridUser = $('#gridUser');
+
+            this.$modalUser = $('#modalUser'), this.$lblModalTitle = $('#lblModalTitle'), this.$formUser = $('#formUser');
+            this.$gridUserCompanies = $('#gridUserCompanies');
+            this.$btnSubmit = $('#btnSubmit');
+        }
+
+        async init() {
+            this.initControls();
+            this.initHandlers();
+            this.initValidation();
+            
+            await this.initLoad();
+        }
+
+        initControls() {
+            DataTableHelper.initPaginationGrid({
+                $el: this.$gridUser,
+                url: `${apiBaseUrl}/v1/user/paging`,
+                columns: [
+                    { title: "Email", data: "emailAddress" },
+                    { title: "Name", data: "fullName" },
+                    {
+                        width: "10px",
+                        render: (data, type, row) => {
+                            const id = row.userId;
+                            const elem = `<div class="d-inline-flex justify-content-between">
+                                            ${this.canModify ? `<button class="btn text-secondary p-0" data-id="${id}" role="editbutton"><i class="fa fa-pencil-alt"></i></button>` : ``}
+                                            ${this.canDelete ? `<button class="btn text-danger p-0 ml-2" data-id="${id}" role="deletebutton"><i class="fa fa-trash"></i></button>` : ``}
+                                        </div>`;
+                            return elem;
+                        }
+                    }
+                ],
+                getParams: (d) => ({
+                    page: d.start / d.length + 1,
+                    pageSize: d.length,
+                    searchKey: history.state?.filter?.['flt-searchKey'] ?? "",
+                    companyId: history.state?.filter?.['flt-companyId'] ?? ""
+                })
+            });
+
+            DataTableHelper.initPaginationDetailData({
+                $el: this.$gridUserCompanies,
+                columns: [
+                    {
+                        title: "Company",
+                        render: (data, type, row, meta) => {
+                            const disabled = row.userCompanyId != null ? "disabled" : "";
+                            let options = `<option value="">&nbsp;</option>`;
+                            this.companies.forEach((data, index, obj) => {
+                                const isSelected = data.companyId == row.companyId;
+                                options += `<option value="${data.companyId}" ${isSelected ? "selected" : ""}>${data.name}</option>`;
+                            });
+
+                            const elem = `<select class="select2" role="detailcompany" data-row-index="${meta.row}" ${disabled}>
+                                            ${options}
+                                         </select>`;
+
+                            return elem;
+                        },
+                        width: "50%"
+                    },
+                    {
+                        title: "Role",
+                        render: (data, type, row, meta) => {
+                            let options = ``;
+                            this.roles.forEach(function (data, index, obj) {
+                                const isSelected = row.roleIds.some(d => d == data.roleId);
+                                options += `<option value="${data.roleId}" ${isSelected ? "selected" : ""}>${data.code}</option>`
+                            });
+
+                            const elem = `<select class="select2" role="detailrole" multiple="multiple" data-row-index=${meta.row}>
+                                            ${options}
+                                         </select>`;
+
+                            return elem;
+                        },
+                        width: "50%"
+                    },
+                    {
+                        title: "Default",
+                        render: (data, type, row, meta) => {
+                            const checked = row.isDefault == true ? "checked" : "";
+                            return `<input type="checkbox" role="detaildefault" data-row-index="${meta.row}" ${checked}>`;
+                        }
+                    },
+                    {
+                        render: (data, type, row, meta) =>`<a class="btn text-secondary p-0" role="deletedetail" data-row-index="${meta.row}"><i class="fas fa-trash"></i></a>`,
+                        width: "10px"
+                    }
+                ]
+            });
+
+            this.$ddlFltCompany.select2();
+        }
+
+        initHandlers() {
+            $(document).on('click', '#btnCreate', () => {
+                this.userId = null;
+                this.$lblModalTitle.text('Create User');
+
+                FormHelper.clearForm(this.$formUser, this.validator);
+
+                this.$modalUser.modal('show');
+            });
+
+            $(document).on('click', '[role="editbutton"]', (e) => {
+                this.userId = $(e.currentTarget).data('id');
+                this.$lblModalTitle.text("Edit User");
+
+                this.loadUser();
+            });
+
+            $(document).on('click', '[role="deletebutton"]', (e) => {
+                this.userId = $(e.currentTarget).data('id');
+                const url = `${apiBaseUrl}/v1/user/delete/${this.userId}`;
+
+                CommonHelper.deleteData(url, this.$gridUser);
+            });
+
+            $(document).on('click', '#btnAddDetail', () => this.$gridUserCompanies.api().row.add({ ...this.initialUserCompany }).draw());
+
+            $(document).on('change', '[role="detailcompany"]', (e) => {
+                const rowIndex = $(e.currentTarget).data('row-index');
+                const rowData = this.$gridUserCompanies.api().row(rowIndex).data();
+
+                rowData.companyId = $(e.currentTarget).val();
+                this.$gridUserCompanies.api().row(rowIndex).data(rowData).draw();
+            });
+
+            $(document).on('change', '[role="detailrole"]', (e) => {
+                const rowIndex = $(e.currentTarget).data('row-index');
+                const rowData = this.$gridUserCompanies.api().row(rowIndex).data();
+
+                rowData.roleIds = $(e.currentTarget).val();
+                this.$gridUserCompanies.api().row(rowIndex).data(rowData).draw();
+            });
+
+            $(document).on('change', '[role="detaildefault"]', (e) => {
+                const rowIndex = $(e.currentTarget).data('row-index');
+                const rowData = this.$gridUserCompanies.api().row(rowIndex).data();
+
+                rowData.isDefault = $(e.currentTarget).is(":checked");
+                this.$gridUserCompanies.api().row(rowIndex).data(rowData).draw();
+            });
+
+            $(document).on('click', '[role="deletedetail"]', (e) => {
+                const rowIndex = $(e.currentTarget).data('row-index');
+                CommonHelper.deleteDataDetail(this.$gridUserCompanies, rowIndex);
+            });
+
+            this.$btnSubmit.on('click', async () => {
+                if (!this.$formUser.valid()) {
+                    return;
+                }
+
+                const formDataObject = {
+                    ...FormHelper.getFormData(this.$formUser),
+                    userCompanies: this.$gridUserCompanies.api().data().toArray()
+                };
+                const upsertResponse = await AjaxHelper.doAjax({
+                    method: this.userId == null ? "POST" : "PUT",
+                    url: this.userId == null ? `${apiBaseUrl}/v1/user/create` : `${apiBaseUrl}/v1/user/update/${this.userId}`,
+                    data: formDataObject,
+                });
+
+                if (upsertResponse?.succeeded) {
+                    this.$modalUser.modal('hide');
+                    this.$gridUser.api().draw();
+
+                    Swal.fire({
+                        title: "Success",
+                        text: upsertResponse.message,
+                        icon: "success"
+                    });
+                }
+            });
+        }
+
+        initValidation() {
+            this.validator = this.$formUser.validate({
+                rules: {
+                    code: { required: true },
+                    fullName: { required: true }
+                },
+                messages: {
+                    code: { required: "Code is required" },
+                    fullName: { required: "Name is required" }
+                },
+                errorElement: 'div',
+                errorClass: 'text-danger',
+            });
+        }
+
+        async initLoad() {
+            this.companies = await DataHelper.loadCompanies();
+            this.roles = await DataHelper.loadRoles();
+            FormHelper.populateDdl(this.$ddlFltCompany, this.companies, "companyId", "name", true);
+
+            FilterHelper.setupFilter(this.$btnFilter, this.$btnReset, this.$divFilter, this.$gridUser);
+
+            LoadingHelper.hide();
+        }
+
+        async loadUser() {
+            const loadUserResponse = await AjaxHelper.doAjax({ url: `${apiBaseUrl}/v1/user/${this.userId}` });
+
+            if (loadUserResponse?.succeeded) {
+                FormHelper.populateFormData(this.$formUser, loadUserResponse.obj, this.validator);
+
+                const userCompanies = loadUserResponse.obj.userCompanies.map(d => ({
+                    userCompanyId: d.userCompanyId,
+                    companyId: d.companyId,
+                    isDefault: d.isDefault,
+                    roleIds: d.userCompanyRoles.map(d => d.roleId)
+                }));
+
+                this.$gridUserCompanies.api().rows().remove();
+                this.$gridUserCompanies.api().rows.add(userCompanies).draw();
+
+                this.$modalUser.modal('show');
+            }
+        }
+    }
+
+    $(async function () {
+        const manageUser = new ManageUser();
+        await manageUser.init();
+
+        @if (System.Diagnostics.Debugger.IsAttached)
+        {
+            <text>window.manageUser = manageUser;</text>
+        }
+    });
+</script>

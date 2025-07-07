@@ -1,0 +1,39 @@
+﻿<div class="modal fade" id="modalRole" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="lblModalTitle"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mb-2">
+                <form id="formRole">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Code <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="text" maxlength="50" class="form-control" name="code" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Permission <span class="text-danger">*</span></label>
+                                <div class="col-md-9">
+                                    <div id="divPermission" class="row"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="form-group justify-content-between" style="margin-bottom: 0px !important">
+                    <button type="button" class="btn btn-primary float-right ml-2" id="btnSubmit">Submit</button>
+                    <button type="button" class="btn btn-default close-button float-right" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

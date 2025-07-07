@@ -1,0 +1,39 @@
+﻿@page
+@{
+    ViewData["Title"] = "Role";
+    ViewData["Header"] = "Manage Role";
+    ViewData["Breadcrumb"] = new List<(string, string)>
+    {
+        ("Dashboard", "/"),
+        ("Security", ""),
+        ("Role", "/security/role")
+    };
+}
+
+<div class="card">
+    <div class="card-body">
+        <div id="divFilter" class="row">
+            <div class="col-lg-12">
+                <label>Search</label>
+                <input type="text" class="form-control" id="txtFltSearch" name="flt-searchKey" />
+            </div>
+            <div class="col-lg-12 mt-2 text-right">
+                <button type="button" class="btn btn-md btn-secondary" id="btnReset" style="min-width:150px">Reset Filter</button>
+                <button type="button" class="btn btn-mdl btn-success" id="btnFilter" style="min-width:150px">Filter</button>
+            </div>
+        </div>
+        
+        <hr />
+
+        <div class="row">
+            <div class="col-lg-12">
+                <table id="gridRole" class="table table-bordered table-hover"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Pages/Security/Role/Components/_RoleForm.cshtml")
+@section scripts {
+    @await Html.PartialAsync("~/Pages/Security/Role/Scripts/_Index.cshtml")
+}

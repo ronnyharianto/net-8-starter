@@ -35,13 +35,11 @@ namespace NET.Starter.API.Controllers.V1.Security
         [AppAuthorize]
         [HttpGet("my-companies")]
         [SwaggerOperation(Summary = "Retrieve my companies")]
-        [NonAction]
         public async Task<ObjectDto<IEnumerable<CompanyDto>>> RetrieveMyCompaniesAsync() => await _accountService.RetrieveMyCompaniesAsync();
 
         [AppAuthorize]
         [HttpGet("change-company/{companyId:guid}")]
         [SwaggerOperation(Summary = "Change access company")]
-        [NonAction]
         public async Task<ObjectDto<LoginDto>> ChangeCompanyAsync(Guid companyId)
         {
             var tokenResult = await _accountService.RefreshTokenAsync(companyId);
