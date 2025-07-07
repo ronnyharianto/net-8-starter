@@ -1,7 +1,7 @@
 services:
-  net-starter-api:
-    container_name: net-starter-api
+  net-starter-web:
+    container_name: net-starter-web
     # image akan dioverride oleh docker-compose.override.yml
     restart: unless-stopped
     ports:
-      - 5000:5000
+      - 7000:7000

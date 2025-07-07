@@ -24,7 +24,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/net-starter/src
+            cd /home/net-starter-api/src
             git pull origin main
 
             COMMIT_HASH=$(git rev-parse --short HEAD)
@@ -33,7 +33,7 @@ jobs:
             # Generate docker-compose.override.yml dengan tag versi commit hash
             cat > api-docker-compose.override.yml <<-EOL
             services:
-              sellio-api:
+              net-starter-api:
                 image: net-starter-api:$COMMIT_HASH
                 build:
                   context: .

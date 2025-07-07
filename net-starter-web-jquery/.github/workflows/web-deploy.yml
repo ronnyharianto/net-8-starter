@@ -1,0 +1,42 @@
+name: Deploy Web to Server (Build on Server)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'NET.Starter.Web/**'
+      - 'Dockerfile.WEB'
+
+jobs:
+  deploy:
+    name: Build & Deploy Web on Remote Server with docker-compose
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/net-starter-web/src
+            git pull origin main
+
+            COMMIT_HASH=$(git rev-parse --short HEAD)
+            echo "Deploy commit $COMMIT_HASH"
+
+            # Generate docker-compose.override.yml dengan tag versi commit hash
+            cat > web-docker-compose.override.yml <<-EOL
+            services:
+              net-starter-web:
+                image: net-starter-web:$COMMIT_HASH
+                build:
+                  context: .
+                  dockerfile: Dockerfile.WEB
+            EOL
+
+            docker compose -f web-docker-compose.yaml -f web-docker-compose.override.yml up -d --build
+
+            bash Tools/web-image-cleanup.sh
