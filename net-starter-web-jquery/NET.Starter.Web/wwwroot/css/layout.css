@@ -1,0 +1,130 @@
+[class*="sidebar-dark-"] .nav-sidebar > .nav-item > .nav-treeview {
+    padding-left: 0.25rem;
+}
+
+hr {
+    border-top-color: rgba(0, 0, 0, 0.15);
+}
+
+.user-list-row {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.user-item {
+    text-align: center;
+    position: relative;
+    padding-top: 2rem;
+}
+
+.user-rank {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: 700;
+    font-size: 1rem;
+    color: #007bff;
+    padding: 4px 10px;
+    border-radius: 16px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    width: fit-content;
+    user-select: none;
+}
+
+.user-photo {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+}
+
+.user-achievement {
+    color: #28a745;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* Spinner Loader */
+/* HTML: 
+    <div id="loader-wrapper">
+        <div id="loader-spinner"></div>
+        <div class="loader-section"></div>
+    </div> 
+*/
+/*
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loader-spinner {
+    width: 100px;
+    height: 100px;
+    border: 10px solid #ccc;
+    border-top: 10px solid #000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loaded #loader-wrapper {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+*/
+/* End Spinner Loader */
+
+/* Modern Loader */
+/* HTML:
+    <div id="loader-wrapper" class="d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+*/
+
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 1050;
+}
+
+.loaded #loader-wrapper {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+
+/* End Modern Loader */

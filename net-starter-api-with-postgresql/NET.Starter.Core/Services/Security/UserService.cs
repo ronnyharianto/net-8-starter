@@ -48,6 +48,8 @@ namespace NET.Starter.Core.Services.Security
             var user = await _dbContext.Users.Include(u => u.UserCompanies)
                                                 .ThenInclude(uc => uc.UserCompanyRoles)
                                                     .ThenInclude(ur => ur.Role)
+                                             .Include(u => u.UserCompanies)
+                                                .ThenInclude(uc => uc.Company)
                                              .AsNoTracking()
                                              .FirstOrDefaultAsync(d => d.Id == userId);
             if (user == null)
@@ -171,6 +173,15 @@ namespace NET.Starter.Core.Services.Security
                 }));
 
             #endregion
+
+            await _dbContext.SaveChangesAsync();
+
+            // Set default is separately to avoid error duplicate key on database
+            var defaultCompanyId = input.UserCompanies.FirstOrDefault(d => d.IsDefault)?.CompanyId;
+            if (defaultCompanyId is not null)
+            {
+                user.UserCompanies.First(d => d.CompanyId == defaultCompanyId.Value).IsDefault = true;
+            }
 
             await _dbContext.SaveChangesAsync();
 
@@ -316,6 +327,16 @@ namespace NET.Starter.Core.Services.Security
 
         private async Task<(bool isValid, string validationMessage)> ValidateUserInput(UserInput input, Guid? userId = null)
         {
+            if (!input.UserCompanies.Any()) return (false, "User must have at least one company.");
+
+            var duplicateDefaultCompany = input.UserCompanies.Where(uc => uc.IsDefault).Count() > 1;
+            if (duplicateDefaultCompany)
+                return (false, "User can only have one default company.");
+
+            var duplicateCompany = input.UserCompanies.GroupBy(uc => uc.CompanyId).Any(g => g.Count() > 1);
+            if (duplicateCompany)
+                return (false, "User can only have one company per company.");
+
             var dataDuplicateUser = await _dbContext.Users.FirstOrDefaultAsync(d =>
                 (d.Username == input.EmailAddress || d.EmailAddress == input.EmailAddress) &&
                 d.Id != userId

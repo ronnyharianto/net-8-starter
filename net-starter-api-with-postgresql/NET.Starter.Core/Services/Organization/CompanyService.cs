@@ -92,7 +92,7 @@ namespace NET.Starter.Core.Services.Organization
             await _dbContext.Companies.AddAsync(company);
             await _dbContext.SaveChangesAsync();
 
-            _logger.LogInformation("Company entity created: {@Company}", company);
+            _logger.LogInformation("Company entity created");
             return new("Company data is successfully created", HttpStatusCode.OK);
         }
 

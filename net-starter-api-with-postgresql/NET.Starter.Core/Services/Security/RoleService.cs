@@ -90,7 +90,7 @@ namespace NET.Starter.Core.Services.Security
             await _dbContext.Roles.AddAsync(role);
             await _dbContext.SaveChangesAsync();
 
-            _logger.LogInformation("Successfully created role: {@Role}", role);
+            _logger.LogInformation("Successfully created role");
             return new("Role data is successfully created", HttpStatusCode.OK);
         }
 

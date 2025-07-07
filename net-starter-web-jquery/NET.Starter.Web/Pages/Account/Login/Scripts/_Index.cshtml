@@ -1,0 +1,32 @@
+﻿@inject IConfiguration Configuration
+@{
+    var urlApi = @Configuration["APIUrl"];
+}
+
+<script>
+    const sessionAvailable = AccountHelper.userSessionAvailable();
+
+    if (sessionAvailable) {
+        window.location.href = "/";
+    }
+    else {
+        localStorage.clear();
+    }
+
+    async function handleCredentialResponse(response) {
+        const idToken = response.credential;
+
+        const loginResponse = await AjaxHelper.doAjaxAnonymous({
+            method: "POST",
+            url: "@urlApi/v1/account/login/google",
+            data: { idToken },
+            customHeaders: { "X-Platform": "NET-Starter-Web" }
+        });
+
+        if (loginResponse?.succeeded) {
+            AccountHelper.setSessionData(loginResponse.obj);
+
+            window.location.href = "/";
+        }
+    }
+</script>

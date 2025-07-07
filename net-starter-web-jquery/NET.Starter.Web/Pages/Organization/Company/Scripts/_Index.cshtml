@@ -1,0 +1,160 @@
+﻿<script type="text/javascript">
+	class ManageCompany {
+		constructor() {
+			this.canModify = AccountHelper.userPermission().some(d => d == "Organization.Company.Modify");
+			this.canDelete = AccountHelper.userPermission().some(d => d == "Organization.Company.Delete");
+			this.companyId = null, this.validator = null;
+
+			this.$divFilter = $('#divFilter'), this.$btnFilter = $('#btnFilter'), this.$btnReset = $('#btnReset');
+
+			this.$gridCompany = $('#gridCompany');
+
+			this.$modalCompany = $('#modalCompany'), this.$lblModalTitle = $('#lblModalTitle'), this.$formCompany = $('#formCompany');
+			this.$txtCode = $('#txtCode');
+			this.$btnSubmit = $('#btnSubmit');
+		}
+
+		async init() {
+			this.initControls();
+			this.initHandlers();
+			this.initValidation();
+			
+			await this.initLoad();
+		}
+
+		initControls() {
+			DataTableHelper.initPaginationGrid({
+				$el: this.$gridCompany,
+				url: `${apiBaseUrl}/v1/company/paging`,
+				columns: [
+                    { title: "Code", data: "code" },
+                    { title: "Name", data: "name" },
+                    { title: "Address", data: "address"},
+                    { title: "Email", data: "email" },
+                    { title: "Website", data: "website" },
+                    {
+                        width: "10px",
+                        render: (data, type, row) => {
+                            const id = row.companyId;
+                            const elem = `<div class="d-inline-flex justify-content-between">
+											${this.canModify ? `<button class="btn text-secondary p-0" data-id="${id}" role="editbutton"><i class="fa fa-pencil-alt"></i></button>` : ``}
+											${this.canDelete ? `<button class="btn text-danger p-0 ml-2" data-id="${id}" role="deletebutton"><i class="fa fa-trash"></i></button>` : ``}
+                                        </div>`;
+                            return elem;
+                        }
+                    }
+                ],
+				getParams: (d) => ({
+					page: d.start / d.length + 1,
+					pageSize: d.length,
+					searchKey: history.state?.filter?.['flt-searchKey'] ?? ""
+                })
+			});
+		}
+
+		initHandlers() {
+			$(document).on('click', '#btnCreate', () => {
+				this.companyId = null;
+				this.$lblModalTitle.text('Create Company');
+
+				FormHelper.clearForm(this.$formCompany, this.validator);
+
+				this.changeFormMode('create');
+
+				this.$modalCompany.modal('show');
+			});
+
+			$(document).on('click', '[role="editbutton"]', (e) => {
+				this.companyId = $(e.currentTarget).data('id');
+				this.$lblModalTitle.text("Edit Company");
+
+				this.changeFormMode('edit');
+
+				this.loadCompany();
+			});
+
+			$(document).on('click', '[role="deletebutton"]', (e) => {
+				this.companyId = $(e.currentTarget).data('id');
+				const url = `${apiBaseUrl}/v1/company/delete/${this.companyId}`;
+
+				CommonHelper.deleteData(url, this.$gridCompany);
+			});
+
+			this.$btnSubmit.on('click', async () => {
+				if (!this.$formCompany.valid()) {
+					return;
+				}
+
+				const formDataObject = FormHelper.getFormData(this.$formCompany);
+				const upsertResponse = await AjaxHelper.doAjax({
+					method: this.companyId == null ? "POST" : "PUT",
+					url: this.companyId == null ? `${apiBaseUrl}/v1/company/create` : `${apiBaseUrl}/v1/company/update/${this.companyId}`,
+					data: formDataObject,
+				});
+
+				if (upsertResponse?.succeeded) {
+					this.$modalCompany.modal('hide');
+					this.$gridCompany.api().draw();
+
+					Swal.fire({
+						title: "Success",
+						text: upsertResponse.message,
+						icon: "success"
+					});
+				}
+			});
+		}
+
+		initValidation() {
+			this.validator = this.$formCompany.validate({
+				rules: {
+					code: { required: true },
+					name: { required: true },
+					email: { email: true }
+				},
+				messages: {
+					code: { required: "Code is required" },
+					name: { required: "Name is required" },
+					email: { email: "Invalid email format" }
+				},
+				errorElement: 'div',
+				errorClass: 'text-danger',
+			});
+		}
+
+		async initLoad() {
+			FilterHelper.setupFilter(this.$btnFilter, this.$btnReset, this.$divFilter, this.$gridCompany);
+
+			LoadingHelper.hide();
+		}
+
+		async loadCompany() {
+			const loadCompanyResponse = await AjaxHelper.doAjax({ url: `${apiBaseUrl}/v1/company/${this.companyId}` });
+
+			if (loadCompanyResponse?.succeeded) {
+				FormHelper.populateFormData(this.$formCompany, loadCompanyResponse.obj, this.validator);
+
+				this.$modalCompany.modal('show');
+			}
+		}
+
+		changeFormMode(mode) {
+			if (mode == "create") {
+				this.$txtCode.attr('disabled', false);
+			}
+			else if (mode == "edit") {
+				this.$txtCode.attr('disabled', true);
+			}
+		}
+	}
+
+	$(async function () {
+		const manageCompany = new ManageCompany();
+		await manageCompany.init();
+
+		@if (System.Diagnostics.Debugger.IsAttached)
+		{
+			<text>window.manageCompany = manageCompany;</text>
+		}
+	});
+</script>

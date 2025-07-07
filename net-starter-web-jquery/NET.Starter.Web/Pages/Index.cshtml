@@ -1,0 +1,47 @@
+﻿@page
+@{
+	ViewData["Title"] = "Dashboard";
+	ViewData["Header"] = "Dashboard";
+}
+
+<div class="row">
+	
+</div>
+
+@section scripts {
+	<script type="text/javascript">
+		class Dashboard {
+			constructor() {
+				
+			}
+
+			init() {
+				this.initControls();
+				this.initHandlers();
+				this.initLoad();
+			}
+
+			initControls() {
+				
+			}
+
+			initHandlers() {
+				
+			}
+
+			async initLoad() {
+				LoadingHelper.hide();
+			}
+		}
+
+		$(function () {
+			const dashboard = new Dashboard();
+			dashboard.init();
+
+			@if (System.Diagnostics.Debugger.IsAttached)
+			{
+				<text>window.dashboard = dashboard;</text>
+			}
+		});
+	</script>
+}

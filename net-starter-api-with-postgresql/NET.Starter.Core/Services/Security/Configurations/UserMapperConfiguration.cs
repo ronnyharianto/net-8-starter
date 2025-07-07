@@ -73,6 +73,10 @@ namespace NET.Starter.Core.Services.Security.Configurations
                             RoleId = d
                         }).ToHashSet();
                     }
+                    else
+                    {
+                        dest.IsDefault = false;
+                    }
                 });
 
             CreateMap<UserPushTokenInput, UserPushToken>()

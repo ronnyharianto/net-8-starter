@@ -1,0 +1,60 @@
+﻿@page "/Login"
+@inject IConfiguration Configuration
+@{
+    ViewData["Title"] = "Login page";
+    Layout = null;
+    var googleClientId = Configuration["OAuth:Google:ClientId"];
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NET.Starter | Log in</title>
+
+    <link rel="stylesheet" href="/lib/fontawesome-free/css/all.css" />
+    <link rel="stylesheet" href="/lib/adminlte/css/adminlte.css" />
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <h1>NET.Starter</h1>
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">Sign in to start your session</p>
+
+                <div id="g_id_onload"
+                     data-client_id="@googleClientId"
+                     data-callback="handleCredentialResponse"
+                     data-auto_prompt="false">
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="g_id_signin"
+                         data-type="standard"
+                         data-size="large"
+                         data-theme="outline"
+                         data-text="sign_in_with"
+                         data-shape="rectangular"
+                         data-logo_alignment="left">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/sweetalert/sweetalert2.all.min.js"></script>
+
+    <script src="~/js/loadingHelper.js" asp-append-version="true"></script>
+    <script src="~/js/accountHelper.js" asp-append-version="true"></script>
+    <script src="~/js/ajaxHelper.js" asp-append-version="true"></script>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <partial name="Scripts/_Index" />
+</body>
+</html>

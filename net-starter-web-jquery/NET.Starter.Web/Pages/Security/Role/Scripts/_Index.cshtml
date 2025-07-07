@@ -1,0 +1,159 @@
+﻿<script type="text/javascript">
+	class ManageRole {
+		constructor() {
+			this.canModify = AccountHelper.userPermission().some(d => d == "Security.Role.Modify");
+			this.canDelete = AccountHelper.userPermission().some(d => d == "Security.Role.Delete");
+			this.roleId = null, this.validator = null;
+
+			this.$divFilter = $('#divFilter'), this.$btnFilter = $('#btnFilter'), this.$btnReset = $('#btnReset');
+
+			this.$gridRole = $('#gridRole');
+
+			this.$modalRole = $('#modalRole'), this.$lblModalTitle = $('#lblModalTitle'), this.$formRole = $('#formRole');
+			this.$divPermission = $('#divPermission');
+			this.$btnSubmit = $('#btnSubmit');
+		}
+
+		async init() {
+			this.initControls();
+			this.initHandlers();
+			this.initValidation();
+			
+			await this.initLoad();
+		}
+
+		initControls() {
+			DataTableHelper.initPaginationGrid({
+				$el: this.$gridRole,
+				url: `${apiBaseUrl}/v1/role/paging`,
+				columns: [
+                    { title: "Code", data: "code" },
+                    {
+                        width: "10px",
+                        render: (data, type, row) => {
+                            const id = row.roleId;
+                            const elem = `<div class="d-inline-flex justify-content-between">
+											${this.canModify ? `<button class="btn text-secondary p-0" data-id="${id}" role="editbutton"><i class="fa fa-pencil-alt"></i></button>` : ``}
+											${this.canDelete ? `<button class="btn text-danger p-0 ml-2" data-id="${id}" role="deletebutton"><i class="fa fa-trash"></i></button>` : ``}
+                                        </div>`;
+                            return elem;
+                        }
+                    }
+                ],
+				getParams: (d) => ({
+					page: d.start / d.length + 1,
+					pageSize: d.length,
+					searchKey: history.state?.filter?.['flt-searchKey'] ?? ""
+                })
+			});
+		}
+
+		initHandlers() {
+			$(document).on('click', '#btnCreate', () => {
+				this.roleId = null;
+				this.$lblModalTitle.text('Create Role');
+
+				FormHelper.clearForm(this.$formRole, this.validator);
+
+				this.$modalRole.modal('show');
+			});
+
+			$(document).on('click', '[role="editbutton"]', (e) => {
+				this.roleId = $(e.currentTarget).data('id');
+				this.$lblModalTitle.text("Edit Role");
+
+				this.loadRole();
+			});
+
+			$(document).on('click', '[role="deletebutton"]', (e) => {
+				this.roleId = $(e.currentTarget).data('id');
+				const url = `${apiBaseUrl}/v1/role/delete/${this.roleId}`;
+
+				CommonHelper.deleteData(url, this.$gridRole);
+			});
+
+			this.$btnSubmit.on('click', async () => {
+				if (!this.$formRole.valid()) {
+					return;
+				}
+
+				const formDataObject = FormHelper.getFormData(this.$formRole);
+				const upsertResponse = await AjaxHelper.doAjax({
+					method: this.roleId == null ? "POST" : "PUT",
+					url: this.roleId == null ? `${apiBaseUrl}/v1/role/create` : `${apiBaseUrl}/v1/role/update/${this.roleId}`,
+					data: formDataObject,
+				});
+
+				if (upsertResponse?.succeeded) {
+					this.$modalRole.modal('hide');
+					this.$gridRole.api().draw();
+
+					Swal.fire({
+						title: "Success",
+						text: upsertResponse.message,
+						icon: "success"
+					});
+				}
+			});
+		}
+
+		initValidation() {
+			this.validator = this.$formRole.validate({
+				rules: {
+					code: { required: true }
+				},
+				messages: {
+					code: { required: "Code is required" }
+				},
+				errorElement: 'div',
+				errorClass: 'text-danger',
+			});
+		}
+
+		async initLoad() {
+			FilterHelper.setupFilter(this.$btnFilter, this.$btnReset, this.$divFilter, this.$gridRole);
+
+			const permissions = await DataHelper.loadPermissions();
+            this.populatePermissions(permissions);
+
+			LoadingHelper.hide();
+		}
+
+		async loadRole() {
+			const loadRoleResponse = await AjaxHelper.doAjax({ url: `${apiBaseUrl}/v1/role/${this.roleId}` });
+
+			if (loadRoleResponse?.succeeded) {
+				loadRoleResponse.obj.permissionIds = loadRoleResponse.obj.permissions.map(x => x.permissionId);
+				FormHelper.populateFormData(this.$formRole, loadRoleResponse.obj, this.validator);
+
+				this.$modalRole.modal('show');
+			}
+		}
+
+		populatePermissions(permissions) {
+            this.$divPermission.empty();
+
+			let html = ``;
+            for (const permission of permissions) {
+				html += `<div class="col-md-6">
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" id="${permission.permissionId}" name="permissionIds[]" value="${permission.permissionId}">
+								<label class="custom-control-label" for="${permission.permissionId}">${permission.code}</label>
+							</div>
+						</div>`;
+            }
+
+            this.$divPermission.html(html);
+        }
+	}
+
+	$(async function () {
+		const manageRole = new ManageRole();
+		await manageRole.init();
+
+		@if (System.Diagnostics.Debugger.IsAttached)
+		{
+			<text>window.manageRole = manageRole;</text>
+		}
+	});
+</script>
