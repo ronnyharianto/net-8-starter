@@ -209,7 +209,7 @@
         const sessionAvailable = AccountHelper.userSessionAvailable();
 
         if (!sessionAvailable) {
-            logoutUser();
+            AccountHelper.logoutUser();
         }
 
         (async function () {
