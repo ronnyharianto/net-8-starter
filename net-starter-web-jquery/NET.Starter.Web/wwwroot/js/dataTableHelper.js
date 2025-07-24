@@ -31,10 +31,10 @@
 			layout: {
 				topStart: null,
 				topEnd: () => {
-					if (!buttons) return null;
-
 					const toolbar = document.createElement('div');
-					toolbar.innerHTML = buttons;
+					if (buttons) {
+						toolbar.innerHTML = buttons;
+					}
 					return toolbar;
 				},
 				bottomStart: 'info',
@@ -59,10 +59,10 @@
 			columns,
 			layout: {
 				top1End: () => {
-					if (!buttons) return null;
-
 					const toolbar = document.createElement('div');
-					toolbar.innerHTML = buttons;
+					if (buttons) {
+						toolbar.innerHTML = buttons;
+					}
 					return toolbar;
 				}
 			},
