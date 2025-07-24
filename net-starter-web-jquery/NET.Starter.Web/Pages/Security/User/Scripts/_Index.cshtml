@@ -232,9 +232,7 @@
                     isDefault: d.isDefault,
                     roleIds: d.userCompanyRoles.map(d => d.roleId)
                 }));
-
-                this.$gridUserCompanies.api().rows().remove();
-                this.$gridUserCompanies.api().rows.add(userCompanies).draw();
+                DataTableHelper.replaceData(this.$gridUserCompanies, userCompanies);
 
                 this.$modalUser.modal('show');
             }

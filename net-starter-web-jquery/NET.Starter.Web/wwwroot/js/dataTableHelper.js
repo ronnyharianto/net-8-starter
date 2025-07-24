@@ -70,8 +70,14 @@
 		})
 	}
 
+	function replaceData($el, obj) {
+		$el.api().rows().remove();
+		$el.api().rows.add(obj).draw();
+	}
+
     window.DataTableHelper = {
 		initPaginationGrid,
-		initPaginationDetailData
+		initPaginationDetailData,
+		replaceData
     };
 })();
