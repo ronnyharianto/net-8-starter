@@ -78,7 +78,7 @@ namespace NET.Starter.DataAccess.Bases
         /// <param name="modelBuilder">Builder used to construct the model for the context.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var dbSetProperties = GetType().GetProperties()
+            var dbSetProperties = GetType().GetProperties(BindingFlags.Instance | BindingFlags.NonPublic)
                                            .Where(p =>
                                                p.PropertyType.IsGenericType &&
                                                p.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>));
