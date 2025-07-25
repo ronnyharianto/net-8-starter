@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     function initPaginationGrid(options) {
 		const {
 			$el,
@@ -70,14 +70,35 @@
 		})
 	}
 
-	function replaceData($el, obj) {
+	function clearData($el, doDraw = true) {
 		$el.api().rows().remove();
-		$el.api().rows.add(obj).draw();
+
+		if (doDraw)
+            $el.api().draw();
+    }
+
+	function replaceData($el, obj, doDraw = true) {
+		clearData($el, false);
+		$el.api().rows.add(obj);
+
+        if (doDraw)
+            $el.api().draw();
+	}
+
+	function updateSingleProp($el, rowIndex, prop, value, doDraw = true) {
+		const rowData = $el.api().row(rowIndex).data();
+		rowData[prop] = value;
+		$el.api().row(rowIndex).data(rowData);
+
+        if (doDraw)
+            $el.api().draw();
 	}
 
     window.DataTableHelper = {
 		initPaginationGrid,
 		initPaginationDetailData,
-		replaceData
+		clearData,
+		replaceData,
+		updateSingleProp
     };
 })();
