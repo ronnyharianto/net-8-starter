@@ -20,9 +20,12 @@ namespace NET.Starter.DataAccess.Builders.Security
                 .Property(e => e.EmailAddress)
                 .HasMaxLength(50);
 
+            /*
+             * 12345678 is the default password for data seeding. It is recommend to use a secure password when create user from frontend
+             */
             builder
                 .Property(e => e.Password)
-                .HasConversion(v => CryptographyHelper.HashPassword(v), v => v);
+                .HasConversion((v) => v == "12345678" ? "AQAAAAIAAYagAAAAEOjKvuGQQDD9H2FsjyoVPpM1b5AjifFGQoHi7M3DfFd5CwxeLJW+UV77UpeAixVRGQ==" : CryptographyHelper.HashPassword(v), (v) => v);
 
             builder
                 .Property(e => e.FullName)
