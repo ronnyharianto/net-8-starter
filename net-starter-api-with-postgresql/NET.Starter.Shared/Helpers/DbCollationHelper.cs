@@ -18,8 +18,8 @@ namespace NET.Starter.Shared.Helpers
         public static string GetCaseInsensitiveCollation(DatabaseEngine engine) =>
             engine switch
             {
-                DatabaseEngine.SQLServer => CollationConstants.SQL_Latin1_General_CP1_CI_AS,
-                DatabaseEngine.PostgreSQL => CollationConstants.PG_English_UnitedStates_CI,
+                DatabaseEngine.SQLServer => CollationConstant.SQL_Latin1_General_CP1_CI_AS,
+                DatabaseEngine.PostgreSQL => CollationConstant.PG_English_UnitedStates_CI,
                 _ => throw new NotSupportedException($"Unsupported database engine: {engine}")
             };
 
@@ -32,8 +32,8 @@ namespace NET.Starter.Shared.Helpers
         public static string GetCaseSensitiveCollation(DatabaseEngine engine) =>
             engine switch
             {
-                DatabaseEngine.SQLServer => CollationConstants.SQL_Latin1_General_CP1_CS_AS,
-                DatabaseEngine.PostgreSQL => CollationConstants.PG_POSIX_C,
+                DatabaseEngine.SQLServer => CollationConstant.SQL_Latin1_General_CP1_CS_AS,
+                DatabaseEngine.PostgreSQL => CollationConstant.PG_POSIX_C,
                 _ => throw new NotSupportedException($"Unsupported database engine: {engine}")
             };
     }

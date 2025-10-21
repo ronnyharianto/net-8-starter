@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains constant keys for custom JWT claims used throughout the application.
     /// </summary>
-    public static class CustomJwtRegisteredClaimNames
+    public static class CustomJwtRegisteredClaimName
     {
         /// <summary>
         /// The claim that stores the Id of the company the user is currently accessing.

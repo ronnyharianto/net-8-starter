@@ -27,7 +27,7 @@ namespace NET.Starter.API.Controllers.V1.Security
         [SwaggerOperation(Summary = "Login account with google credential")]
         public async Task<ObjectDto<LoginDto>> GoogleLoginAsync(GoogleLoginInput input) => await _accountService.GoogleLoginAsync(input);
 
-        [AppAuthorize(PermissionConstants.RefreshToken)]
+        [AppAuthorize(PermissionConstant.RefreshToken)]
         [HttpGet("refresh-token")]
         [SwaggerOperation(Summary = "Refresh token")]
         public async Task<ObjectDto<LoginDto>> RefreshTokenAsync() => await _accountService.RefreshTokenAsync();

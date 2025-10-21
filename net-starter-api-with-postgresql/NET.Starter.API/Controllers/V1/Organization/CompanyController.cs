@@ -6,8 +6,11 @@ using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Objects.Dtos;
 using NET.Starter.Shared.Objects.Inputs;
 using Swashbuckle.AspNetCore.Annotations;
-using static NET.Starter.Shared.Constants.PermissionConstants.Organization;
-using UserPermission = NET.Starter.Shared.Constants.PermissionConstants.Security.User;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+using static NET.Starter.Shared.Constants.PermissionConstant.Organization;
+using UserPermission = NET.Starter.Shared.Constants.PermissionConstant.Security.User;
+using static NET.Starter.Shared.Constants.MessageConstant.Validation;
 
 namespace NET.Starter.API.Controllers.V1.Organization
 {
@@ -33,18 +36,46 @@ namespace NET.Starter.API.Controllers.V1.Organization
         [Mutation]
         [HttpPost("create")]
         [SwaggerOperation(Summary = "Create company")]
-        public async Task<BaseDto> CreateCompanyAsync([FromBody] CompanyInput input) => await _companyService.CreateCompanyAsync(input);
+        public async Task<BaseDto> CreateCompanyAsync([FromBody] CompanyInput input)
+        {
+            var (isValid, validationMessage) = ValidateCompanyInput(input);
+            if (!isValid)
+                return new(validationMessage, HttpStatusCode.BadRequest);
+
+            return await _companyService.CreateCompanyAsync(input);
+        }
 
         [AppAuthorize(Company.Modify)]
         [Mutation]
         [HttpPut("update/{companyId:guid}")]
         [SwaggerOperation(Summary = "Update company")]
-        public async Task<BaseDto> UpdateCompanyAsync(Guid companyId, [FromBody] CompanyInput input) => await _companyService.UpdateCompanyAsync(companyId, input);
+        public async Task<BaseDto> UpdateCompanyAsync(Guid companyId, [FromBody] CompanyInput input)
+        {
+            var (isValid, validationMessage) = ValidateCompanyInput(input);
+            if (!isValid)
+                return new(validationMessage, HttpStatusCode.BadRequest);
+
+            return await _companyService.UpdateCompanyAsync(companyId, input);
+        }
 
         [AppAuthorize(Company.Delete)]
         [Mutation]
         [HttpDelete("delete/{companyId:guid}")]
         [SwaggerOperation(Summary = "Delete company")]
         public async Task<BaseDto> DeleteCompanyAsync(Guid companyId) => await _companyService.DeleteCompanyAsync(companyId);
+
+        private static (bool isValid, string validationMessage) ValidateCompanyInput(CompanyInput input)
+        {
+            if (string.IsNullOrWhiteSpace(input.Name))
+                return (false, Required("Name"));
+
+            if (string.IsNullOrWhiteSpace(input.Code))
+                return (false, Required("Code"));
+
+            if (!string.IsNullOrWhiteSpace(input.Email) && !new EmailAddressAttribute().IsValid(input.Email))
+                return (false, Invalid("Email"));
+
+            return (true, string.Empty);
+        }
     }
 }

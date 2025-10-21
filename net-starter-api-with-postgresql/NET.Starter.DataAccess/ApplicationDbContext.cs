@@ -9,7 +9,7 @@ using NET.Starter.DataAccess.Models.Security;
 using NET.Starter.DataAccess.Models.System;
 using NET.Starter.Shared.Objects;
 using System.Runtime.CompilerServices;
-using static NET.Starter.Shared.Constants.GeneralConstants;
+using static NET.Starter.Shared.Constants.GeneralConstant;
 
 [assembly: InternalsVisibleTo("NET.Starter.Core")]
 

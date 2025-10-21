@@ -6,7 +6,9 @@ using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Objects.Dtos;
 using NET.Starter.Shared.Objects.Inputs;
 using Swashbuckle.AspNetCore.Annotations;
-using static NET.Starter.Shared.Constants.PermissionConstants.Security;
+using static NET.Starter.Shared.Constants.PermissionConstant.Security;
+using static NET.Starter.Shared.Constants.MessageConstant.Validation;
+using System.Net;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {
@@ -32,18 +34,40 @@ namespace NET.Starter.API.Controllers.V1.Security
         [Mutation]
         [HttpPost("create")]
         [SwaggerOperation(Summary = "Create role")]
-        public async Task<BaseDto> CreateRoleAsync([FromBody] RoleInput input) => await _roleService.CreateRoleAsync(input);
+        public async Task<BaseDto> CreateRoleAsync([FromBody] RoleInput input)
+        {
+            var (isValid, validationMessage) = ValidateRoleInput(input);
+            if (!isValid)
+                return new(validationMessage, HttpStatusCode.BadRequest);
+
+            return await _roleService.CreateRoleAsync(input);
+        }
 
         [AppAuthorize(Role.Modify)]
         [Mutation]
         [HttpPut("update/{roleId:guid}")]
         [SwaggerOperation(Summary = "Update role")]
-        public async Task<BaseDto> UpdateRoleAsync(Guid roleId, [FromBody] RoleInput input) => await _roleService.UpdateRoleAsync(roleId, input);
+        public async Task<BaseDto> UpdateRoleAsync(Guid roleId, [FromBody] RoleInput input)
+        {
+            var (isValid, validationMessage) = ValidateRoleInput(input);
+            if (!isValid)
+                return new(validationMessage, HttpStatusCode.BadRequest);
+
+            return await _roleService.UpdateRoleAsync(roleId, input);
+        }
 
         [AppAuthorize(Role.Delete)]
         [Mutation]
         [HttpDelete("delete/{roleId:guid}")]
         [SwaggerOperation(Summary = "Delete role")]
         public async Task<BaseDto> DeleteRoleAsync(Guid roleId) => await _roleService.DeleteRoleAsync(roleId);
+
+        private static (bool isValid, string validationMessage) ValidateRoleInput(RoleInput input)
+        {
+            if (!input.PermissionIds.Any())
+                return (false, NotEmpty("permission"));
+
+            return (true, string.Empty);
+        }
     }
 }

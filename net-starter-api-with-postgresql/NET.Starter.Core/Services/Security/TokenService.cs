@@ -35,7 +35,7 @@ namespace NET.Starter.Core.Services.Security
             var accessToken = CreateSecurity(dataUser, accessTokenExpireAt, companyId, permissions);
             _logger.LogInformation("Successfully generated Access Token for user Id: {UserId} to access company Id: {CompanyId}", dataUser.Id, companyId);
 
-            var refreshToken = CreateSecurity(dataUser, refreshTokenExpireAt, companyId, [PermissionConstants.RefreshToken]);
+            var refreshToken = CreateSecurity(dataUser, refreshTokenExpireAt, companyId, [PermissionConstant.RefreshToken]);
             _logger.LogInformation("Successfully generated Refresh Token for user Id: {UserId} to access company Id: {CompanyId}", dataUser.Id, companyId);
 
             return new()
@@ -74,8 +74,8 @@ namespace NET.Starter.Core.Services.Security
                     { JwtRegisteredClaimNames.Email, dataUser.EmailAddress },
                     { JwtRegisteredClaimNames.GivenName, dataUser.FullName },
                     { JwtRegisteredClaimNames.Sid, dataUser.Id.ToString() },
-                    { CustomJwtRegisteredClaimNames.CurrentCompany, companyId.ToString() },
-                    { CustomJwtRegisteredClaimNames.TypeCode, permissions.ToList() }
+                    { CustomJwtRegisteredClaimName.CurrentCompany, companyId.ToString() },
+                    { CustomJwtRegisteredClaimName.TypeCode, permissions.ToList() }
                 }
             };
 

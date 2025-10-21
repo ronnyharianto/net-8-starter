@@ -4,7 +4,7 @@ using NET.Starter.Core.Services.Security.Interfaces;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Objects.Dtos;
 using Swashbuckle.AspNetCore.Annotations;
-using static NET.Starter.Shared.Constants.PermissionConstants.Security;
+using static NET.Starter.Shared.Constants.PermissionConstant.Security;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {

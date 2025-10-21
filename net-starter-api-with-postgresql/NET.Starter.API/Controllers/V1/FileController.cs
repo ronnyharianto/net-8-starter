@@ -11,7 +11,7 @@ namespace NET.Starter.API.Controllers.V1
     [Route("api/v1/[controller]")]
     public class FileController() : BaseController
     {
-        [AppAuthorize(PermissionConstants.RetrieveFileFromStorage)]
+        [AppAuthorize(PermissionConstant.RetrieveFileFromStorage)]
         [HttpGet("retrieve-signed-url")]
         [SwaggerOperation(Summary = "Retrieve limited time signed url")]
         public async Task<ObjectDto<string>> RetrieveBrandsPagingAsync([FromQuery] string objectName, [FromQuery] int? durationInSeconds)

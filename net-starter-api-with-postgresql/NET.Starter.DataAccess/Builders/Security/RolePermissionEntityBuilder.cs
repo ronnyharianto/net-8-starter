@@ -67,7 +67,7 @@ namespace NET.Starter.DataAccess.Builders.Security
             foreach (var rolePermission in rolePermissions)
             {
                 rolePermission.Created = new(2025, 7, 24, 3, 0, 0, DateTimeKind.Utc);
-                rolePermission.CreatedBy = GeneralConstants.EFCoreMigration.CreatedBy;
+                rolePermission.CreatedBy = GeneralConstant.EFCoreMigration.CreatedBy;
             }
 
             builder.HasData(rolePermissions);

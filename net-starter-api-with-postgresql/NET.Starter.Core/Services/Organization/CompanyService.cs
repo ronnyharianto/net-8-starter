@@ -144,15 +144,6 @@ namespace NET.Starter.Core.Services.Organization
 
         private async Task<(bool isValid, string validationMessage)> ValidateCompanyInput(CompanyInput input, Guid? companyId = null)
         {
-            if (string.IsNullOrWhiteSpace(input.Name))
-                return (false, "Name is required.");
-
-            if (string.IsNullOrWhiteSpace(input.Code))
-                return (false, "Code is required.");
-
-            if (!string.IsNullOrWhiteSpace(input.Email) && !new EmailAddressAttribute().IsValid(input.Email))
-                return (false, "Email is invalid.");
-
             var dataDuplicateCompany = await _dbContext.Companies.FirstOrDefaultAsync(d => d.Code == input.Code && d.Id != companyId);
             if (dataDuplicateCompany != null)
             {

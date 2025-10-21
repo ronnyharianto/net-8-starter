@@ -4,7 +4,7 @@
     /// Defines constants related to permission handling and authentication.
     /// These constants are used in JWT claims, endpoint access control, and authorization checks.
     /// </summary>
-    public static class PermissionConstants
+    public static class PermissionConstant
     {
         /// <summary>
         /// Claim key used to identify the refresh token action.

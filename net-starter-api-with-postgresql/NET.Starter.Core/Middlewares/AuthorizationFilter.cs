@@ -50,7 +50,7 @@ namespace NET.Starter.Core.Middlewares
                 }
                 else if (identity.Claims is { } claims && claims.Any())
                 {
-                    var permissions = identity.Claims.Where(i => i.Type == CustomJwtRegisteredClaimNames.TypeCode);
+                    var permissions = identity.Claims.Where(i => i.Type == CustomJwtRegisteredClaimName.TypeCode);
 
                     if (IsAuthorize(context, permissions, _logger))
                     {
@@ -58,7 +58,7 @@ namespace NET.Starter.Core.Middlewares
                         _currentUserAccessor.UserId = new Guid(claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sid)?.Value ?? Guid.Empty.ToString());
                         _currentUserAccessor.FullName = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value ?? string.Empty;
                         _currentUserAccessor.EmailAddress = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? string.Empty;
-                        _currentUserAccessor.CompanyId = new Guid(claims.FirstOrDefault(c => c.Type == CustomJwtRegisteredClaimNames.CurrentCompany)?.Value ?? Guid.Empty.ToString());
+                        _currentUserAccessor.CompanyId = new Guid(claims.FirstOrDefault(c => c.Type == CustomJwtRegisteredClaimName.CurrentCompany)?.Value ?? Guid.Empty.ToString());
                         _currentUserAccessor.Permissions = permissions.Select(p => p.Value);
 
                         _logger.LogDebug("Authorization succeeded. UserId={UserId}, CompanyId={CompanyId}", _currentUserAccessor.UserId, _currentUserAccessor.CompanyId);

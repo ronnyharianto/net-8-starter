@@ -3,7 +3,7 @@
     /// <summary>
     /// Common collation names for SQL Server and PostgreSQL.
     /// </summary>
-    internal static class CollationConstants
+    internal static class CollationConstant
     {
         /// <summary>
         /// SQL Server collation for case-insensitive comparisons.

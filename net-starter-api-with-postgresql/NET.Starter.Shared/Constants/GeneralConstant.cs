@@ -3,7 +3,7 @@
     /// <summary>
     /// General constants
     /// </summary>
-    public static class GeneralConstants
+    public static class GeneralConstant
     {
         public static class EFCoreMigration
         {

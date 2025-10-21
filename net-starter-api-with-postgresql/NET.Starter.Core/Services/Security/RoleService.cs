@@ -157,9 +157,6 @@ namespace NET.Starter.Core.Services.Security
 
         private async Task<(bool isValid, string validationMessage)> ValidateRoleInput(RoleInput input, Guid? roleId = null)
         {
-            if (!input.PermissionIds.Any())
-                return (false, "Please add at least one permission.");
-
             var dataDuplicateRole = await _dbContext.Roles.FirstOrDefaultAsync(d => d.Code == input.Code && d.Id != roleId);
             if (dataDuplicateRole != null)
                 return (false, "Role already exists.");
