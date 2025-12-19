@@ -26,11 +26,6 @@ namespace NET.Starter.Core.Middlewares
         {
             try
             {
-                var response = new BaseDto("Authorization has been denied for this request.", HttpStatusCode.Unauthorized)
-                {
-                    Id = context.HttpContext.TraceIdentifier
-                };
-
                 // Skip if endpoint allows anonymous access
                 if (context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any())
                 {
@@ -42,9 +37,7 @@ namespace NET.Starter.Core.Middlewares
                 var headerToken = context.HttpContext.Request.Headers.Authorization;
                 _logger.LogDebug("Authorization header received: {Token}", string.IsNullOrWhiteSpace(headerToken) ? "[empty]" : "[token provided]");
 
-                var identity = context.HttpContext.User.Identity as ClaimsIdentity;
-
-                if (!(identity?.IsAuthenticated ?? false))
+                if (context.HttpContext.User.Identity is not ClaimsIdentity identity || !identity.IsAuthenticated)
                 {
                     _logger.LogWarning("User is not authenticated.");
                 }
@@ -70,8 +63,13 @@ namespace NET.Starter.Core.Middlewares
                 }
 
                 // If not authorized, return error response
-                context.HttpContext.Response.StatusCode = response.Code;
-                context.Result = new JsonResult(response);
+                var unAuthorizedResponse = new BaseDto("Authorization has been denied for this request.", HttpStatusCode.Unauthorized)
+                {
+                    Id = context.HttpContext.TraceIdentifier
+                };
+
+                context.HttpContext.Response.StatusCode = unAuthorizedResponse.Code;
+                context.Result = new JsonResult(unAuthorizedResponse);
             }
             catch (Exception ex)
             {
@@ -102,14 +100,14 @@ namespace NET.Starter.Core.Middlewares
                 logger.LogWarning("Authorization failed: No AppAuthorizeAttribute found.");
                 return false;
             }
-            else if (appAuthorizeAttribute.Permissions.Length == 0)
+            else if (appAuthorizeAttribute.Permissions.Length is 0)
             {
-                logger.LogInformation("Authorization successful: Allow to authenticated users.");
+                logger.LogInformation("Authorization successful: Allow for authenticated users.");
 
                 return true;
             }
 
-            var matched = claims.Where(c => appAuthorizeAttribute.Permissions.Contains(c.Value, StringComparer.Ordinal)).Select(c => c.Value);
+            var matched = claims.Where(c => appAuthorizeAttribute.Permissions.Contains(c.Value, StringComparer.OrdinalIgnoreCase)).Select(c => c.Value);
             if (matched.Any())
             {
                 logger.LogInformation("Authorization successful: Matches permission(s): {Permissions}", string.Join(", ", matched));

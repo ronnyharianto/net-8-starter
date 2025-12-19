@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Objects;
 using Serilog;
+using System.Reflection;
 
 namespace NET.Starter.DataAccess.Bases
 {

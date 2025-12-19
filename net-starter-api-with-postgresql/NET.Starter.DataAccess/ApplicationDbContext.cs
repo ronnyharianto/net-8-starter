@@ -101,7 +101,7 @@ namespace NET.Starter.DataAccess
                     Id = new Guid("5e5ca559-34be-42f2-ab42-90d6c66e889c"),
                     Code = "0001",
                     Name = "NET Starter Company",
-                    Created = EFCoreMigration.Created,
+                    Created = DateTime.UtcNow,
                     CreatedBy = EFCoreMigration.CreatedBy
                 });
 
@@ -115,7 +115,7 @@ namespace NET.Starter.DataAccess
                     Id = new Guid("129ea8c9-9a01-4afa-84ed-85caca7d0a59"),
                     Code = "0002",
                     Name = "NET Boilerplate Company",
-                    Created = EFCoreMigration.Created,
+                    Created = DateTime.UtcNow,
                     CreatedBy = EFCoreMigration.CreatedBy
                 });
 
@@ -147,11 +147,11 @@ namespace NET.Starter.DataAccess
                                 {
                                     Id = new Guid("db56dbc2-92eb-4256-8d1e-5dcdc4b6b199"),
                                     RoleId = new Guid("3bafc714-4aa5-4fc3-8542-f4eeb798f918"),
-                                    Created = EFCoreMigration.Created,
+                                    Created = DateTime.UtcNow,
                                     CreatedBy = EFCoreMigration.CreatedBy
                                 }
                             ],
-                            Created = EFCoreMigration.Created,
+                            Created = DateTime.UtcNow,
                             CreatedBy = EFCoreMigration.CreatedBy
                         },
                         new()
@@ -159,11 +159,11 @@ namespace NET.Starter.DataAccess
                             Id = new Guid("9126ed92-0e37-4f0a-90da-3b06025d4a50"),
                             CompanyId = new Guid("129ea8c9-9a01-4afa-84ed-85caca7d0a59"),
                             IsDefault = false,
-                            Created = EFCoreMigration.Created,
+                            Created = DateTime.UtcNow,
                             CreatedBy = EFCoreMigration.CreatedBy
                         }
                     ],
-                    Created = EFCoreMigration.Created,
+                    Created = DateTime.UtcNow,
                     CreatedBy = EFCoreMigration.CreatedBy
                 });
 
