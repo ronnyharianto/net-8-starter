@@ -107,21 +107,19 @@
         return decodeJwtToken()?.current_company ?? null;
     }
 
-    function checkMenuAccess(permission, menuClass, menuUrl) {
-        const permissions = AccountHelper.userPermission();
+    function showMenus() {
+        const userPermissions = this.userPermission();
 
-        if (permissions.includes(permission)) {
-            $(menuClass).removeClass('d-none');
-        }
-        else {
-            if (window.location.pathname == menuUrl) {
-                Swal.fire({
-                    title: "Error",
-                    text: "You don't have permission to access this page.",
-                    icon: "error",
-                }).then(() => {
-                    window.location.href = "/";
-                });
+        const $menuContainer = $("#menu");
+        const $menusWithAccessRequirement = $menuContainer.find("[data-access]");
+
+        for (let i = 0; i < $menusWithAccessRequirement.length; i++) {
+            const $menuItem = $($menusWithAccessRequirement[i]);
+            const requiredPermission = $menuItem.data('access');
+
+            if (userPermissions.includes(requiredPermission)) {
+                $menuItem.removeClass('d-none');
+                $menuItem.parents('.d-none').removeClass('d-none');
             }
         }
     }
@@ -137,6 +135,6 @@
         userName,
         userPermission,
         userCurrentCompany,
-        checkMenuAccess
+        showMenus
     };
 })();

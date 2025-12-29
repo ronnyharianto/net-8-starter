@@ -1,6 +1,55 @@
 ﻿@inject IConfiguration Configuration
 @{
     var urlApi = @Configuration["APIUrl"];
+    var menu = new[]
+    {
+        new
+        {
+            Title = "Dashboard",
+            Url = "/",
+            Icon = "fas fa-tachometer-alt",
+            children = Array.Empty<dynamic>()
+        },
+        new
+        {
+            Title = "Organization",
+            Url = "#",
+            Icon = "fas fa-database",
+            children = new dynamic[]
+            {
+                new
+                {
+                    Title = "Company",
+                    Url = "/organization/company",
+                    Icon = "far fa-building",
+                    Access = "Organization.Company.Access"
+                }
+            },
+        },
+        new
+        {
+            Title = "Security",
+            Url = "#",
+            Icon = "fas fa-shield-alt",
+            children = new dynamic[]
+            {
+                new
+                {
+                    Title = "Role",
+                    Url = "/security/role",
+                    Icon = "fas fa-suitcase",
+                    Access = "Security.Role.Access"
+                },
+                new
+                {
+                    Title = "User",
+                    Url = "/security/user",
+                    Icon = "far fa-id-badge",
+                    Access = "Security.User.Access"
+                }
+            }
+        }
+    };
 }
 
 <!DOCTYPE html>
@@ -47,7 +96,7 @@
                         <i class="fas fa-building"></i> <span id="current-company-name">Company A</span>
                     </a>
                     <div id="my-companies" class="dropdown-menu dropdown-menu-right">
-                        
+
                     </div>
                 </li>
             </ul>
@@ -66,57 +115,37 @@
             <div class="sidebar">
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <ul id="menu" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
-                        <li class="nav-item">
-                            <a href="/" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Dashboard
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none menu-company">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-database"></i>
-                                <p>
-                                    Organization
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item d-none menu-company">
-                                    <a href="/organization/company" class="nav-link">
-                                        <i class="far fa-building nav-icon"></i>
-                                        <p>Company</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item d-none menu-role menu-user">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-shield-alt"></i>
-                                <p>
-                                    Security
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item d-none menu-role">
-                                    <a href="/security/role" class="nav-link">
-                                        <i class="fas fa-suitcase nav-icon"></i>
-                                        <p>Role</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item d-none menu-user">
-                                    <a href="/security/user" class="nav-link">
-                                        <i class="far fa-id-badge nav-icon"></i>
-                                        <p>User</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        @foreach (var item in menu)
+                        {
+                            <li class="nav-item @(item.children.Length > 0 ? "d-none" : "")">
+                                <a href="@item.Url" class="nav-link">
+                                    <i class="nav-icon @item.Icon"></i>
+                                    <p>
+                                        @item.Title
+                                        @(item.children.Length > 0 ? Html.Raw("<i class=\"right fas fa-angle-left\"></i>") : "")
+                                    </p>
+                                </a>
+                                @if (item.children.Length > 0)
+                                {
+                                    <ul class="pl-2 nav nav-treeview">
+                                        @foreach (var child in item.children)
+                                        {
+                                            <li class="nav-item d-none" data-access="@child.Access">
+                                                <a href="@child.Url" class="nav-link">
+                                                    <i class="nav-icon @child.Icon"></i>
+                                                    <p>
+                                                        @child.Title
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -225,9 +254,7 @@
             }
             $('#spanUserName').text(AccountHelper.userName());
 
-            AccountHelper.checkMenuAccess("Organization.Company.Access", ".menu-company", "/organization/company");
-            AccountHelper.checkMenuAccess("Security.Role.Access", ".menu-role", "/security/role");
-            AccountHelper.checkMenuAccess("Security.User.Access", ".menu-user", "/security/user");
+            AccountHelper.showMenus();
 
             if (!localStorage.getItem("myCompanies")) {
                 const myCompanies = await DataHelper.loadMyCompanies();
