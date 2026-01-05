@@ -44,7 +44,8 @@
 					page: d.start / d.length + 1,
 					pageSize: d.length,
 					searchKey: history.state?.filter?.['flt-searchKey'] ?? ""
-                })
+				}),
+				...(this.canModify ? {} : { buttons: null })
 			});
 		}
 

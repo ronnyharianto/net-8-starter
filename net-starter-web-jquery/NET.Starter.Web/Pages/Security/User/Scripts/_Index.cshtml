@@ -54,7 +54,8 @@
                     pageSize: d.length,
                     searchKey: history.state?.filter?.['flt-searchKey'] ?? "",
                     companyId: history.state?.filter?.['flt-companyId'] ?? ""
-                })
+                }),
+                ...(this.canModify ? {} : { buttons: null })
             });
 
             DataTableHelper.initPaginationDetailData({
