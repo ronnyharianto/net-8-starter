@@ -110,7 +110,9 @@
                 ]
             });
 
-            this.$ddlFltCompany.select2();
+            this.$ddlFltCompany.select2({
+                dropdownParent: this.$modalUser,
+            });
         }
 
         initHandlers() {

@@ -66,7 +66,9 @@
 					return toolbar;
 				}
 			},
-			drawCallback: () => $el.find('select.select2').select2()
+			drawCallback: () => $el.find('select.select2').select2({
+				dropdownParent: $el
+			})
 		})
 	}
 
