@@ -17,7 +17,7 @@ namespace NET.Starter.API.Controllers.V1.Organization
     [Route("api/v1/[controller]")]
     public class CompanyController(ICompanyService _companyService) : BaseController
     {
-        [AppAuthorize(Company.Access, UserPermission.Modify)]
+        [AppAuthorize(UserPermission.Modify)]
         [HttpGet("all")]
         [SwaggerOperation(Summary = "Retrieve all company")]
         public async Task<ObjectDto<IEnumerable<CompanyDto>>> RetrieveCompaniesAsync() => await _companyService.RetrieveCompaniesAsync();
