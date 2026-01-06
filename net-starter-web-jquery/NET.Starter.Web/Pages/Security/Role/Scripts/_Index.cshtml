@@ -99,15 +99,13 @@
 		}
 
 		initValidation() {
-			this.validator = this.$formRole.validate({
+			this.validator = FormHelper.formValidate(this.$formRole, {
 				rules: {
 					code: { required: true }
 				},
 				messages: {
 					code: { required: "Code is required" }
-				},
-				errorElement: 'div',
-				errorClass: 'text-danger',
+				}
 			});
 		}
 

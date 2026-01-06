@@ -131,16 +131,52 @@
         }
     }
 
-    function errorPlacement(error, element) {
-        if (element.hasClass('select2-hidden-accessible')) {
-            error.insertAfter(element.next('.select2'));
+    function formValidate($formElement, options) {
+        const combinedOptions = {
+            errorElement: 'div',
+            errorClass: 'text-danger',
+            errorPlacement: function (error, element) {
+                if (element.hasClass('select2-hidden-accessible')) {
+                    error.insertAfter(
+                        element.siblings('.select2').length
+                            ? element.siblings('.select2')
+                            : element.next('.select2')
+                    );
+                }
+                else if (element.closest('.input-group').length) {
+                    error.insertAfter(element.closest('.input-group'));
+                }
+                else {
+                    error.insertAfter(element);
+                }
+            },
+            highlight: function (element) {
+                const $el = $(element);
+
+                if ($el.hasClass('select2-hidden-accessible')) {
+                    $el.siblings('.select2')
+                        .find('.select2-selection')
+                        .addClass('is-invalid');
+                } else {
+                    $el.addClass('is-invalid');
+                }
+            },
+
+            unhighlight: function (element) {
+                const $el = $(element);
+
+                if ($el.hasClass('select2-hidden-accessible')) {
+                    $el.siblings('.select2')
+                        .find('.select2-selection')
+                        .removeClass('is-invalid');
+                } else {
+                    $el.removeClass('is-invalid');
+                }
+            },
+            ...options
         }
-        else if (element.closest('.input-group').length) {
-            error.insertAfter(element.closest('.input-group'));
-        }
-        else {
-            error.insertAfter(element);
-        }
+
+        return $formElement.validate(combinedOptions);
     }
 
     function numericMoney(selector) {
@@ -189,7 +225,7 @@
         changeStringEmptyToNull,
         populateFormData,
         populateDdl,
-        errorPlacement,
+        formValidate,
         numericMoney,
         numericOnly
     };

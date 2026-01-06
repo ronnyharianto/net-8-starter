@@ -107,7 +107,7 @@
 		}
 
 		initValidation() {
-			this.validator = this.$formCompany.validate({
+			this.validator = FormHelper.formValidate(this.$formCompany, {
 				rules: {
 					code: { required: true },
 					name: { required: true },
@@ -117,9 +117,7 @@
 					code: { required: "Code is required" },
 					name: { required: "Name is required" },
 					email: { email: "Invalid email format" }
-				},
-				errorElement: 'div',
-				errorClass: 'text-danger',
+				}
 			});
 		}
 

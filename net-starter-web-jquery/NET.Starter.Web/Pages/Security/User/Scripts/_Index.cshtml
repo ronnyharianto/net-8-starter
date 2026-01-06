@@ -199,7 +199,7 @@
         }
 
         initValidation() {
-            this.validator = this.$formUser.validate({
+            this.validator = FormHelper.formValidate(this.$formUser, {
                 rules: {
                     code: { required: true },
                     fullName: { required: true }
@@ -207,9 +207,7 @@
                 messages: {
                     code: { required: "Code is required" },
                     fullName: { required: "Name is required" }
-                },
-                errorElement: 'div',
-                errorClass: 'text-danger',
+                }
             });
         }
 
