@@ -270,6 +270,11 @@
                 });
             }
         });
+
+        // Trigger validate when select2 change value
+        $(document).on('change', '.select2-hidden-accessible', function () {
+            $(this).valid();
+        });
     </script>
 </body>
 </html>
