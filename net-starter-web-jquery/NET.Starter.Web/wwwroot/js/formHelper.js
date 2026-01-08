@@ -197,13 +197,22 @@
         numericOnly(selector);
     };
 
-    function numericOnly(selector, allowDash = false) {
+    function numericOnly(selector, options = {}) {
         $(document).on('keydown', selector, function (e) {
+            const {
+                allowDecimal = false,
+                allowDash = false
+            } = options;
+
             const allowedKeys = [
                 'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
                 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
                 'Home', 'End'
             ];
+
+            if (allowDecimal) {
+                allowedKeys.push(',', 'Decimal', 'NumpadDecimal');
+            }
 
             if (allowDash) {
                 allowedKeys.push('-');
