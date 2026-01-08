@@ -1,6 +1,8 @@
 ﻿using NET.Starter.Shared.Attributes;
 using NET.Starter.Shared.Objects.Dtos;
 using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace NET.Starter.Shared.Helpers
 {
@@ -60,9 +62,13 @@ namespace NET.Starter.Shared.Helpers
 
             foreach (TEnum enumData in Enum.GetValues(typeof(TEnum)))
             {
+                var memberInfo = typeof(TEnum).GetMember(enumData.ToString()).FirstOrDefault();
+                var enumMemberAttribute = memberInfo?.GetCustomAttribute<EnumMemberAttribute>();
+
                 result.Add(new()
                 {
                     EnumValue = (int)(object)enumData,
+                    EnumMemberValue = enumMemberAttribute?.Value ?? string.Empty,
                     EnumDescription = enumData.GetDescription()
                 });
             }
@@ -84,6 +90,8 @@ namespace NET.Starter.Shared.Helpers
 
             foreach (var enumData in Enum.GetValues(typeof(TEnum)).Cast<TEnum>())
             {
+                var memberInfo = typeof(TEnum).GetMember(enumData.ToString()).FirstOrDefault();
+                var enumMemberAttribute = memberInfo?.GetCustomAttribute<EnumMemberAttribute>();
                 var fieldInfo = typeof(TEnum).GetField(enumData.ToString());
 
                 result.Add(new()
@@ -92,6 +100,7 @@ namespace NET.Starter.Shared.Helpers
                                         .GetCustomAttributes(typeof(MapFromAttribute<TMapFromEnum>), false)
                                         .FirstOrDefault() is MapFromAttribute<TMapFromEnum> mapFromAttribute ? (int)(object)mapFromAttribute.Target : null,
                     EnumValue = (int)(object)enumData,
+                    EnumMemberValue = enumMemberAttribute?.Value ?? string.Empty,
                     EnumDescription = enumData.GetDescription()
                 });
             }

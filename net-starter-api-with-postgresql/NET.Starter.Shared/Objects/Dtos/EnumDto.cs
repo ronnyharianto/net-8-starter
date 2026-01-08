@@ -17,6 +17,11 @@
         public int EnumValue { get; set; }
 
         /// <summary>
+        /// The string value of the enum entry.
+        /// </summary>
+        public string EnumMemberValue { get; set; } = string.Empty;
+
+        /// <summary>
         /// The human-readable description of the enum entry.
         /// </summary>
         public string EnumDescription { get; set; } = string.Empty;
