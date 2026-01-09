@@ -125,11 +125,11 @@
                 this.$modalUser.modal('show');
             });
 
-            $(document).on('click', '[role="editbutton"]', (e) => {
+            $(document).on('click', '[role="editbutton"]', async (e) => {
                 this.userId = $(e.currentTarget).data('id');
                 this.$lblModalTitle.text("Edit User");
 
-                this.loadUser();
+                await this.loadUser();
             });
 
             $(document).on('click', '[role="deletebutton"]', (e) => {

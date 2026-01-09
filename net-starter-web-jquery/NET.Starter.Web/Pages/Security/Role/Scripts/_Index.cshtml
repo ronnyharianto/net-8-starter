@@ -59,11 +59,11 @@
 				this.$modalRole.modal('show');
 			});
 
-			$(document).on('click', '[role="editbutton"]', (e) => {
+			$(document).on('click', '[role="editbutton"]', async (e) => {
 				this.roleId = $(e.currentTarget).data('id');
 				this.$lblModalTitle.text("Edit Role");
 
-				this.loadRole();
+				await this.loadRole();
 			});
 
 			$(document).on('click', '[role="deletebutton"]', (e) => {

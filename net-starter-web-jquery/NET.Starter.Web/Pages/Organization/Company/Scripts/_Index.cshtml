@@ -65,13 +65,13 @@
 				this.$modalCompany.modal('show');
 			});
 
-			$(document).on('click', '[role="editbutton"]', (e) => {
+			$(document).on('click', '[role="editbutton"]', async (e) => {
 				this.companyId = $(e.currentTarget).data('id');
 				this.$lblModalTitle.text("Edit Company");
 
 				this.changeFormMode('edit');
 
-				this.loadCompany();
+				await this.loadCompany();
 			});
 
 			$(document).on('click', '[role="deletebutton"]', (e) => {
