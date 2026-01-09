@@ -84,7 +84,7 @@ namespace NET.Starter.Core.Services.Organization
             if (!isValid)
             {
                 _logger.LogWarning("Validation failed during company creation. Reason: {ValidationMessage}", validationMessage);
-                return new(validationMessage, HttpStatusCode.InternalServerError);
+                return new(validationMessage, HttpStatusCode.BadRequest);
             }
 
             var company = _mapper.Map<Company>(input, opts => opts.Items["IsCreate"] = true);
@@ -104,7 +104,7 @@ namespace NET.Starter.Core.Services.Organization
             if (!isValid)
             {
                 _logger.LogWarning("Validation failed during company update. Reason: {ValidationMessage}", validationMessage);
-                return new(validationMessage, HttpStatusCode.InternalServerError);
+                return new(validationMessage, HttpStatusCode.BadRequest);
             }
 
             var company = await _dbContext.Companies.FirstOrDefaultAsync(d => d.Id == companyId);

@@ -73,7 +73,7 @@ namespace NET.Starter.Core.Services.Security
             if (!isValid)
             {
                 _logger.LogWarning("User creation failed. Reason: {Message}", validationMessage);
-                return new(validationMessage, HttpStatusCode.InternalServerError);
+                return new(validationMessage, HttpStatusCode.BadRequest);
             }
 
             var user = _mapper.Map<User>(input, opts => opts.Items["IsCreate"] = true);
@@ -93,7 +93,7 @@ namespace NET.Starter.Core.Services.Security
             if (!isValid)
             {
                 _logger.LogWarning("User update failed. Reason: {Message}", validationMessage);
-                return new(validationMessage, HttpStatusCode.InternalServerError);
+                return new(validationMessage, HttpStatusCode.BadRequest);
             }
 
             var user = await _dbContext.Users.Include(u => u.UserCompanies).ThenInclude(uc => uc.UserCompanyRoles).FirstOrDefaultAsync(d => d.Id == userId);

@@ -82,7 +82,7 @@ namespace NET.Starter.Core.Services.Security
             if (!isValid)
             {
                 _logger.LogWarning("Role creation validation failed: {ValidationMessage}", validationMessage);
-                return new(validationMessage, HttpStatusCode.InternalServerError);
+                return new(validationMessage, HttpStatusCode.BadRequest);
             }
 
             var role = _mapper.Map<Role>(input, opts => opts.Items["IsCreate"] = true);
@@ -102,7 +102,7 @@ namespace NET.Starter.Core.Services.Security
             if (!isValid)
             {
                 _logger.LogWarning("Role update validation failed: {ValidationMessage}", validationMessage);
-                return new(validationMessage, HttpStatusCode.InternalServerError);
+                return new(validationMessage, HttpStatusCode.BadRequest);
             }
 
             var role = await _dbContext.Roles.Include(r => r.RolePermissions).FirstOrDefaultAsync(d => d.Id == roleId);
