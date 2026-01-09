@@ -5,14 +5,20 @@
 
             if (type === 'checkbox' || type === 'radio') {
                 $(this).prop('checked', false);
-            } else if (this.tagName.toLowerCase() === 'select') { 
+            } else if (this.tagName.toLowerCase() === 'select') {
                 $(this).val(null).trigger('change');
             }
             else {
                 $(this).val('');
             }
 
-            $(this).removeClass('text-danger');
+            if ($(this).hasClass('select2-hidden-accessible')) {
+                $(this).siblings('.select2')
+                    .find('.select2-selection')
+                    .removeClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
+            }
         });
 
         if (validator != null)

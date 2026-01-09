@@ -1,5 +1,5 @@
 (function () {
-    function initPaginationGrid(options) {
+	function initPaginationGrid(options) {
 		const {
 			$el,
 			url,
@@ -66,41 +66,77 @@
 					return toolbar;
 				}
 			},
-			drawCallback: () => $el.find('select.select2').select2({
-				dropdownParent: $el
-			})
+			drawCallback: () => $el.find('select.select2').select2({ dropdownParent: $el })
 		})
 	}
 
 	function clearData($el, doDraw = true) {
-		$el.api().rows().remove();
+		$el.api().rows().clear();
 
 		if (doDraw)
-            $el.api().draw();
-    }
+			$el.api().draw();
+	}
 
 	function replaceData($el, obj, doDraw = true) {
 		clearData($el, false);
 		$el.api().rows.add(obj);
 
-        if (doDraw)
-            $el.api().draw();
+		if (doDraw)
+			$el.api().draw();
 	}
 
-	function updateSingleProp($el, rowIndex, prop, value, doDraw = true) {
+	function createRow($el, rowIndex, obj, doDraw = true) {
+		const data = $el.api().data().toArray();
+
+		data.splice(rowIndex, 0, obj);
+
+		$el.api().rows().clear();
+		$el.api().rows.add(data);
+
+		if (doDraw)
+			$el.api().draw();
+	}
+
+	function updateRow($el, rowIndex, prop, value, doDraw = true) {
 		const rowData = $el.api().row(rowIndex).data();
 		rowData[prop] = value;
 		$el.api().row(rowIndex).data(rowData);
 
-        if (doDraw)
-            $el.api().draw();
+		if (doDraw)
+			$el.api().draw();
 	}
 
-    window.DataTableHelper = {
+	function deleteRow($el, rowIndex, doDraw = true) {
+		Swal.fire({
+			title: "Hapus Data",
+			html: "Apakah anda yakin ingin meghapus data ini?",
+			showCancelButton: true,
+			confirmButtonText: "Hapus",
+			confirmButtonColor: "#D92D20",
+			customClass: {
+				actions: 'my-actions',
+				cancelButton: 'order-1 right-gap',
+				confirmButton: 'order-2',
+			},
+			icon: "warning"
+		})
+			.then((result) => {
+				if (result.isConfirmed) {
+					$el.api().row(rowIndex).remove();
+
+					if (doDraw)
+						$el.api().draw();
+				}
+			});
+	}
+
+	window.DataTableHelper = {
 		initPaginationGrid,
 		initPaginationDetailData,
 		clearData,
 		replaceData,
-		updateSingleProp
-    };
+		createRow,
+		updateRow,
+		deleteRow
+	};
 })();
