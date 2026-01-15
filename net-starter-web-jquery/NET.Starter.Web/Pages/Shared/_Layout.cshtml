@@ -271,9 +271,16 @@
             }
         });
 
-        // Trigger validate when select2 change value
-        $(document).on('change', '.select2-hidden-accessible', function () {
-            $(this).valid();
+        // Trigger validate when select2 change value inside a form
+        $(document).on('change', '.select2-hidden-accessible', (e) => {
+            const el = e.currentTarget;
+            const $form = $(el).closest('form');
+            if (!$form.length) return;
+
+            const validator = $form.data('validator');
+            if (!validator) return;
+
+            validator.element(el);
         });
     </script>
 </body>
