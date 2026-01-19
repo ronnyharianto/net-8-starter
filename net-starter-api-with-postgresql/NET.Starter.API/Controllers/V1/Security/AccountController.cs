@@ -12,7 +12,6 @@ using System.Net;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {
-    [Route("api/v1/[controller]")]
     public class AccountController(IAccountService _accountService) : BaseController
     {
         [AllowAnonymous]

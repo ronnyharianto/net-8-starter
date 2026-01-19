@@ -11,7 +11,6 @@ using static NET.Starter.Shared.Constants.MessageConstant.Validation;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {
-    [Route("api/v1/[controller]")]
     public class UserController(IUserService _userService) : BaseController
     {
         [AppAuthorize(UserPermission.Access)]

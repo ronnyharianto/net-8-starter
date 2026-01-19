@@ -8,7 +8,6 @@ using static NET.Starter.Shared.Constants.PermissionConstant.Security;
 
 namespace NET.Starter.API.Controllers.V1.Security
 {
-    [Route("api/v1/[controller]")]
     public class PermissionController(IPermissionService _permissionService) : BaseController
     {
         [AppAuthorize(Role.Modify)]

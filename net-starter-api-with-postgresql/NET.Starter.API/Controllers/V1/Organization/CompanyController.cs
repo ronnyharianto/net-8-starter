@@ -14,7 +14,6 @@ using static NET.Starter.Shared.Constants.MessageConstant.Validation;
 
 namespace NET.Starter.API.Controllers.V1.Organization
 {
-    [Route("api/v1/[controller]")]
     public class CompanyController(ICompanyService _companyService) : BaseController
     {
         [AppAuthorize(UserPermission.Modify)]

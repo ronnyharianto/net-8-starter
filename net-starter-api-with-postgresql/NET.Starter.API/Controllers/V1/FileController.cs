@@ -8,7 +8,6 @@ using System.Net;
 
 namespace NET.Starter.API.Controllers.V1
 {
-    [Route("api/v1/[controller]")]
     public class FileController() : BaseController
     {
         [AppAuthorize(PermissionConstant.RetrieveFileFromStorage)]
