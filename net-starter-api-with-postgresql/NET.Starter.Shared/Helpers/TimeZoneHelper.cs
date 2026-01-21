@@ -24,6 +24,26 @@ namespace NET.Starter.Shared.Helpers
         }
 
         /// <summary>
+        /// Returns the current UTC datetime converted to the configured system timezone.
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime DateTimeNow()
+        {
+            return ConvertToTimezoneId(DateTime.UtcNow);
+        }
+
+        /// <summary>
+        /// Returns the current UTC date converted to the configured system timezone.
+        /// </summary>
+        /// <returns></returns>
+        public static DateOnly DateOnlyNow()
+        {
+            var dateNow = ConvertToTimezoneId(DateTime.UtcNow);
+
+            return new DateOnly(dateNow.Year, dateNow.Month, dateNow.Day);
+        }
+
+        /// <summary>
         /// Converts a UTC datetime to the specified timezone Id.
         /// </summary>
         /// <param name="utcDateTime">The UTC datetime value.</param>

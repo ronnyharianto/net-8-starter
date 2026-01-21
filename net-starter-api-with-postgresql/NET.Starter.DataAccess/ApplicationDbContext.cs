@@ -32,6 +32,7 @@ namespace NET.Starter.DataAccess
         #region System
 
         internal virtual DbSet<DocumentNumbering> DocumentNumberings { get; set; }
+        internal virtual DbSet<DocumentNumberingCounter> DocumentNumberingCounters { get; set; }
 
         #endregion
 
@@ -64,6 +65,7 @@ namespace NET.Starter.DataAccess
             #region System
 
             new DocumentNumberingEntityBuilder().Configure(modelBuilder.Entity<DocumentNumbering>());
+            new DocumentNumberingCounterEntityBuilder().Configure(modelBuilder.Entity<DocumentNumberingCounter>());
 
             #endregion
 

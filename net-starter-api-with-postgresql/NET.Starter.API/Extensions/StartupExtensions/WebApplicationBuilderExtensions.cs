@@ -28,6 +28,11 @@ namespace NET.Starter.API.Extensions.StartupExtensions
 
             // Add controllers and configure Newtonsoft.Json to handle reference loops and nulls.
             builder.Services
+                .AddRouting(x =>
+                {
+                    x.LowercaseUrls = true;
+                    x.LowercaseQueryStrings = true;
+                })
                 .AddControllers()
                 .AddNewtonsoftJson(x =>
                 {
