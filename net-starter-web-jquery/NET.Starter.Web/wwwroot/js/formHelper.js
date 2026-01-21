@@ -125,15 +125,39 @@
         }
     }
 
-    function populateDdl(ddlElement, data, valueField, textField, isFirstOptionEmpty = false, firstOptionValue = null, firstOptionText = null) {
+    function populateDdl(ddlElement, data, valueField, textField, isFirstOptionEmpty = false, firstOptionValue = null, firstOptionText = null, metadataFields = null) {
         ddlElement.empty();
 
         if (isFirstOptionEmpty) {
-            ddlElement.append($(`<option value="${firstOptionValue ?? ""}">${firstOptionText ?? "&nbsp"}</option>`));
+            ddlElement.append($(`<option value="${firstOptionValue ?? ""}" selected>${firstOptionText ?? "&nbsp"}</option>`));
         }
 
         for (let i = 0; i < data.length; i++) {
-            ddlElement.append($('<option value="' + data[i][valueField] + '">' + data[i][textField] + '</option>'));
+            const item = data[i];
+
+            const text =
+                typeof textField === "function"
+                    ? textField(data[i])
+                    : data[i][textField];
+
+            const $option = $(
+                `<option value="${item[valueField]}">${text}</option>`
+            );
+
+            if (metadataFields) {
+                if (Array.isArray(metadataFields)) {
+                    metadataFields.forEach(f => {
+                        $option.data(f, item[f]);
+                    });
+                }
+                else if (typeof metadataFields === "object") {
+                    Object.keys(metadataFields).forEach(key => {
+                        $option.data(key, item[metadataFields[key]]);
+                    });
+                }
+            }
+
+            ddlElement.append($option);
         }
     }
 

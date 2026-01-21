@@ -47,7 +47,9 @@
 		const {
 			$el,
 			columns,
-			buttons = `<button id="btnAddDetail" class="btn btn-sm btn-outline-primary mr-2 ml-2">Add Detail</button>`
+			scrollX = false,
+			buttons = `<button type="button" id="btnAddDetail" class="btn btn-sm btn-outline-primary mr-2 ml-2">Add Detail</button>`,
+			drawCallback = () => { }
 		} = options;
 
 		$el.dataTable({
@@ -56,6 +58,11 @@
 			info: false,
 			searching: false,
 			autoWidth: false,
+			scrollX: scrollX,
+			initComplete: (settings, json) => {
+				if (scrollX)
+					$('.dt-scroll-head').remove();
+			},
 			columns,
 			layout: {
 				top1End: () => {
@@ -66,7 +73,17 @@
 					return toolbar;
 				}
 			},
-			drawCallback: () => $el.find('select.select2').select2({ dropdownParent: $el })
+			drawCallback: (settings) => {
+				$el.find('select.select2').select2({ dropdownParent: $el.closest('.dt-container') });
+
+				const $dtPickers = $el.find('.datepicker');
+				$dtPickers.datepicker({
+					dateFormat: "yy-mm-dd"
+				});
+
+				if (drawCallback && typeof drawCallback === 'function')
+					drawCallback.call(this, settings);
+			}
 		})
 	}
 
