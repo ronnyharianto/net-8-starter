@@ -117,10 +117,11 @@
 	function updateRow($el, rowIndex, prop, value, doDraw = true) {
 		const rowData = $el.api().row(rowIndex).data();
 		rowData[prop] = value;
-		$el.api().row(rowIndex).data(rowData);
 
-		if (doDraw)
+		if (doDraw) {
+			$el.api().row(rowIndex).data(rowData);
 			$el.api().draw();
+		}
 	}
 
 	function deleteRow($el, rowIndex, doDraw = true) {
