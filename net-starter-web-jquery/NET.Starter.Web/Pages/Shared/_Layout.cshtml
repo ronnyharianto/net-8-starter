@@ -236,6 +236,8 @@
         const apiBaseUrl = "@urlApi";
         const accessAvailable = AccountHelper.userAccessAvailable();
         const sessionAvailable = AccountHelper.userSessionAvailable();
+        const cloudStorageBasePath = `@(Configuration.GetValue<string>("CloudStorageSettings:BasePath"))`;
+        const maxFileSize = @(Configuration.GetValue<int?>("CloudStorageSettings:MaxFileSizeInMB") ?? 20) * 1024 * 1024;
 
         if (!sessionAvailable) {
             AccountHelper.logoutUser();

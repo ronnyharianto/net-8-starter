@@ -11,13 +11,23 @@
         public MemoryStream? FileStream { get; set; }
 
         /// <summary>
-        /// The MIME content type of the file (e.g., "image/png", "application/pdf").
+        /// The path to the file on the server.
         /// </summary>
-        public string ContentType { get; set; } = string.Empty;
+        public string FilePath { get; set; } = string.Empty;
 
         /// <summary>
         /// The name of the file, including extension.
         /// </summary>
         public string FileName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The size of the file in bytes.
+        /// </summary>
+        public long FileSize { get; set; }
+
+        /// <summary>
+        /// The MIME content type of the file (e.g., "image/png", "application/pdf").
+        /// </summary>
+        public string ContentType { get; set; } = string.Empty;
     }
 }
