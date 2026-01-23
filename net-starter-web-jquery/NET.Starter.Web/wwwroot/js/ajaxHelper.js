@@ -60,6 +60,7 @@
         } catch (error) {
             if (error.status === 401) {
                 const sessionAvailable = AccountHelper.userSessionAvailable();
+                LoadingHelper.hide();
 
                 if (!sessionAvailable) {
                     Swal.fire({
@@ -100,6 +101,8 @@
 
     async function doAjaxUploadFile({ url, file, fieldName = "file", tokenType = "token", customHeaders = {} }) {
         try {
+            LoadingHelper.show();
+
             const formData = new FormData();
             formData.append(fieldName, file);
 
@@ -116,10 +119,12 @@
                 }
             });
 
+            LoadingHelper.hide();
             return response;
         } catch (error) {
             console.error(`[doAjaxUploadFile] Error POST ${url}:`, error);
 
+            LoadingHelper.hide();
             return error.responseJSON;
         }
     }
