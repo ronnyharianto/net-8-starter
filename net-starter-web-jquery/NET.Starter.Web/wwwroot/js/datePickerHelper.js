@@ -2,16 +2,14 @@
     function initDatePicker(options) {
         const {
             $el,
-            minDate,
-            maxDate,
-            onClose
+            ...opts
         } = options;
 
         $el.datepicker({
             dateFormat: "yy-mm-dd",
-            onClose: onClose,
-            minDate: minDate,
-            maxDate: maxDate
+            changeYear: true,
+            changeMonth: true,
+            ...opts
         });
     }
 

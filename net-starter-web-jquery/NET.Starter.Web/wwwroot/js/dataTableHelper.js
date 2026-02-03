@@ -49,7 +49,8 @@
 			columns,
 			scrollX = false,
 			buttons = `<button type="button" id="btnAddDetail" class="btn btn-sm btn-outline-primary mr-2 ml-2">Add Detail</button>`,
-			drawCallback = () => { }
+			drawCallback = () => { },
+			...opts
 		} = options;
 
 		$el.dataTable({
@@ -83,7 +84,8 @@
 
 				if (drawCallback && typeof drawCallback === 'function')
 					drawCallback.call(this, settings);
-			}
+			},
+			...opts
 		})
 	}
 
