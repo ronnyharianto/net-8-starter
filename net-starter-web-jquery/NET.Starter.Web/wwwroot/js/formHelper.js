@@ -191,7 +191,6 @@
                     $el.addClass('is-invalid');
                 }
             },
-
             unhighlight: function (element) {
                 const $el = $(element);
 
@@ -228,12 +227,12 @@
     };
 
     function numericOnly(selector, options = {}) {
-        $(document).on('keydown', selector, function (e) {
-            const {
-                allowDecimal = false,
-                allowDash = false
-            } = options;
+        const {
+            allowDecimal = false,
+            allowDash = false
+        } = options;
 
+        $(document).on('keydown', selector, function (e) {
             const allowedKeys = [
                 'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
                 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
@@ -248,12 +247,29 @@
                 allowedKeys.push('-');
             }
 
-            if (allowedKeys.includes(e.key)) {
+            if (allowedKeys.includes(e.key) || e.ctrlKey) {
                 return;
             }
 
             if (!((e.key >= '0' && e.key <= '9') || (e.key >= 'Numpad0' && e.key <= 'Numpad9'))) {
                 e.preventDefault();
+            }
+        });
+
+        $(document).on('paste', selector, function (e) {
+            const text = (e.originalEvent || e).clipboardData.getData('text');
+            const regex = new RegExp(
+                `^${allowDash ? '-?' : ''}\\d+${allowDecimal ? '([.,]\\d+)?' : ''}$`
+            );
+
+            if (!regex.test(text)) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: "Error Paste",
+                    text: "Paste value is not valid",
+                    icon: "error",
+                })
             }
         });
     }
