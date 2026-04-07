@@ -125,11 +125,23 @@
         }
     }
 
-    function populateDdl(ddlElement, data, valueField, textField, isFirstOptionEmpty = false, firstOptionValue = null, firstOptionText = null, metadataFields = null) {
-        ddlElement.empty();
+    function populateDdl($el, data, options = {}) {
+        const rawLabel = $(`label[for="${$el.attr('id')}"]`).text();
+        const labelText = rawLabel.replace(/\*+$/, '').trim();
+
+        const {
+            valueField = $el.attr('name') ?? 'id',
+            textField = 'name',
+            isFirstOptionEmpty = true,
+            firstOptionValue = null,
+            firstOptionText = labelText ? `- Select ${labelText} -` : null,
+            metadataFields = [] // example: ["metadata1", "metadata2"]
+        } = options;
+
+        $el.empty();
 
         if (isFirstOptionEmpty) {
-            ddlElement.append($(`<option value="${firstOptionValue ?? ""}" selected>${firstOptionText ?? "&nbsp"}</option>`));
+            $el.append($(`<option value="${firstOptionValue ?? ""}" selected>${firstOptionText ?? "&nbsp"}</option>`));
         }
 
         for (let i = 0; i < data.length; i++) {
@@ -157,7 +169,7 @@
                 }
             }
 
-            ddlElement.append($option);
+            $el.append($option);
         }
     }
 
