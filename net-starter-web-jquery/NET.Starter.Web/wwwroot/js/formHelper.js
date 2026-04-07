@@ -1,11 +1,11 @@
-﻿(function () {
+(function () {
     function clearForm(formElement, validator) {
         formElement.find('input, select, textarea').each(function () {
             const type = $(this).attr('type');
 
             if (type === 'checkbox' || type === 'radio') {
                 $(this).prop('checked', false);
-            } else if (this.tagName.toLowerCase() === 'select') {
+            } else if (this.tagName.toLowerCase() === 'select') { 
                 $(this).val(null).trigger('change');
             }
             else {
@@ -208,7 +208,7 @@
         return $formElement.validate(combinedOptions);
     }
 
-    function numericMoney(selector) {
+    function numericMoney(selector, options = {}) {
         $(document).on('focusin', selector, function () {
             const value = $(this).val();
 
@@ -223,13 +223,13 @@
             }
         });
 
-        numericOnly(selector);
+        numericOnly(selector, options);
     };
 
     function numericOnly(selector, options = {}) {
         const {
             allowDecimal = false,
-            allowDash = false
+            allowNegative = true
         } = options;
 
         $(document).on('keydown', selector, function (e) {
@@ -243,7 +243,7 @@
                 allowedKeys.push(',', 'Decimal', 'NumpadDecimal');
             }
 
-            if (allowDash) {
+            if (allowNegative && $(this).val() === '') {
                 allowedKeys.push('-');
             }
 
@@ -259,7 +259,7 @@
         $(document).on('paste', selector, function (e) {
             const text = (e.originalEvent || e).clipboardData.getData('text');
             const regex = new RegExp(
-                `^${allowDash ? '-?' : ''}\\d+${allowDecimal ? '([.,]\\d+)?' : ''}$`
+                `^${allowNegative ? '-?' : ''}\\d+${allowDecimal ? '([.,]\\d+)?' : ''}$`
             );
 
             if (!regex.test(text)) {
