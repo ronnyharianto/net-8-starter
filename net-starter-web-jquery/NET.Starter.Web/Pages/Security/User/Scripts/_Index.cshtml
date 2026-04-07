@@ -212,7 +212,10 @@
         async initLoad() {
             this.companies = await DataHelper.loadCompanies();
             this.roles = await DataHelper.loadRoles();
-            FormHelper.populateDdl(this.$ddlFltCompany, this.companies, "companyId", "name", true);
+            FormHelper.populateDdl(this.$ddlFltCompany, this.companies, {
+                valueField: "companyId", 
+                textField: "name"
+            });
 
             FilterHelper.setupFilter(this.$btnFilter, this.$btnReset, this.$divFilter, this.$gridUser);
 
