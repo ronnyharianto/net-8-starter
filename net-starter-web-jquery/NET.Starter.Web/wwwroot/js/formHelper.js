@@ -5,7 +5,8 @@
 
             if (type === 'checkbox' || type === 'radio') {
                 $(this).prop('checked', false);
-            } else if (this.tagName.toLowerCase() === 'select') { 
+            }
+            else if (this.tagName.toLowerCase() === 'select') { 
                 $(this).val(null).trigger('change');
                 $(this).trigger({
                     type: 'select2:select',
@@ -18,6 +19,23 @@
                 $(this).val('');
             }
 
+            // reset control to initial state
+            const initialState = $(this).data('initial-state');
+            if (initialState) {
+                if (initialState.includes('disabled')) {
+                    $(this).attr('disabled', true);
+                }
+
+                if (initialState.includes('readonly')) {
+                    $(this).attr('readonly', true);
+                }
+
+                if (initialState.includes('hidden')) {
+                    $(this).hide();
+                }
+            }
+
+            // remove validation for select2
             if ($(this).hasClass('select2-hidden-accessible')) {
                 $(this).siblings('.select2')
                     .find('.select2-selection')
@@ -136,7 +154,8 @@
     }
 
     function populateDdl($el, data, options = {}) {
-        const rawLabel = $(`label[for="${$el.attr('id')}"]`).text();
+        //const rawLabel = $(`label[for="${$el.attr('id')}"]`).text();
+        const rawLabel = $el.siblings('label').text();
         const labelText = rawLabel.replace(/\*+$/, '').trim();
 
         const {
