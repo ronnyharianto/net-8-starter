@@ -7,6 +7,12 @@
                 $(this).prop('checked', false);
             } else if (this.tagName.toLowerCase() === 'select') { 
                 $(this).val(null).trigger('change');
+                $(this).trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: ''
+                    }
+                })
             }
             else {
                 $(this).val('');
@@ -36,6 +42,10 @@
         formDataArray.forEach(({ name, value }) => {
             const keys = name.replace(/\[\]$/, '').split('.');
             let current = formDataObject;
+
+            if ($('input[name="' + name + '"][inputmode="numeric"]')) {
+                value = value.replace(/\./g, '');
+            }
 
             keys.forEach((key, index) => {
                 if (index === keys.length - 1) {
