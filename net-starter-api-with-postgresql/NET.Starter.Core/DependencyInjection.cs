@@ -31,7 +31,7 @@ namespace NET.Starter.Core
                     options.Filters.Add<TransactionFilter<ApplicationDbContext>>();
                 });
 
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(config => { }, Assembly.GetExecutingAssembly());
 
             #region Register Services with scoped lifetimes
 
