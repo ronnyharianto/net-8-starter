@@ -1,11 +1,12 @@
 (function () {
-	function initPaginationGrid(options) {
+    function initPaginationGrid(options) {
 		const {
 			$el,
 			url,
 			columns,
 			buttons = `<button type="button" class="btn btn-md btn-primary ml-2" id="btnCreate" style="min-width:150px">Create</button>`,
 			getParams = () => ({}),
+			...opts
 		} = options;
 
 		$el.dataTable({
@@ -39,7 +40,8 @@
 				},
 				bottomStart: 'info',
 				bottomEnd: 'paging'
-			}
+			},
+			...opts
 		});
 	}
 
@@ -75,7 +77,13 @@
 				}
 			},
 			drawCallback: (settings) => {
-				$el.find('select.select2').select2({ dropdownParent: $el.closest('.dt-container') });
+				$el.find('select.select2').each(function () {
+					if (!$(this).hasClass('select2-hidden-accessible')) {
+						$(this).select2({
+							dropdownParent: $el.closest('.dt-container')
+						});
+					}
+				});
 
 				const $dtPickers = $el.find('.datepicker');
 				$dtPickers.datepicker({
@@ -93,15 +101,15 @@
 		$el.api().rows().clear();
 
 		if (doDraw)
-			$el.api().draw();
-	}
+            $el.api().draw();
+    }
 
 	function replaceData($el, obj, doDraw = true) {
 		clearData($el, false);
 		$el.api().rows.add(obj);
 
-		if (doDraw)
-			$el.api().draw();
+        if (doDraw)
+            $el.api().draw();
 	}
 
 	function createRow($el, rowIndex, obj, doDraw = true) {
@@ -112,8 +120,8 @@
 		$el.api().rows().clear();
 		$el.api().rows.add(data);
 
-		if (doDraw)
-			$el.api().draw();
+        if (doDraw)
+            $el.api().draw();
 	}
 
 	function updateRow($el, rowIndex, prop, value, doDraw = true) {
@@ -140,17 +148,17 @@
 			},
 			icon: "warning"
 		})
-			.then((result) => {
-				if (result.isConfirmed) {
-					$el.api().row(rowIndex).remove();
+		.then((result) => {
+			if (result.isConfirmed) {
+				$el.api().row(rowIndex).remove();
 
-					if (doDraw)
-						$el.api().draw();
-				}
-			});
-	}
+                if (doDraw)
+                    $el.api().draw();
+			}
+		});
+    }
 
-	window.DataTableHelper = {
+    window.DataTableHelper = {
 		initPaginationGrid,
 		initPaginationDetailData,
 		clearData,
@@ -158,5 +166,5 @@
 		createRow,
 		updateRow,
 		deleteRow
-	};
+    };
 })();
