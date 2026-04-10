@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     function fmtMoney(angka) {
         return new Number(angka).toLocaleString('id-ID', {
             style: 'decimal',
@@ -9,6 +9,14 @@
 
     function fmtDate(dt, format) {
         const pad = (num) => String(num).padStart(2, '0');
+
+        if (!(dt instanceof Date)) {
+            dt = new Date(dt);
+        }
+
+        if (isNaN(dt.getTime())) {
+            throw new Error("Invalid date");
+        }
 
         const formatters = {
             "MMM yyyy": new Intl.DateTimeFormat('id-ID', { month: 'short', year: 'numeric' }),
