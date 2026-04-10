@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     function userAccessAvailable() {
         if (
             localStorage.getItem("token") == null ||
@@ -104,7 +104,10 @@
     }
 
     function userCurrentCompany() {
-        return decodeJwtToken()?.current_company ?? null;
+        const myCompanies = JSON.parse(localStorage.getItem("myCompanies"));
+        const currentCompany = myCompanies.find(d => d.companyId == decodeJwtToken()?.current_company)
+
+        return currentCompany ?? null;
     }
 
     function showMenus() {
