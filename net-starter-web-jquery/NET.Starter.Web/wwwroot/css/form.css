@@ -10,6 +10,14 @@
     width: 100% !important;
 }
 
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #444;
+}
+
+.select2-container--default .select2-selection--multiple .select2-search__field::placeholder {
+    color: #444;
+}
+
 .ui-datepicker {
     z-index: 1050!important;
 }
