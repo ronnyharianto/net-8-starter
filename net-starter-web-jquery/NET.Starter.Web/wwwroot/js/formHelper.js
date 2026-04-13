@@ -1,4 +1,31 @@
 (function () {
+    function resetControlState($el, stateName) {
+        const state = $el.data(stateName);
+        const tagName = $el.prop('tagName').toLowerCase();
+
+        $el.attr('disabled', false).attr('readonly', false).show();
+        if (tagName === 'select') { 
+            $el.data('select2').$container.show();
+        }
+
+        if (!state) return;
+
+        if (state.includes('disabled')) {
+            $el.attr('disabled', true);
+        }
+
+        if (state.includes('readonly')) {
+            $el.attr('readonly', true);
+        }
+
+        if (state.includes('hidden')) {
+            $el.hide();
+            if (tagName === 'select') {
+                $el.data('select2').$container.hide();
+            }
+        }
+    }
+
     function clearForm(formElement, validator) {
         formElement.find('input, select, textarea').each(function () {
             const type = $(this).attr('type');
@@ -19,21 +46,7 @@
                 $(this).val('');
             }
 
-            // reset control to initial state
-            const initialState = $(this).data('initial-state');
-            if (initialState) {
-                if (initialState.includes('disabled')) {
-                    $(this).attr('disabled', true);
-                }
-
-                if (initialState.includes('readonly')) {
-                    $(this).attr('readonly', true);
-                }
-
-                if (initialState.includes('hidden')) {
-                    $(this).hide();
-                }
-            }
+            resetControlState($(this), 'initial-state');
 
             // remove validation for select2
             if ($(this).hasClass('select2-hidden-accessible')) {
@@ -123,6 +136,8 @@
                 else
                     setDataToElement(element, value);
             }
+
+            resetControlState(element, 'edit-state');
         });
     }
 
@@ -133,6 +148,7 @@
     function setDataToElement(element, value) {
         const tagName = element.prop('tagName').toLowerCase();
         const type = element.attr('type');
+        const inputmode = element.attr('inputmode');
 
         if (type === 'checkbox') {
             if (element.attr('name')?.endsWith('[]')) {
@@ -142,13 +158,42 @@
             } else {
                 element.prop('checked', !!value);
             }
-        } else if (type === 'radio') {
+        }
+        else if (type === 'radio') {
             element.prop('checked', element.val() === value);
-        } else {
-            element.val(value);
+        }
+        else {
+            if (tagName === 'input' && inputmode === 'numeric') {
+                element.val(FormatterHelper.fmtMoney(value));
+            }
+            else {
+                element.val(value);
+            }
 
             if (tagName === 'select') {
                 element.trigger('change');
+
+                let data = element.select2('data');
+                if (!data.length) {
+                    const option = element.find('option').filter(function () {
+                        return $(this).text().trim() === value;
+                    });
+
+                    if (option.length) {
+                        element.val(option.val()).trigger('change');
+                    }
+
+                    data = element.select2('data');
+                }
+
+                if (data.length > 0) {
+                    element.trigger({
+                        type: 'select2:select',
+                        params: {
+                            data: data[0]
+                        }
+                    });
+                }
             }
         }
     }
@@ -161,7 +206,7 @@
         const {
             valueField = $el.attr('name') ?? 'id',
             textField = 'name',
-            isFirstOptionEmpty = true,
+            isFirstOptionEmpty = $el.attr('multiple') ? false : true,
             firstOptionValue = null,
             firstOptionText = labelText ? `- Select ${labelText} -` : null,
             metadataFields = [] // example: ["metadata1", "metadata2"]
@@ -176,16 +221,23 @@
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
 
-            const text =
-                typeof textField === "function"
-                    ? textField(data[i])
-                    : data[i][textField];
+            let value, text;
 
-            const $option = $(
-                `<option value="${item[valueField]}">${text}</option>`
-            );
+            if (typeof item === "object" && item !== null) {
+                // object (existing behavior)
+                value = item[valueField];
+                text = typeof textField === "function"
+                    ? textField(item)
+                    : item[textField];
+            } else {
+                // primitive (number / string)
+                value = item;
+                text = item;
+            }
 
-            if (metadataFields) {
+            const $option = $(`<option value="${value}">${text}</option>`);
+
+            if (typeof item === "object" && item !== null && metadataFields) {
                 if (Array.isArray(metadataFields)) {
                     metadataFields.forEach(f => {
                         $option.data(f, item[f]);
