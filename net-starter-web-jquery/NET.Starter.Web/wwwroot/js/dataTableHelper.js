@@ -19,8 +19,23 @@
 				data: (d) => {
 					LoadingHelper.show();
 					const params = getParams(d);
+					const searchParams = new URLSearchParams();
 
-					return new URLSearchParams(params).toString();
+					Object.entries(params).forEach(([key, value]) => {
+						if (value === null || value === undefined || value === "") return;
+
+						if (Array.isArray(value)) {
+							value.forEach(v => {
+								if (v !== null && v !== undefined && v !== "") {
+									searchParams.append(key, v);
+								}
+							});
+						} else {
+							searchParams.append(key, value);
+						}
+					});
+
+					return searchParams.toString();
 				},
 				dataSrc: (json) => {
 					LoadingHelper.hide();
