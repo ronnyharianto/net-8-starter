@@ -212,7 +212,7 @@
         async initLoad() {
             this.companies = await DataHelper.loadCompanies();
             this.roles = await DataHelper.loadRoles();
-            SelectHelper.init(this.$ddlFltCompany, this.companies, {
+            await SelectHelper.init(this.$ddlFltCompany, this.companies, {
                 valueField: "companyId", 
                 textField: "name",
                 isFirstOptionEmpty: true
