@@ -265,7 +265,7 @@
             
             const myCompanies = JSON.parse(localStorage.getItem("myCompanies"));
             if (myCompanies.length > 0) {
-                $('#current-company-name').text(myCompanies.find(d => d.companyId == AccountHelper.userCurrentCompany()).name);
+                $('#current-company-name').text(myCompanies.find(d => d.companyId == AccountHelper.userCurrentCompany().companyId).name);
 
                 myCompanies.forEach(c => {
                     $('#my-companies').append(`<a href="#" class="dropdown-item" onclick="AccountHelper.changeCurrentCompany('@urlApi', '${c.companyId}')">${c.name}</a>`);

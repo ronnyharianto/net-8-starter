@@ -198,62 +198,6 @@
         }
     }
 
-    function populateDdl($el, data, options = {}) {
-        //const rawLabel = $(`label[for="${$el.attr('id')}"]`).text();
-        const rawLabel = $el.siblings('label').text();
-        const labelText = rawLabel.replace(/\*+$/, '').trim();
-
-        const {
-            valueField = $el.attr('name') ?? 'id',
-            textField = 'name',
-            isFirstOptionEmpty = $el.attr('multiple') ? false : true,
-            firstOptionValue = null,
-            firstOptionText = labelText ? `- Select ${labelText} -` : null,
-            metadataFields = [] // example: ["metadata1", "metadata2"]
-        } = options;
-
-        $el.empty();
-
-        if (isFirstOptionEmpty) {
-            $el.append($(`<option value="${firstOptionValue ?? ""}" selected>${firstOptionText ?? "&nbsp"}</option>`));
-        }
-
-        for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-
-            let value, text;
-
-            if (typeof item === "object" && item !== null) {
-                // object (existing behavior)
-                value = item[valueField];
-                text = typeof textField === "function"
-                    ? textField(item)
-                    : item[textField];
-            } else {
-                // primitive (number / string)
-                value = item;
-                text = item;
-            }
-
-            const $option = $(`<option value="${value}">${text}</option>`);
-
-            if (typeof item === "object" && item !== null && metadataFields) {
-                if (Array.isArray(metadataFields)) {
-                    metadataFields.forEach(f => {
-                        $option.data(f, item[f]);
-                    });
-                }
-                else if (typeof metadataFields === "object") {
-                    Object.keys(metadataFields).forEach(key => {
-                        $option.data(key, item[metadataFields[key]]);
-                    });
-                }
-            }
-
-            $el.append($option);
-        }
-    }
-
     function formValidate($formElement, options) {
         const combinedOptions = {
             errorElement: 'div',
@@ -372,7 +316,6 @@
         getFormData,
         changeStringEmptyToNull,
         populateFormData,
-        populateDdl,
         formValidate,
         numericMoney,
         numericOnly
