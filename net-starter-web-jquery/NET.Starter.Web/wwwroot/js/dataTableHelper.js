@@ -1,5 +1,5 @@
 (function () {
-    function initPaginationGrid(options) {
+	function initPaginationGrid(options) {
 		const {
 			$el,
 			url,
@@ -112,19 +112,25 @@
 		})
 	}
 
+	function clearAjaxDataTable($el, totalColumn) {
+		$el.find('tbody')
+			.empty()
+			.append(`<tr><td colspan="${totalColumn}" class="dataTables_empty text-center">No matching records found</td></tr>`);
+	}
+
 	function clearData($el, doDraw = true) {
 		$el.api().rows().clear();
 
 		if (doDraw)
-            $el.api().draw();
-    }
+			$el.api().draw();
+	}
 
 	function replaceData($el, obj, doDraw = true) {
 		clearData($el, false);
 		$el.api().rows.add(obj);
 
-        if (doDraw)
-            $el.api().draw();
+		if (doDraw)
+			$el.api().draw();
 	}
 
 	function createRow($el, rowIndex, obj, doDraw = true) {
@@ -135,8 +141,8 @@
 		$el.api().rows().clear();
 		$el.api().rows.add(data);
 
-        if (doDraw)
-            $el.api().draw();
+		if (doDraw)
+			$el.api().draw();
 	}
 
 	function updateRow($el, rowIndex, prop, value, doDraw = true) {
@@ -163,23 +169,24 @@
 			},
 			icon: "warning"
 		})
-		.then((result) => {
-			if (result.isConfirmed) {
-				$el.api().row(rowIndex).remove();
+			.then((result) => {
+				if (result.isConfirmed) {
+					$el.api().row(rowIndex).remove();
 
-                if (doDraw)
-                    $el.api().draw();
-			}
-		});
-    }
+					if (doDraw)
+						$el.api().draw();
+				}
+			});
+	}
 
-    window.DataTableHelper = {
+	window.DataTableHelper = {
 		initPaginationGrid,
 		initPaginationDetailData,
+		clearAjaxDataTable,
 		clearData,
 		replaceData,
 		createRow,
 		updateRow,
 		deleteRow
-    };
+	};
 })();

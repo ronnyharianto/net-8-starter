@@ -1,54 +1,50 @@
 ﻿(function () {
     async function loadCompanies() {
-        const loadCompaniesResponse = await AjaxHelper.doAjax({
+        const response = await AjaxHelper.doAjax({
             url: `${apiBaseUrl}/v1/company/all`
         });
 
-        if (loadCompaniesResponse?.succeeded) {
-            return loadCompaniesResponse.obj;
+        if (response?.succeeded) {
+            return response.obj;
         }
-        else {
-            return [];
-        }
+
+        return [];
     }
 
     async function loadRoles() {
-        const loadRolesResponse = await AjaxHelper.doAjax({
+        const response = await AjaxHelper.doAjax({
             url: `${apiBaseUrl}/v1/role/all`
         });
 
-        if (loadRolesResponse?.succeeded) {
-            return loadRolesResponse.obj;
+        if (response?.succeeded) {
+            return response.obj;
         }
-        else {
-            return [];
-        }
+
+        return [];
     }
 
     async function loadPermissions() {
-        const loadPermissionsResponse = await AjaxHelper.doAjax({
+        const response = await AjaxHelper.doAjax({
             url: `${apiBaseUrl}/v1/permission/all`
         });
 
-        if (loadPermissionsResponse?.succeeded) {
-            return loadPermissionsResponse.obj;
+        if (response?.succeeded) {
+            return response.obj;
         }
-        else {
-            return [];
-        }
+
+        return [];
     }
 
     async function loadMyCompanies() {
-        const loadMyCompaniesResponse = await AjaxHelper.doAjax({
+        const response = await AjaxHelper.doAjax({
             url: `${apiBaseUrl}/v1/account/my-companies`
         });
 
-        if (loadMyCompaniesResponse?.succeeded) {
-            return loadMyCompaniesResponse.obj;
+        if (response?.succeeded) {
+            return response.obj;
         }
-        else {
-            return [];
-        }
+
+        return [];
     }
 
     window.DataHelper = {

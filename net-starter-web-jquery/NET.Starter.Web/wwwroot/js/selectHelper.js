@@ -9,11 +9,12 @@
             textField = 'name',
             isFirstOptionEmpty = false,
             placeholder = labelText ? `- Select ${labelText} -` : null,
+            dropdownParent = $el.parent(), //$el.closest('form').length ? $el.closest('form') : $('body'),
             ...opts
         } = options;
 
         let data = [];
-        
+
         try {
             if (typeof dataSource === 'function') {
                 data = await dataSource();
@@ -64,7 +65,7 @@
             }
 
             $el.select2({
-                dropdownParent: $el.closest('form').length ? $el.closest('form') : $('body'),
+                dropdownParent: dropdownParent,
                 data: mappedData,
                 ...($el.attr('multiple') ? { closeOnSelect: false } : {}),
                 ...(isFirstOptionEmpty ? {} : { placeholder: placeholder }),

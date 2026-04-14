@@ -110,7 +110,7 @@
 		}
 
 		async initLoad() {
-			FilterHelper.setupFilter(this.$btnFilter, this.$btnReset, this.$divFilter, this.$gridRole);
+			FilterHelper.setupStatedFilter(this.$btnFilter, this.$btnReset, this.$divFilter, this.$gridRole);
 
 			const permissions = await DataHelper.loadPermissions();
             this.populatePermissions(permissions);

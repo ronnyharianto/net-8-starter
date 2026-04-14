@@ -49,7 +49,7 @@
                 url,
                 data: data ? JSON.stringify(data) : null,
                 headers: {
-                    ...getDefaultHeaders(tokenType),  
+                    ...getDefaultHeaders(tokenType),
                     "Content-Type": "application/json",
                     ...customHeaders
                 }

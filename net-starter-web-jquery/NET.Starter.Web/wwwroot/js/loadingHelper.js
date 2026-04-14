@@ -13,6 +13,7 @@
         countLoad--;
 
         if (countLoad <= 0) {
+            countLoad = 0;
             $("body").addClass("loaded");
         }
     }
