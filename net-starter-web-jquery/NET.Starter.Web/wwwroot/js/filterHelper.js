@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     function setupStatedFilter($btnFilter, $btnReset, $filterContainer, $gridPaging) {
         if (!$btnFilter || !$btnReset || !$filterContainer || !$gridPaging) return;
 
@@ -28,7 +28,7 @@
         });
 
         $btnReset.on('click', function () {
-            $filterContainer.find('input,select').val(null).trigger('change');
+            $filterContainer.find('input:not(:disabled),select:not(:disabled)').val(null).trigger('change');
             history.pushState(null, '', '?reset');
 
             $gridPaging.api().draw();
@@ -58,7 +58,7 @@
         });
 
         $btnReset.on('click', function () {
-            $filterContainer.find('input,select').val(null).trigger('change');
+            $filterContainer.find('input:not(:disabled),select:not(:disabled)').val(null).trigger('change');
 
             $gridPaging.api().draw();
         });
