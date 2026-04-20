@@ -23,14 +23,7 @@ namespace NET.Starter.Shared.Helpers
         /// <param name="config">The configuration object containing Google Cloud credentials and bucket information.</param>
         internal static void Initialize(GoogleCloudStorage config)
         {
-            GoogleCredential = GoogleCredential.FromJsonParameters(new()
-            {
-                Type = config.ServiceAccount.Type,
-                ProjectId = config.ProjectId,
-                PrivateKey = config.ServiceAccount.PrivateKey,
-                ClientEmail = config.ServiceAccount.ClientEmail
-            });
-
+            GoogleCredential = CredentialFactory.FromJson(JsonConvertHelper.SerializeObject(config.ServiceAccount), config.ServiceAccount.Type);
             BucketName = config.BucketName;
 
             Log.Logger.Information("Google Cloud Storage enabled for bucket {BucketName}.", BucketName);
