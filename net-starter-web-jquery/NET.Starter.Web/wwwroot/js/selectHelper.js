@@ -14,7 +14,7 @@
         } = options;
 
         let data = [];
-
+        
         try {
             if (typeof dataSource === 'function') {
                 data = await dataSource();
@@ -32,7 +32,7 @@
             else if (Array.isArray(dataSource)) {
                 data = dataSource;
             }
-
+            
             let mappedData = data.map(d => {
                 let value, text;
 
@@ -63,7 +63,7 @@
             if (isFirstOptionEmpty) {
                 mappedData.unshift({ id: "", text: placeholder, metadata: null });
             }
-
+            
             $el.select2({
                 dropdownParent: dropdownParent,
                 data: mappedData,
@@ -87,9 +87,36 @@
         return $el.select2('data')[0].metadata;
     }
 
+    function selectOption($el, value, options = {}) {
+        $el.val(value).trigger('change');
+
+        let data = $el.select2('data');
+        if (!data.length) {
+            const option = $el.find('option').filter(function () {
+                return $(this).text().trim() === value;
+            });
+
+            if (option.length) {
+                $el.val(option.val()).trigger('change');
+            }
+
+            data = $el.select2('data');
+        }
+
+        if (data.length > 0) {
+            $el.trigger({
+                type: 'select2:select',
+                params: {
+                    data: data[0]
+                }
+            });
+        }
+    }
+
     window.SelectHelper = {
         init,
         multiInit,
-        retrieveMetadata
+        retrieveMetadata,
+        selectOption
     };
 })();
