@@ -4,7 +4,7 @@
         const tagName = $el.prop('tagName').toLowerCase();
 
         $el.attr('disabled', false).attr('readonly', false).show();
-        if (tagName === 'select') {
+        if (tagName === 'select') { 
             $el.data('select2').$container.show();
         }
 
@@ -33,7 +33,7 @@
             if (type === 'checkbox' || type === 'radio') {
                 $(this).prop('checked', false);
             }
-            else if (this.tagName.toLowerCase() === 'select') {
+            else if (this.tagName.toLowerCase() === 'select') { 
                 $(this).val(null).trigger('change');
                 $(this).trigger({
                     type: 'select2:select',
@@ -98,6 +98,10 @@
         });
 
         return formDataObject;
+    }
+
+    function disableForm($el) {
+        $el.find('input, select, textarea').prop('disabled', true);
     }
 
     function changeStringEmptyToNull(obj, keys) {
@@ -314,6 +318,7 @@
     window.FormHelper = {
         clearForm,
         getFormData,
+        disableForm,
         changeStringEmptyToNull,
         populateFormData,
         formValidate,
