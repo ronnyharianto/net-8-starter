@@ -29,7 +29,7 @@
 
         $btnReset.on('click', function () {
             $filterContainer.find('input:not(:disabled),select:not(:disabled)').val(null).trigger('change');
-            history.pushState(null, '', '?reset');
+            history.pushState(null, '', window.location.pathname);
 
             $gridPaging.api().draw();
         });
